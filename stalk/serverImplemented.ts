@@ -38,14 +38,16 @@ export default class ServerImplemented {
     static connectionProblemString: string = 'Server connection is unstable.';
 
     pomelo: any;
+    socketComponent: SocketComponent;
     host: string;
-    port: number;
+    port: number | string;
     authenData: AuthenData;
     _isConnected = false;
     _isLogedin = false;
-    socketComponent: SocketComponent;
     username: string = "";
     password: string = "";
+    connect = this.connectServer;
+
 
     public setSocketComponent(socket: SocketComponent) {
         this.socketComponent = socket;
@@ -106,7 +108,7 @@ export default class ServerImplemented {
         self.pomelo = Pomelo;
 
         self.host = Config.Stalk.chat;
-        self.port = Config.Stalk.port;
+        self.port = parseInt(Config.Stalk.port);
         if (!!self.pomelo) {
             //<!-- Connecting gate server.
             self.connectServer(self.host, self.port, (err) => {
@@ -133,7 +135,7 @@ export default class ServerImplemented {
     /// <summary>
     /// Connect to gate server then get query of connector server.
     /// </summary>
-    public logIn(_username: string, _hash: string,  deviceToken: string, callback: (err, res) => void) {
+    public logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
         let self = this;
 
         this.username = _username;
@@ -187,10 +189,10 @@ export default class ServerImplemented {
     }
 
     //<!-- Authentication. request for token sign.
-    private authenForFrontendServer(deviceToken : string, callback: (err, res) => void) {
+    private authenForFrontendServer(deviceToken: string, callback: (err, res) => void) {
         let self = this;
 
-        let msg : IDictionary = {};
+        let msg: IDictionary = {};
         msg["email"] = self.username;
         msg["password"] = self.password;
         msg["registrationId"] = deviceToken;
@@ -219,6 +221,72 @@ export default class ServerImplemented {
                     callback(null, res);
                 }
             }
+        });
+    }
+
+    public gateEnter(uid: string): Promise<any> {
+        let self = this;
+        let msg = { uid: uid };
+        return new Promise((resolve, rejected) => {
+            if (!!self.pomelo && this._isConnected === false) {
+                //<!-- Quering connector server.
+                self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
+
+                    console.log("gateEnter", JSON.stringify(result));
+
+                    if (result.code === HttpStatusCode.success) {
+                        self.disConnect();
+
+                        let data = { host: self.host, port: result.port };
+                        resolve(data);
+                    }
+                    else {
+                        rejected(result);
+                    }
+                });
+            }
+            else {
+                let message = "pomelo client is null: connecting status is" + self._isConnected;
+                console.log("Automatic init pomelo socket...");
+
+                rejected(message);
+                // self.init((err, res) => {
+                //     if (err) {
+                //         console.warn("Cannot starting pomelo socket!");
+
+                //         rejected(err);
+                //     }
+                //     else {
+                //         console.log("Init socket success.");
+                //         resolve();
+                //     }
+                // });
+            }
+        });
+    }
+
+    public connectorEnter(msg: IDictionary): Promise<any> {
+        let self = this;
+
+        return new Promise((resolve, rejected) => {
+            //<!-- Authentication.
+            self.pomelo.request("connector.entryHandler.login", msg, function (res) {
+                if (res.code === HttpStatusCode.fail) {
+                    rejected(res.message);
+                }
+                else if (res.code === HttpStatusCode.success) {
+                    resolve(res);
+
+                    self.pomelo.on('disconnect', function data(reason) {
+                        self._isConnected = false;
+                        if (self.socketComponent !== null)
+                            self.socketComponent.disconnected(reason);
+                    });
+                }
+                else {
+                    resolve(res);
+                }
+            });
         });
     }
 
