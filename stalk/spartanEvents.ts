@@ -1,4 +1,4 @@
-﻿module absSpartan {
+﻿export module absSpartan {
     export interface IChatServerListener {
         onChat(data);
         onLeaveRoom(data);

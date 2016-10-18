@@ -1,61 +1,32 @@
-﻿/**
+/**
  * Stalk-JavaScript, Node.js client. Supported react-native.
  * Support by@ nattapon.r@live.com
- * 
- * Ahoo Studio.co.th 
+ *
+ * Ahoo Studio.co.th
  */
-
 import HttpStatusCode from './utils/httpStatusCode';
-import TokenDecode from './utils/tokenDecode';
-
 const Pomelo = require('../pomelo/webSocketClient');
 import Config from '../../configs/config';
-
-
-export interface IDictionary {
-    [k: string]: string;
+class AuthenData {
 }
-
-interface IAuthenData {
-    userId: string;
-    token: string;
-}
-class AuthenData implements IAuthenData {
-    userId: string;
-    token: string;
-}
-
 export default class ServerImplemented {
-    private static Instance: ServerImplemented;
-    public static getInstance(): ServerImplemented {
+    constructor() {
+        this._isConnected = false;
+        this._isLogedin = false;
+        this.username = "";
+        this.password = "";
+        console.log("serv imp. constructor");
+    }
+    static getInstance() {
         if (this.Instance === null || this.Instance === undefined) {
             this.Instance = new ServerImplemented();
         }
-
         return this.Instance;
     }
-
-    static connectionProblemString: string = 'Server connection is unstable.';
-
-    pomelo: any;
-    host: string;
-    port: number;
-    authenData: AuthenData;
-    _isConnected = false;
-    _isLogedin = false;
-    socketComponent: SocketComponent;
-    username: string = "";
-    password: string = "";
-
-    public setSocketComponent(socket: SocketComponent) {
+    setSocketComponent(socket) {
         this.socketComponent = socket;
     }
-
-    constructor() {
-        console.log("serv imp. constructor");
-    }
-
-    public getClient() {
+    getClient() {
         var self = this;
         if (self.pomelo !== null) {
             return self.pomelo;
@@ -64,18 +35,13 @@ export default class ServerImplemented {
             console.warn("disconnected.");
         }
     }
-
-    public dispose() {
+    dispose() {
         console.warn("dispose socket client.");
-
         this.disConnect();
-
         this.authenData = null;
-
         ServerImplemented.Instance = null;
     }
-
-    public disConnect() {
+    disConnect() {
         let self = this;
         console.log('disconnecting...');
         if (!!self.pomelo) {
@@ -83,28 +49,23 @@ export default class ServerImplemented {
             self.pomelo.disconnect();
         }
     }
-
-    public logout() {
+    logout() {
         console.log('logout request', this.username);
         let self = this;
         var registrationId = "";
-        var msg: IDictionary = {};
+        var msg = {};
         msg["username"] = this.username;
         msg["registrationId"] = registrationId;
         if (self.pomelo != null)
             self.pomelo.notify("connector.entryHandler.logout", msg);
-
         this.disConnect();
         self.pomelo = null;
     }
-
-    public init(callback: (err, res) => void) {
+    init(callback) {
         console.log('serverImp.init()');
-
         let self = this;
         this._isConnected = false;
         self.pomelo = Pomelo;
-
         self.host = Config.Stalk.chat;
         self.port = Config.Stalk.port;
         if (!!self.pomelo) {
@@ -117,43 +78,33 @@ export default class ServerImplemented {
             console.warn("pomelo socket is un ready.");
         }
     }
-
-    private connectServer(_host: string, _port: number, callback: (err) => void) {
+    connectServer(_host, _port, callback) {
         let self = this;
         console.log("socket connecting to: ", _host, _port);
-
         self.pomelo.init({ host: _host, port: _port }, function cb(err) {
             console.log("socket init result: ", err);
-
             callback(err);
         });
     }
-
     // region <!-- Authentication...
     /// <summary>
     /// Connect to gate server then get query of connector server.
     /// </summary>
-    public logIn(_username: string, _hash: string,  deviceToken: string, callback: (err, res) => void) {
+    logIn(_username, _hash, deviceToken, callback) {
         let self = this;
-
         this.username = _username;
         this.password = _hash;
-
         if (!!self.pomelo && this._isConnected === false) {
             let msg = { uid: self.username };
             //<!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
-
                 console.log("QueryConnectorServ", JSON.stringify(result));
-
                 if (result.code === HttpStatusCode.success) {
                     self.disConnect();
-
                     let connectorPort = result.port;
                     //<!-- Connecting to connector server.
                     self.connectServer(self.host, connectorPort, (err) => {
                         self._isConnected = true;
-
                         if (!!err) {
                             callback(err, null);
                         }
@@ -170,34 +121,28 @@ export default class ServerImplemented {
         else {
             console.warn("pomelo client is null: connecting status %s", this._isConnected);
             console.log("Automatic init pomelo socket...");
-
             self.init((err, res) => {
                 if (err) {
                     console.warn("Cannot starting pomelo socket!");
-
                     callback(err, null);
                 }
                 else {
                     console.log("Init socket success.");
-
                     self.logIn(this.username, this.password, deviceToken, callback);
                 }
             });
         }
     }
-
     //<!-- Authentication. request for token sign.
-    private authenForFrontendServer(deviceToken : string, callback: (err, res) => void) {
+    authenForFrontendServer(deviceToken, callback) {
         let self = this;
-
-        let msg : IDictionary = {};
+        let msg = {};
         msg["email"] = self.username;
         msg["password"] = self.password;
         msg["registrationId"] = deviceToken;
         //<!-- Authentication.
         self.pomelo.request("connector.entryHandler.login", msg, function (res) {
             console.log("login response: ", JSON.stringify(res));
-
             if (res.code === HttpStatusCode.fail) {
                 if (callback != null) {
                     callback(res.message, null);
@@ -207,7 +152,6 @@ export default class ServerImplemented {
                 if (callback != null) {
                     callback(null, res);
                 }
-
                 self.pomelo.on('disconnect', function data(reason) {
                     self._isConnected = false;
                     if (self.socketComponent !== null)
@@ -221,21 +165,19 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void) {
+    TokenAuthen(tokenBearer, checkTokenCallback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = tokenBearer;
         self.pomelo.request("gate.gateHandler.authenGateway", msg, (result) => {
             this.OnTokenAuthenticate(result, checkTokenCallback);
         });
     }
-
-    private OnTokenAuthenticate(tokenRes: any, onSuccessCheckToken: (err, res) => void) {
+    OnTokenAuthenticate(tokenRes, onSuccessCheckToken) {
         if (tokenRes.code === HttpStatusCode.success) {
             var data = tokenRes.data;
             var decode = data.decoded; //["decoded"];
-            var decodedModel: TokenDecode = JSON.parse(JSON.stringify(decode));
+            var decodedModel = JSON.parse(JSON.stringify(decode));
             if (onSuccessCheckToken != null)
                 onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
         }
@@ -244,8 +186,7 @@ export default class ServerImplemented {
                 onSuccessCheckToken(tokenRes, null);
         }
     }
-
-    public kickMeAllSession(uid: string) {
+    kickMeAllSession(uid) {
         let self = this;
         if (self.pomelo !== null) {
             var msg = { uid: uid };
@@ -254,14 +195,10 @@ export default class ServerImplemented {
             });
         }
     }
-
     //<@--- ServerAPIProvider.
-
     //region <!-- user profile -->
-
-    public UpdateUserProfile(myId: string, profileFields: { [k: string]: string }, callback: (err, res) => void) {
+    UpdateUserProfile(myId, profileFields, callback) {
         let self = this;
-
         profileFields["token"] = this.authenData.token;
         profileFields["_id"] = myId;
         self.pomelo.request("auth.profileHandler.profileUpdate", profileFields, (result) => {
@@ -270,10 +207,9 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public ProfileImageChanged(userId: string, path: string, callback: (err, res) => void) {
+    ProfileImageChanged(userId, path, callback) {
         let self = this;
-        var msg: { [k: string]: string } = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["userId"] = userId;
         msg["path"] = path;
@@ -283,10 +219,9 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public getLastAccessRoomsInfo(callback: Function) {
+    getLastAccessRoomsInfo(callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         //<!-- Get user info.
         self.pomelo.request("connector.entryHandler.getLastAccessRooms", msg, (result) => {
@@ -295,10 +230,9 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public getMe(callback: (err, res) => void) {
+    getMe(callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["username"] = self.username;
         msg["password"] = self.password;
         msg["token"] = this.authenData.token;
@@ -310,10 +244,9 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public updateFavoriteMember(editType: string, member: string, callback: (err, ress) => void) {
+    updateFavoriteMember(editType, member, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["editType"] = editType;
         msg["member"] = member;
         msg["token"] = this.authenData.token;
@@ -323,10 +256,9 @@ export default class ServerImplemented {
             callback(null, result);
         });
     }
-
-    public updateFavoriteGroups(editType: string, group: string, callback: (err, res) => void) {
+    updateFavoriteGroups(editType, group, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["editType"] = editType;
         msg["group"] = group;
         msg["token"] = this.authenData.token;
@@ -336,10 +268,9 @@ export default class ServerImplemented {
             callback(null, result);
         });
     }
-
-    public updateClosedNoticeMemberList(editType: string, member: string, callback: (err, res) => void) {
+    updateClosedNoticeMemberList(editType, member, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["editType"] = editType;
         msg["member"] = member;
         msg["token"] = this.authenData.token;
@@ -349,10 +280,9 @@ export default class ServerImplemented {
             callback(null, result);
         });
     }
-
-    public updateClosedNoticeGroupsList(editType: string, group: string, callback: (err, res) => void) {
+    updateClosedNoticeGroupsList(editType, group, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["editType"] = editType;
         msg["group"] = group;
         msg["token"] = this.authenData.token;
@@ -362,45 +292,38 @@ export default class ServerImplemented {
             callback(null, result);
         });
     }
-
-    public getMemberProfile(userId: string, callback: (err, res) => void) {
+    getMemberProfile(userId, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["userId"] = userId;
-
         self.pomelo.request("auth.profileHandler.getMemberProfile", msg, (result) => {
             if (callback != null) {
                 callback(null, result);
             }
         });
     }
-
     //endregion
-
-
     //region  Company data. 
-
     /// <summary>
     /// Gets the company info.
     /// Beware for data loading so mush. please load from cache before load from server.
     /// </summary>
-    public getCompanyInfo(callBack: (err, res) => void) {
+    getCompanyInfo(callBack) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         self.pomelo.request("connector.entryHandler.getCompanyInfo", msg, (result) => {
             if (callBack != null)
                 callBack(null, result);
         });
     }
-
     /// <summary>
     /// Gets the company members.
     /// Beware for data loading so mush. please load from cache before load from server.
     /// </summary>
-    public getCompanyMembers(callBack: (err, res) => void) {
+    getCompanyMembers(callBack) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         self.pomelo.request("connector.entryHandler.getCompanyMember", msg, (result) => {
             console.log("getCompanyMembers", JSON.stringify(result));
@@ -408,14 +331,13 @@ export default class ServerImplemented {
                 callBack(null, result);
         });
     }
-
     /// <summary>
     /// Gets the company chat rooms.
     /// Beware for data loading so mush. please load from cache before load from server.
     /// </summary>
-    public getOrganizationGroups(callBack: (err, res) => void) {
+    getOrganizationGroups(callBack) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         self.pomelo.request("connector.entryHandler.getCompanyChatRoom", msg, (result) => {
             console.log("getOrganizationGroups: " + JSON.stringify(result));
@@ -423,14 +345,11 @@ export default class ServerImplemented {
                 callBack(null, result);
         });
     }
-
     //endregion
-
-
     //region Project base.
-    public getProjectBaseGroups(callback: (err, res) => void) {
+    getProjectBaseGroups(callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         self.pomelo.request("connector.entryHandler.getProjectBaseGroups", msg, (result) => {
             console.log("getProjectBaseGroups: " + JSON.stringify(result));
@@ -438,10 +357,9 @@ export default class ServerImplemented {
                 callback(null, result);
         });
     }
-
-    public requestCreateProjectBaseGroup(groupName: string, members: Member[], callback: (err, res) => void) {
+    requestCreateProjectBaseGroup(groupName, members, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["groupName"] = groupName;
         msg["members"] = JSON.stringify(members);
@@ -451,10 +369,9 @@ export default class ServerImplemented {
                 callback(null, result);
         });
     }
-
-    public editMemberInfoInProjectBase(roomId: string, roomType: RoomType, member: Member, callback: (err, res) => void) {
+    editMemberInfoInProjectBase(roomId, roomType, member, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["roomId"] = roomId;
         msg["roomType"] = roomType.toString();
@@ -464,22 +381,17 @@ export default class ServerImplemented {
                 callback(null, result);
         });
     }
-
     //endregion
-
-
     //region <!-- Private Group Room... -->
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /// <summary>
     /// Gets the public group chat rooms.
     /// Beware for data loading so mush. please load from cache before load from server.
     /// </summary>
     /// <param name="callback">Callback.</param>
-
-    public getPrivateGroups(callback: (err, res) => void) {
+    getPrivateGroups(callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         self.pomelo.request("connector.entryHandler.getMyPrivateGroupChat", msg, (result) => {
             console.log("getPrivateGroups: " + JSON.stringify(result));
@@ -488,44 +400,42 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public UserRequestCreateGroupChat(groupName: string, memberIds: string[], callback: (err, res) => void) {
+    UserRequestCreateGroupChat(groupName, memberIds, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["groupName"] = groupName;
         msg["memberIds"] = JSON.stringify(memberIds);
         self.pomelo.request("chat.chatRoomHandler.userCreateGroupChat", msg, (result) => {
             console.log("RequestCreateGroupChat", JSON.stringify(result));
-
             if (callback != null)
                 callback(null, result);
         });
     }
-
-    public UpdatedGroupImage(groupId: string, path: string, callback: (err, res) => void) {
+    UpdatedGroupImage(groupId, path, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["groupId"] = groupId;
         msg["path"] = path;
         self.pomelo.request("chat.chatRoomHandler.updateGroupImage", msg, (result) => {
             console.log("UpdatedGroupImage", JSON.stringify(result));
-
             if (callback != null) {
                 callback(null, result);
             }
         });
     }
-
-    public editGroupMembers(editType: string, roomId: string, roomType: RoomType, members: string[], callback: (err, res) => void) {
+    editGroupMembers(editType, roomId, roomType, members, callback) {
         let self = this;
-        if (editType == null || editType.length === 0) return;
-        if (roomId == null || roomId.length === 0) return;
-        if (roomType === null) return;
-        if (members == null || members.length === 0) return;
-
-        var msg: IDictionary = {};
+        if (editType == null || editType.length === 0)
+            return;
+        if (roomId == null || roomId.length === 0)
+            return;
+        if (roomType === null)
+            return;
+        if (members == null || members.length === 0)
+            return;
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["editType"] = editType;
         msg["roomId"] = roomId;
@@ -533,41 +443,39 @@ export default class ServerImplemented {
         msg["members"] = JSON.stringify(members);
         self.pomelo.request("chat.chatRoomHandler.editGroupMembers", msg, (result) => {
             console.log("editGroupMembers response." + result.toString());
-
             if (callback != null) {
                 callback(null, result);
             }
         });
     }
-
-    public editGroupName(roomId: string, roomType: RoomType, newGroupName: string, callback: (err, res) => void) {
+    editGroupName(roomId, roomType, newGroupName, callback) {
         let self = this;
-        if (roomId == null || roomId.length === 0) return;
-        if (roomType === null) return;
-        if (newGroupName == null || newGroupName.length === 0) return;
-
-        var msg: IDictionary = {};
+        if (roomId == null || roomId.length === 0)
+            return;
+        if (roomType === null)
+            return;
+        if (newGroupName == null || newGroupName.length === 0)
+            return;
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["roomId"] = roomId;
         msg["roomType"] = roomType.toString();
         msg["newGroupName"] = newGroupName;
         self.pomelo.request("chat.chatRoomHandler.editGroupName", msg, (result) => {
             console.log("editGroupName response." + result.toString());
-
             if (callback != null) {
                 callback(null, result);
             }
         });
     }
-
     /// <summary>
     /// Gets Private Chat Room.
     /// </summary>
     /// <param name="myId">My identifier.</param>
     /// <param name="myRoommateId">My roommate identifier.</param>
-    public getPrivateChatRoomId(token: string, myId: string, myRoommateId: string, callback: (err, res) => void) {
+    getPrivateChatRoomId(token, myId, myRoommateId, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = token;
         msg["ownerId"] = myId;
         msg["roommateId"] = myRoommateId;
@@ -577,11 +485,10 @@ export default class ServerImplemented {
             }
         });
     }
-
     //<!-- Join and leave chat room.
-    public JoinChatRoomRequest(token: string, username, room_id: string, callback: (err, res) => void) {
+    JoinChatRoomRequest(token, username, room_id, callback) {
         let self = this;
-        let msg: IDictionary = {};
+        let msg = {};
         msg["token"] = token;
         msg["rid"] = room_id;
         msg["username"] = username;
@@ -592,10 +499,9 @@ export default class ServerImplemented {
             }
         });
     }
-
-    public LeaveChatRoomRequest(token: string, roomId: string, username: string, callback: (err, res) => void) {
+    LeaveChatRoomRequest(token, roomId, username, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = token;
         msg["rid"] = roomId;
         msg["username"] = username;
@@ -604,26 +510,23 @@ export default class ServerImplemented {
                 callback(null, result);
         });
     }
-
     /// <summary>
     /// Gets the room info. For load Room info by room_id.
     /// </summary>
     /// <c> return data</c>
-    public getRoomInfo(roomId: string, callback: (err, res) => void) {
+    getRoomInfo(roomId, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["roomId"] = roomId;
-
         self.pomelo.request("chat.chatRoomHandler.getRoomInfo", msg, (result) => {
             if (callback != null)
                 callback(null, result);
         });
     }
-
-    public getUnreadMsgOfRoom(roomId: string, lastAccessTime: string, callback: (err, res) => void) {
+    getUnreadMsgOfRoom(roomId, lastAccessTime, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["roomId"] = roomId;
         msg["lastAccessTime"] = lastAccessTime;
@@ -633,20 +536,16 @@ export default class ServerImplemented {
             }
         });
     }
-
     //endregion
-
-
     // region <!-- Web RTC Calling...
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     /// <summary>
     /// Videos the call requesting.
     /// - tell target client for your call requesting...
     /// </summary>
-    public videoCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
+    videoCallRequest(targetId, myRtcId, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["targetId"] = targetId;
         msg["myRtcId"] = myRtcId;
@@ -656,42 +555,35 @@ export default class ServerImplemented {
                 callback(null, result);
         });
     }
-
-    public voiceCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
+    voiceCallRequest(targetId, myRtcId, callback) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["token"] = this.authenData.token;
         msg["targetId"] = targetId;
         msg["myRtcId"] = myRtcId;
         self.pomelo.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
             console.log("voiceCallRequesting =>: " + JSON.stringify(result));
-
             if (callback != null)
                 callback(null, result);
         });
     }
-
-    public hangupCall(myId: string, contactId: string) {
+    hangupCall(myId, contactId) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["userId"] = myId;
         msg["contactId"] = contactId;
         msg["token"] = this.authenData.token;
-
         self.pomelo.request("connector.entryHandler.hangupCall", msg, (result) => {
             console.log("hangupCall: ", JSON.stringify(result));
         });
     }
-
-    public theLineIsBusy(contactId: string) {
+    theLineIsBusy(contactId) {
         let self = this;
-        var msg: IDictionary = {};
+        var msg = {};
         msg["contactId"] = contactId;
-
         self.pomelo.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
             console.log("theLineIsBusy response: " + JSON.stringify(result));
         });
     }
-
-    //endregion
 }
+ServerImplemented.connectionProblemString = 'Server connection is unstable.';
