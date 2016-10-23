@@ -15,7 +15,6 @@ import Config from '../../configs/config';
 export interface IDictionary {
     [k: string]: string;
 }
-
 interface IAuthenData {
     userId: string;
     token: string;
@@ -38,7 +37,6 @@ export default class ServerImplemented {
     static connectionProblemString: string = 'Server connection is unstable.';
 
     pomelo: any;
-    socketComponent: SocketComponent;
     host: string;
     port: number | string;
     authenData: AuthenData;
@@ -48,17 +46,12 @@ export default class ServerImplemented {
     password: string = "";
     connect = this.connectServer;
 
-
-    public setSocketComponent(socket: SocketComponent) {
-        this.socketComponent = socket;
-    }
-
     constructor() {
         console.log("serv imp. constructor");
     }
 
     public getClient() {
-        var self = this;
+        let self = this;
         if (self.pomelo !== null) {
             return self.pomelo;
         }
@@ -88,9 +81,10 @@ export default class ServerImplemented {
 
     public logout() {
         console.log('logout request', this.username);
+
         let self = this;
-        var registrationId = "";
-        var msg: IDictionary = {};
+        let registrationId = "";
+        let msg: IDictionary = {};
         msg["username"] = this.username;
         msg["registrationId"] = registrationId;
         if (self.pomelo != null)
@@ -212,8 +206,6 @@ export default class ServerImplemented {
 
                 self.pomelo.on('disconnect', function data(reason) {
                     self._isConnected = false;
-                    if (self.socketComponent !== null)
-                        self.socketComponent.disconnected(reason);
                 });
             }
             else {
@@ -279,8 +271,6 @@ export default class ServerImplemented {
 
                     self.pomelo.on('disconnect', function data(reason) {
                         self._isConnected = false;
-                        if (self.socketComponent !== null)
-                            self.socketComponent.disconnected(reason);
                     });
                 }
                 else {
@@ -292,7 +282,7 @@ export default class ServerImplemented {
 
     public TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void) {
         let self = this;
-        var msg: IDictionary = {};
+        let msg: IDictionary = {};
         msg["token"] = tokenBearer;
         self.pomelo.request("gate.gateHandler.authenGateway", msg, (result) => {
             this.OnTokenAuthenticate(result, checkTokenCallback);

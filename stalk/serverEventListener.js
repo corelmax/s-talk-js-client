@@ -19,7 +19,8 @@ export default class ServerEventListener {
         this.callChatServer();
         this.callRTCEvents();
         this.callServerEvents();
-        resolve();
+        if (!!resolve)
+            resolve();
     }
     callFrontendServer() {
         let self = this;

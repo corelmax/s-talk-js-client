@@ -24,11 +24,8 @@ export default class ServerImplemented {
         }
         return this.Instance;
     }
-    setSocketComponent(socket) {
-        this.socketComponent = socket;
-    }
     getClient() {
-        var self = this;
+        let self = this;
         if (self.pomelo !== null) {
             return self.pomelo;
         }
@@ -53,8 +50,8 @@ export default class ServerImplemented {
     logout() {
         console.log('logout request', this.username);
         let self = this;
-        var registrationId = "";
-        var msg = {};
+        let registrationId = "";
+        let msg = {};
         msg["username"] = this.username;
         msg["registrationId"] = registrationId;
         if (self.pomelo != null)
@@ -155,8 +152,6 @@ export default class ServerImplemented {
                 }
                 self.pomelo.on('disconnect', function data(reason) {
                     self._isConnected = false;
-                    if (self.socketComponent !== null)
-                        self.socketComponent.disconnected(reason);
                 });
             }
             else {
@@ -203,8 +198,6 @@ export default class ServerImplemented {
                     resolve(res);
                     self.pomelo.on('disconnect', function data(reason) {
                         self._isConnected = false;
-                        if (self.socketComponent !== null)
-                            self.socketComponent.disconnected(reason);
                     });
                 }
                 else {
@@ -215,7 +208,7 @@ export default class ServerImplemented {
     }
     TokenAuthen(tokenBearer, checkTokenCallback) {
         let self = this;
-        var msg = {};
+        let msg = {};
         msg["token"] = tokenBearer;
         self.pomelo.request("gate.gateHandler.authenGateway", msg, (result) => {
             this.OnTokenAuthenticate(result, checkTokenCallback);

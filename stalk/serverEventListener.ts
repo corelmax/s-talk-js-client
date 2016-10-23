@@ -57,13 +57,14 @@ export default class ServerEventListener {
         this.pomelo = socket;
     }
 
-    public addListenner(resolve: Function) {
+    public addListenner(resolve?: Function) {
         this.callFrontendServer();
         this.callChatServer();
         this.callRTCEvents();
         this.callServerEvents();
 
-        resolve();
+        if (!!resolve)
+            resolve();
     }
 
     private callFrontendServer() {
