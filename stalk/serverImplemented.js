@@ -68,7 +68,8 @@ export default class ServerImplemented {
         self.port = parseInt(Config.Stalk.port);
         if (!!self.pomelo) {
             //<!-- Connecting gate server.
-            self.connectServer(self.host, self.port, (err) => {
+            let params = { host: self.host, port: self.port, reconnect: false };
+            self.connectServer(params, (err) => {
                 callback(err, self);
             });
         }
@@ -76,10 +77,10 @@ export default class ServerImplemented {
             console.warn("pomelo socket is un ready.");
         }
     }
-    connectServer(_host, _port, callback) {
+    connectServer(params, callback) {
         let self = this;
-        console.log("socket connecting to: ", _host, _port);
-        self.pomelo.init({ host: _host, port: _port }, function cb(err) {
+        console.log("socket connecting to: ", params);
+        self.pomelo.init(params, function cb(err) {
             console.log("socket init result: ", err);
             callback(err);
         });
@@ -101,7 +102,8 @@ export default class ServerImplemented {
                     self.disConnect();
                     let connectorPort = result.port;
                     //<!-- Connecting to connector server.
-                    self.connectServer(self.host, connectorPort, (err) => {
+                    let params = { host: self.host, port: connectorPort, reconnect: true };
+                    self.connectServer(params, (err) => {
                         self._isConnected = true;
                         if (!!err) {
                             callback(err, null);

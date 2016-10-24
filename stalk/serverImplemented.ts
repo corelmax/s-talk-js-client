@@ -23,6 +23,9 @@ class AuthenData implements IAuthenData {
     userId: string;
     token: string;
 }
+export interface IPomeloParam {
+    host: string, port: number, reconnect: boolean
+}
 
 export default class ServerImplemented {
     private static Instance: ServerImplemented;
@@ -105,7 +108,8 @@ export default class ServerImplemented {
         self.port = parseInt(Config.Stalk.port);
         if (!!self.pomelo) {
             //<!-- Connecting gate server.
-            self.connectServer(self.host, self.port, (err) => {
+            let params: IPomeloParam = { host: self.host, port: self.port, reconnect: false };
+            self.connectServer(params, (err) => {
                 callback(err, self);
             });
         }
@@ -114,11 +118,11 @@ export default class ServerImplemented {
         }
     }
 
-    private connectServer(_host: string, _port: number, callback: (err) => void) {
+    private connectServer(params: IPomeloParam, callback: (err) => void) {
         let self = this;
-        console.log("socket connecting to: ", _host, _port);
+        console.log("socket connecting to: ", params);
 
-        self.pomelo.init({ host: _host, port: _port }, function cb(err) {
+        self.pomelo.init(params, function cb(err) {
             console.log("socket init result: ", err);
 
             callback(err);
@@ -147,7 +151,8 @@ export default class ServerImplemented {
 
                     let connectorPort = result.port;
                     //<!-- Connecting to connector server.
-                    self.connectServer(self.host, connectorPort, (err) => {
+                    let params: IPomeloParam = { host: self.host, port: connectorPort, reconnect: true };
+                    self.connectServer(params, (err) => {
                         self._isConnected = true;
 
                         if (!!err) {
