@@ -253,7 +253,7 @@ window.navigator.userAgent = 'react-native';
             }, reconnectionDelay);
         }
         else {
-            console.warn("reconnection fail!");
+            console.log("reconnection !", reconnect);
         }
     };
     let reset = function () {

@@ -182,7 +182,7 @@ export default class ServerImplemented {
                 });
             }
             else {
-                let message = "pomelo client is null: connecting status is" + self._isConnected;
+                let message = "pomelo client is null: connecting status is " + self._isConnected;
                 console.log("Automatic init pomelo socket...");
                 rejected(message);
             }
