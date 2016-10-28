@@ -1,27 +1,40 @@
 import { IDictionary } from "./serverImplemented";
 
+export interface IMetaFile {
+    thumbnail: string;
+    filename: string;
+    extension: string;
+    fileSize: string;
+}
+export interface IMessage {
+    rid: string;
+    content: string;
+    sender: string;
+    target: string;
+    type: string;
+    uuid: string;
+    mata: IMetaFile;
+}
+
+
 export default class ChatRoomApiProvider {
     pomelo : any;
     constructor(socket) {
         this.pomelo = socket;
     }
 
-    public chat(target: string, _message: any, callback: (err, res) => void) {
-        let msg: IDictionary = {};
-        msg["rid"] = _message.rid;
-        msg["content"] = _message.text;
-        msg["sender"] = _message.sender;
-        msg["target"] = target;
-        msg["type"] = _message.type;
-        msg["uuid"] = _message.uniqueId;
-        this.pomelo.request("chat.chatHandler.send", msg, (result) => {
-            var data = JSON.parse(JSON.stringify(result));
+    public chat(target: string, _message: IMessage, callback: (err, res) => void) {
+        this.pomelo.request("chat.chatHandler.send", _message, (result) => {
+            let data = JSON.parse(JSON.stringify(result));
 
             if (callback !== null)
                 callback(null, data);
         });
     }
 
+/**
+ * @deprecated please use chat instead.
+ */
     public chatFile(room_id: string, target: string, sender_id: string, fileUrl: string, contentType: string, meta: any, callback: (err, res) => void) {
         console.log("Send file to ", target);
 

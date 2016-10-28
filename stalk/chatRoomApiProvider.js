@@ -3,19 +3,15 @@ export default class ChatRoomApiProvider {
         this.pomelo = socket;
     }
     chat(target, _message, callback) {
-        let msg = {};
-        msg["rid"] = _message.rid;
-        msg["content"] = _message.text;
-        msg["sender"] = _message.sender;
-        msg["target"] = target;
-        msg["type"] = _message.type;
-        msg["uuid"] = _message.uniqueId;
-        this.pomelo.request("chat.chatHandler.send", msg, (result) => {
-            var data = JSON.parse(JSON.stringify(result));
+        this.pomelo.request("chat.chatHandler.send", _message, (result) => {
+            let data = JSON.parse(JSON.stringify(result));
             if (callback !== null)
                 callback(null, data);
         });
     }
+    /**
+     * @deprecated please use chat instead.
+     */
     chatFile(room_id, target, sender_id, fileUrl, contentType, meta, callback) {
         console.log("Send file to ", target);
         var message = {};
