@@ -39,12 +39,18 @@ export default class ServerImplemented {
         this.authenData = null;
         ServerImplemented.Instance = null;
     }
-    disConnect() {
+    disConnect(callBack) {
         let self = this;
-        console.log('disconnecting...');
         if (!!self.pomelo) {
             self.pomelo.removeAllListeners();
-            self.pomelo.disconnect();
+            self.pomelo.disconnect().then(() => {
+                if (callBack)
+                    callBack();
+            });
+        }
+        else {
+            if (callBack)
+                callBack();
         }
     }
     logout() {

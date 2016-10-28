@@ -1,28 +1,34 @@
 /**
  * Facebook.Inc react-native websocket sample.
  */
-//export default class WebSocketClient {
-//    init2() {
-//        let ws = new WebSocket('ws://git.animation-genius.com:3010');
-//        ws.onopen = () => {
-//            // connection opened
-//            console.log('onOpen: ');
-//            ws.send('something');
-//        };
-//        ws.onmessage = (e) => {
-//            // a message was received
-//            console.log('message: ', e.data);
-//        };
-//        ws.onerror = (e) => {
-//            // an error occurred
-//            console.log('connection error: ', e);
-//        };
-//        ws.onclose = (e) => {
-//            // connection closed
-//            console.log('connection closed: ', e.code, e.reason);
-//        };
-//    };
-//}
+/*
+export default class WebSocketClient {
+   init2() {
+       let ws = new WebSocket('ws://git.animation-genius.com:3010');
+
+       ws.onopen = () => {
+           // connection opened
+           console.log('onOpen: ');
+           ws.send('something');
+       };
+
+       ws.onmessage = (e) => {
+           // a message was received
+           console.log('message: ', e.data);
+       };
+
+       ws.onerror = (e) => {
+           // an error occurred
+           console.log('connection error: ', e);
+       };
+
+       ws.onclose = (e) => {
+           // connection closed
+           console.log('connection closed: ', e.code, e.reason);
+       };
+   };
+}
+*/
 window.navigator.userAgent = 'react-native';
 (function () {
     let JS_WS_CLIENT_TYPE = 'js-websocket';
@@ -117,22 +123,25 @@ window.navigator.userAgent = 'react-native';
         connect(params, url);
     };
     pomelo.disconnect = function () {
-        if (socket) {
-            if (socket.disconnect)
-                socket.disconnect();
-            if (socket.close)
-                socket.close();
-            console.log('disconnect');
-            socket = null;
-        }
-        if (heartbeatId) {
-            clearTimeout(heartbeatId);
-            heartbeatId = null;
-        }
-        if (heartbeatTimeoutId) {
-            clearTimeout(heartbeatTimeoutId);
-            heartbeatTimeoutId = null;
-        }
+        return new Promise((resolve, rejected) => {
+            if (!!socket) {
+                if (socket.disconnect)
+                    socket.disconnect();
+                if (socket.close)
+                    socket.close();
+                socket = null;
+                console.log('disconnected socket is', socket);
+            }
+            if (heartbeatId) {
+                clearTimeout(heartbeatId);
+                heartbeatId = null;
+            }
+            if (heartbeatTimeoutId) {
+                clearTimeout(heartbeatTimeoutId);
+                heartbeatTimeoutId = null;
+            }
+            resolve();
+        });
     };
     pomelo.request = function (route, msg, cb) {
         if (arguments.length === 2 && typeof msg === 'function') {
