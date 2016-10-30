@@ -45,8 +45,6 @@ export default class ServerImplemented {
     authenData: AuthenData;
     _isConnected = false;
     _isLogedin = false;
-    username: string = "";
-    password: string = "";
     connect = this.connectServer;
 
     constructor() {
@@ -89,7 +87,7 @@ export default class ServerImplemented {
     }
 
     public logout() {
-        console.log('logout request', this.username);
+        console.log('logout request');
 
         let self = this;
         let registrationId = "";
@@ -142,11 +140,8 @@ export default class ServerImplemented {
     public logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
         let self = this;
 
-        this.username = _username;
-        this.password = _hash;
-
         if (!!self.pomelo && this._isConnected === false) {
-            let msg = { uid: self.username };
+            let msg = { uid: _username };
             //<!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
 
@@ -165,14 +160,14 @@ export default class ServerImplemented {
                             callback(err, null);
                         }
                         else {
-                            self.authenForFrontendServer(deviceToken, callback);
+                            self.authenForFrontendServer(_username, _hash, deviceToken, callback);
                         }
                     });
                 }
             });
         }
         else if (!!self.pomelo && this._isConnected) {
-            self.authenForFrontendServer(deviceToken, callback);
+            self.authenForFrontendServer(_username, _hash, deviceToken, callback);
         }
         else {
             console.warn("pomelo client is null: connecting status %s", this._isConnected);
@@ -187,19 +182,19 @@ export default class ServerImplemented {
                 else {
                     console.log("Init socket success.");
 
-                    self.logIn(this.username, this.password, deviceToken, callback);
+                    self.logIn(_username, _hash, deviceToken, callback);
                 }
             });
         }
     }
 
     //<!-- Authentication. request for token sign.
-    private authenForFrontendServer(deviceToken: string, callback: (err, res) => void) {
+    private authenForFrontendServer(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
         let self = this;
 
         let msg: IDictionary = {};
-        msg["email"] = self.username;
-        msg["password"] = self.password;
+        msg["email"] = _username;
+        msg["password"] = _hash;
         msg["registrationId"] = deviceToken;
         //<!-- Authentication.
         self.pomelo.request("connector.entryHandler.login", msg, function (res) {
@@ -354,10 +349,8 @@ export default class ServerImplemented {
         });
     }
 
-    public getLastAccessRoomsInfo(callback: Function) {
+    public getLastAccessRoomsInfo(msg: IDictionary, callback: Function) {
         let self = this;
-        var msg: IDictionary = {};
-        msg["token"] = this.authenData.token;
         //<!-- Get user info.
         self.pomelo.request("connector.entryHandler.getLastAccessRooms", msg, (result) => {
             if (callback !== null) {
@@ -366,15 +359,10 @@ export default class ServerImplemented {
         });
     }
 
-    public getMe(callback: (err, res) => void) {
+    public getMe(msg: IDictionary, callback: (err, res) => void) {
         let self = this;
-        var msg: IDictionary = {};
-        msg["username"] = self.username;
-        msg["password"] = self.password;
-        msg["token"] = this.authenData.token;
         //<!-- Get user info.
         self.pomelo.request("connector.entryHandler.getMe", msg, (result) => {
-            console.log("getMe: ", JSON.stringify(result.code));
             if (callback !== null) {
                 callback(null, result);
             }
@@ -679,24 +667,16 @@ export default class ServerImplemented {
     /// Gets the room info. For load Room info by room_id.
     /// </summary>
     /// <c> return data</c>
-    public getRoomInfo(roomId: string, callback: (err, res) => void) {
+    public getRoomInfo(msg: IDictionary, callback: (err, res) => void) {
         let self = this;
-        var msg: IDictionary = {};
-        msg["token"] = this.authenData.token;
-        msg["roomId"] = roomId;
-
         self.pomelo.request("chat.chatRoomHandler.getRoomInfo", msg, (result) => {
             if (callback != null)
                 callback(null, result);
         });
     }
 
-    public getUnreadMsgOfRoom(roomId: string, lastAccessTime: string, callback: (err, res) => void) {
+    public getUnreadMsgOfRoom(msg: IDictionary, callback: (err, res) => void) {
         let self = this;
-        var msg: IDictionary = {};
-        msg["token"] = this.authenData.token;
-        msg["roomId"] = roomId;
-        msg["lastAccessTime"] = lastAccessTime;
         self.pomelo.request("chat.chatRoomHandler.getUnreadRoomMessage", msg, (result) => {
             if (callback != null) {
                 callback(null, result);
