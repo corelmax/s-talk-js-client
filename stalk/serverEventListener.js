@@ -96,15 +96,15 @@ export default class ServerEventListener {
         var self = this;
         //<!-- AccessRoom Info -->
         self.pomelo.on(ServerEventListener.ON_ACCESS_ROOMS, (data) => {
-            console.log(ServerEventListener.ON_ACCESS_ROOMS);
+            console.log(ServerEventListener.ON_ACCESS_ROOMS, data);
             self.serverListener.onAccessRoom(data);
         });
         self.pomelo.on(ServerEventListener.ON_ADD_ROOM_ACCESS, (data) => {
-            console.log(ServerEventListener.ON_ADD_ROOM_ACCESS);
+            console.log(ServerEventListener.ON_ADD_ROOM_ACCESS, data);
             self.serverListener.onAddRoomAccess(data);
         });
         self.pomelo.on(ServerEventListener.ON_UPDATED_LASTACCESSTIME, (data) => {
-            console.log(ServerEventListener.ON_UPDATED_LASTACCESSTIME);
+            console.log(ServerEventListener.ON_UPDATED_LASTACCESSTIME, data);
             self.serverListener.onUpdatedLastAccessTime(data);
         });
         //<!-- User -->
