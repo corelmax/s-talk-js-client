@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.1",
+  "version": "0.0.1f1",
   "description": "stalk javascript client.",
   "main": "index.js",
   "repository": {
@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/mzget/stalk-javascript-client#readme",
   "dependencies": {
-    "typescript": "^2.0.10"
+    "pomelo-protobuf": "^0.4.0",
+    "pomelo-protocol": "^0.1.6",
+    "typescript": "^2.0.10",
+    "ws": "^1.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
