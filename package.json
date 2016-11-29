@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "stalk javascript client.",
   "main": "index.js",
   "repository": {
@@ -8,5 +8,8 @@
     "type": "git"
   },
   "author": "nattapon.r <nattapon.r@live.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^2.0.10"
+  }
 }
