@@ -1,5 +1,5 @@
 {
-  "name": "stalk-js-client",
+  "name": "stalk-js",
   "version": "0.0.1-f2",
   "description": "stalk javascript client.",
   "main": "index.js",
@@ -7,11 +7,8 @@
     "url": "git+https://github.com/mzget/stalk-javascript-client.git",
     "type": "git"
   },
-  "author": "rattajak.n <rattajak.n@gmail.com>",
+  "author": "nattapon.r <nattapon.r@live.com>",
   "license": "MIT",
-  "devDependencies": {
-    "typescript": "^2.0.10"
-  },
   "bugs": {
     "url": "https://github.com/mzget/stalk-javascript-client/issues"
   },
@@ -21,6 +18,9 @@
     "pomelo-protocol": "^0.1.6",
     "typescript": "^2.0.10",
     "ws": "^1.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^2.0.10"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
