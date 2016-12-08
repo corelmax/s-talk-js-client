@@ -21,7 +21,10 @@ function init() {
     });
 }
 exports.init = init;
-function call() {
+/**
+ * For test call api omly...
+ */
+function testCall() {
     let msg = {};
     msg["event"] = "Test api.";
     msg["message"] = "test api from express.js client.";
@@ -30,8 +33,17 @@ function call() {
     StalkFactory.pushMessage(msg).catch((stalk) => {
         init().then(boo => {
             if (boo)
-                call();
+                testCall();
         });
     });
 }
-exports.call = call;
+exports.testCall = testCall;
+function push(msg) {
+    StalkFactory.pushMessage(msg).catch((stalk) => {
+        init().then(boo => {
+            if (boo)
+                push(msg);
+        });
+    });
+}
+exports.push = push;
