@@ -3,17 +3,19 @@
  *
  * ChatRoomComponent for handle some business logic of chat room.
  */
-import * as async from 'async';
-import * as DataModels from "./models/ChatDataModels";
-import ChatLog from "./models/chatLog";
-import BackendFactory from "./BackendFactory";
-import HttpCode from "../libs/stalk/utils/httpStatusCode";
+"use strict";
+const async = require("async");
+const DataModels = require("./models/ChatDataModels");
+const chatLog_1 = require("./models/chatLog");
+const BackendFactory_1 = require("./BackendFactory");
+const httpStatusCode_1 = require("../libs/stalk/utils/httpStatusCode");
 ;
 ;
-export class Unread {
+class Unread {
 }
+exports.Unread = Unread;
 ;
-export default class ChatsLogComponent {
+class ChatsLogComponent {
     constructor(_convertDateService) {
         this.serverImp = null;
         this.dataManager = null;
@@ -24,10 +26,10 @@ export default class ChatsLogComponent {
         this.chatListeners = new Array();
         this._isReady = false;
         this.convertDateService = _convertDateService;
-        this.dataManager = BackendFactory.getInstance().dataManager;
-        this.dataListener = BackendFactory.getInstance().dataListener;
+        this.dataManager = BackendFactory_1.default.getInstance().dataManager;
+        this.dataListener = BackendFactory_1.default.getInstance().dataListener;
         this.dataListener.addRoomAccessListenerImp(this);
-        BackendFactory.getInstance().getServer().then(server => {
+        BackendFactory_1.default.getInstance().getServer().then(server => {
             this.serverImp = server;
         }).catch(err => {
             console.log(err);
@@ -116,7 +118,7 @@ export default class ChatsLogComponent {
                         console.warn("getUnreadMsgOfRoom: ", err);
                     }
                     else {
-                        if (res.code === HttpCode.success) {
+                        if (res.code === httpStatusCode_1.default.success) {
                             let unread = JSON.parse(JSON.stringify(res.data));
                             unread.rid = item.roomId;
                             unreadLogs.push(unread);
@@ -144,7 +146,7 @@ export default class ChatsLogComponent {
                 callback(err, null);
             }
             else {
-                if (res.code === HttpCode.success) {
+                if (res.code === httpStatusCode_1.default.success) {
                     let unread = JSON.parse(JSON.stringify(res.data));
                     unread.rid = roomAccess.roomId;
                     callback(null, unread);
@@ -191,7 +193,7 @@ export default class ChatsLogComponent {
         msg["roomId"] = room_id;
         self.serverImp.getRoomInfo(msg, function (err, res) {
             console.log("getRoomInfo result", err, res);
-            if (res.code === HttpCode.success) {
+            if (res.code === httpStatusCode_1.default.success) {
                 let roomInfo = JSON.parse(JSON.stringify(res.data));
                 let room = self.decorateRoomInfoData(roomInfo);
                 self.dataManager.addGroup(room);
@@ -233,7 +235,7 @@ export default class ChatsLogComponent {
     }
     organizeChatLogMap(unread, roomInfo, done) {
         let self = this;
-        let log = new ChatLog(roomInfo);
+        let log = new chatLog_1.default(roomInfo);
         log.setNotiCount(unread.count);
         if (!!unread.message) {
             log.setLastMessageTime(unread.message.createTime.toString());
@@ -352,3 +354,5 @@ export default class ChatsLogComponent {
         });
     }
 }
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ChatsLogComponent;

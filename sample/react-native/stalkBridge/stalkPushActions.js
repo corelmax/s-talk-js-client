@@ -3,33 +3,35 @@
  *
  * This is pure function action for redux app.
  */
-import BackendFactory from "../../chats/BackendFactory";
-import Store from "../configureStore";
-import * as ProfileActions from "../profile/profileActions";
-import * as notificationsActions from "../../reducers/notifications/notificationsActions";
+"use strict";
+const BackendFactory_1 = require("../../chats/BackendFactory");
+const configureStore_1 = require("../configureStore");
+const ProfileActions = require("../profile/profileActions");
+const notificationsActions = require("../../reducers/notifications/notificationsActions");
 const LINK_REQUEST = "LINK_REQUEST";
 const LINK_ACCEPTED = "LINK_ACCEPTED";
 const NEW_NOTICE = 'NEW_NOTICE';
-export function stalkPushInit() {
-    const pushDataListener = BackendFactory.getInstance().pushDataListener;
+function stalkPushInit() {
+    const pushDataListener = BackendFactory_1.default.getInstance().pushDataListener;
     pushDataListener.addPushEvents(onPush_handler);
 }
+exports.stalkPushInit = stalkPushInit;
 function onPush_handler(dataEvent) {
     //  console.log(`Event : ${dataEvent}`);
     if (dataEvent) {
-        let profile = Store.getState().profileReducer.form.profile;
+        let profile = configureStore_1.default.getState().profileReducer.form.profile;
         switch (dataEvent.event) {
             case LINK_REQUEST: {
-                Store.dispatch(ProfileActions.getLinkRequestFromNet(profile.email));
+                configureStore_1.default.dispatch(ProfileActions.getLinkRequestFromNet(profile.email));
                 break;
             }
             case LINK_ACCEPTED: {
-                Store.dispatch(ProfileActions.getLinkRequestFromNet(profile.email));
+                configureStore_1.default.dispatch(ProfileActions.getLinkRequestFromNet(profile.email));
                 break;
             }
             case NEW_NOTICE:
                 {
-                    Store.dispatch(notificationsActions.getNotifications(profile._id));
+                    configureStore_1.default.dispatch(notificationsActions.getNotifications(profile._id));
                 }
                 break;
             default:
