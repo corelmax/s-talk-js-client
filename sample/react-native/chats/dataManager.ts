@@ -1,4 +1,4 @@
-const async = require("async");
+import * as async from "async";
 
 import { absSpartan } from "../libs/stalk/spartanEvents";
 import ServerImplemented from "../libs/stalk/serverImplemented";
@@ -13,16 +13,6 @@ interface IMemberMep {
 }
 
 export default class DataManager implements absSpartan.IFrontendServerListener {
-
-    private static _instance: DataManager;
-    public static getInstance(): DataManager {
-        if (!DataManager._instance) {
-            DataManager._instance = new DataManager();
-        }
-
-        return DataManager._instance;
-    }
-
     private myProfile: StalkAccount;
     public orgGroups: IRoomMap = {};
     public projectBaseGroups: IRoomMap = {};
@@ -60,6 +50,9 @@ export default class DataManager implements absSpartan.IFrontendServerListener {
     }
 
     //@ Profile...
+    public getMyProfile(): StalkAccount {
+        return this.myProfile;
+    }
     public setProfile(data: StalkAccount): Promise<StalkAccount> {
         return new Promise((resolve, reject) => {
             this.myProfile = data;
@@ -73,18 +66,24 @@ export default class DataManager implements absSpartan.IFrontendServerListener {
     }
     public updateRoomAccessForUser(data) {
         let arr: Array<RoomAccessData> = JSON.parse(JSON.stringify(data.roomAccess));
-        if (!!this.myProfile && !!this.myProfile.roomAccess) {
-            this.myProfile.roomAccess.forEach(value => {
-                if (value.roomId === arr[0].roomId) {
-                    value.accessTime = arr[0].accessTime;
 
-                    return;
-                }
-            });
-        }
-        else {
+        if (!this.myProfile) {
             this.myProfile = new StalkAccount();
             this.myProfile.roomAccess = arr;
+        }
+        else {
+            if (!this.myProfile.roomAccess) {
+                this.myProfile.roomAccess = arr;
+            }
+            else {
+                this.myProfile.roomAccess.forEach(value => {
+                    if (value.roomId === arr[0].roomId) {
+                        value.accessTime = arr[0].accessTime;
+
+                        return;
+                    }
+                });
+            }
         }
     }
 
@@ -384,11 +383,7 @@ export default class DataManager implements absSpartan.IFrontendServerListener {
     onGetMe() { }
 
     public isMySelf(uid: string): boolean {
-        if (uid === this.myProfile._id) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        if (uid === this.myProfile._id) return true;
+        else return false;
     }
 }

@@ -6,7 +6,7 @@
 "use strict";
 const ChatlogsActions = require("../chatlogs/chatlogsActions");
 const authActions_1 = require("../auth/authActions");
-const immutable_1 = require('immutable');
+const immutable_1 = require("immutable");
 /**
  * ## Initial State
  */
@@ -27,16 +27,21 @@ function stalkReducer(state = initialState, action) {
     if (!(state instanceof exports.StalkInitState))
         return initialState.mergeDeep(state);
     switch (action.type) {
-        case ChatlogsActions.INIT_CHATSLOG: {
+        case ChatlogsActions.STALK_INIT_CHATSLOG: {
             return state.set("isInit", true)
                 .set("chatslogComponent", action.payload);
         }
-        case ChatlogsActions.GET_CHATSLOG_COMPLETE: {
+        case ChatlogsActions.STALK_GET_CHATSLOG_COMPLETE: {
             return state.set("chatsLog", action.payload);
         }
-        case ChatlogsActions.UNREAD_MAP_CHANGED: {
+        case ChatlogsActions.STALK_CHATSLOG_CONTACT_COMPLETE: {
+            let nextState = state.set("state", ChatlogsActions.STALK_CHATSLOG_CONTACT_COMPLETE)
+                .set("chatsLog", action.payload);
+            return nextState;
+        }
+        case ChatlogsActions.STALK_UNREAD_MAP_CHANGED: {
             let nextState = state.set("chatsLog", action.payload)
-                .set("state", ChatlogsActions.UNREAD_MAP_CHANGED);
+                .set("state", ChatlogsActions.STALK_UNREAD_MAP_CHANGED);
             return nextState;
         }
         case authActions_1.AuthenActionsType.LOGOUT_SUCCESS: {

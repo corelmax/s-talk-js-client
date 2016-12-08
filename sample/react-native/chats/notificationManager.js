@@ -5,8 +5,8 @@
  *
  */
 "use strict";
-const dataListener_1 = require("./dataListener");
-const pushNotifyHelper_1 = require('../libs/pushNotifyHelper');
+const BackendFactory_1 = require("./BackendFactory");
+const pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
 const configureStore_1 = require("../reducers/configureStore");
 class NotificationManager {
     static getInstance() {
@@ -21,10 +21,10 @@ class NotificationManager {
     }
     regisNotifyNewMessageEvent() {
         console.log("subscribe global notify message event");
-        dataListener_1.default.getInstance().addNoticeNewMessageEvent(this.notify);
+        BackendFactory_1.default.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
     }
     unsubscribeGlobalNotifyMessageEvent() {
-        dataListener_1.default.getInstance().removeNoticeNewMessageEvent(this.notify);
+        BackendFactory_1.default.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
     }
     notify(messageImp) {
         //@ Check app not run in background.

@@ -6,7 +6,7 @@
 "use strict";
 const chatroomActions_1 = require("./chatroomActions");
 const StalkBridgeActions = require("../stalkBridge/stalkBridgeActions");
-const immutable_1 = require('immutable');
+const immutable_1 = require("immutable");
 /**
  * ## Initial State
  */
@@ -22,7 +22,8 @@ exports.ChatRoomInitState = immutable_1.Record({
     messages: null,
     earlyMessageReady: false,
     isFetching: false,
-    state: null
+    state: null,
+    error: null,
 });
 const initialState = new exports.ChatRoomInitState;
 function chatRoomReducer(state = initialState, action) {
@@ -81,18 +82,19 @@ function chatRoomReducer(state = initialState, action) {
                 .set("state", chatroomActions_1.ChatRoomActionsType.SELECT_CHAT_ROOM)
                 .set("selectRoom", roomInfo);
         }
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_REQUEST: {
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST: {
             return state.set("isFetching", true);
         }
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_FAILURE: {
-            return state.set("isFetching", false);
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE: {
+            return state.set("isFetching", false)
+                .set("error", action.payload);
         }
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_SUCCESS: {
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS: {
             let payload = action.payload;
             return state
                 .set("isFetching", false)
                 .set("selectRoom", payload)
-                .set("state", StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_SUCCESS);
+                .set("state", StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS);
         }
         default:
             return state;

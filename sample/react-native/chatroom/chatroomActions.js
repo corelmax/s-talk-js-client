@@ -5,14 +5,12 @@
  */
 "use strict";
 const chatRoomComponent_1 = require("../../chats/chatRoomComponent");
-const dataManager_1 = require("../../chats/dataManager");
-const dataListener_1 = require("../../chats/dataListener");
 const BackendFactory_1 = require("../../chats/BackendFactory");
 const secureServiceFactory_1 = require("../../libs/chitchat/services/secureServiceFactory");
 const serverEventListener_1 = require("../../libs/stalk/serverEventListener");
 const httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
 const ChatDataModels_1 = require("../../chats/models/ChatDataModels");
-const notificationManager_1 = require('../../chats/notificationManager');
+const notificationManager_1 = require("../../chats/notificationManager");
 const configureStore_1 = require("../configureStore");
 const config_1 = require("../../configs/config");
 /**
@@ -48,7 +46,7 @@ function initChatRoom(currentRoom) {
             throw new Error("Empty roomInfo");
         let chatroomComp = chatRoomComponent_1.default.getInstance();
         chatroomComp.setRoomId(currentRoom._id);
-        dataListener_1.default.getInstance().addChatListenerImp(chatroomComp);
+        BackendFactory_1.default.getInstance().dataListener.addChatListenerImp(chatroomComp);
         notificationManager_1.default.getInstance().unsubscribeGlobalNotifyMessageEvent();
         chatroomComp.chatroomDelegate = onChatRoomDelegate;
         chatroomComp.outsideRoomDelegete = onOutSideRoomDelegate;
@@ -63,7 +61,7 @@ function onChatRoomDelegate(event, newMsg) {
          * - if message_id is mine. Replace message_id to local messages list.
          * - if not my message. Update who read this message. And tell anyone.
          */
-        if (dataManager_1.default.getInstance().isMySelf(newMsg.sender)) {
+        if (BackendFactory_1.default.getInstance().dataManager.isMySelf(newMsg.sender)) {
         }
         else {
             console.log("is contact message");
@@ -273,13 +271,17 @@ function joinRoom_failure() {
 function joinRoom(roomId, token, username) {
     return (dispatch) => {
         dispatch(joinRoom_request());
-        BackendFactory_1.default.getInstance().getServer().JoinChatRoomRequest(token, username, roomId, (err, res) => {
-            if (err || res.code != httpStatusCode_1.default.success) {
-                dispatch(joinRoom_failure());
-            }
-            else {
-                dispatch(joinRoom_success());
-            }
+        BackendFactory_1.default.getInstance().getServer().then(server => {
+            server.JoinChatRoomRequest(token, username, roomId, (err, res) => {
+                if (err || res.code != httpStatusCode_1.default.success) {
+                    dispatch(joinRoom_failure());
+                }
+                else {
+                    dispatch(joinRoom_success());
+                }
+            });
+        }).catch(err => {
+            dispatch(joinRoom_failure());
         });
     };
 }
@@ -290,11 +292,14 @@ function leaveRoom() {
         let myProfile = configureStore_1.default.getState().profileReducer.form.profile;
         let username = myProfile.email;
         let room = chatRoomComponent_1.default.getInstance();
-        BackendFactory_1.default.getInstance().getServer().LeaveChatRoomRequest(token, room.getRoomId(), username, (err, res) => {
-            console.log("leaveRoom resutl", res);
-            dataListener_1.default.getInstance().removeChatListenerImp(room);
-            chatRoomComponent_1.default.getInstance().dispose();
-            notificationManager_1.default.getInstance().regisNotifyNewMessageEvent();
+        BackendFactory_1.default.getInstance().getServer().then(server => {
+            server.LeaveChatRoomRequest(token, room.getRoomId(), username, (err, res) => {
+                console.log("leaveRoom result", res);
+                BackendFactory_1.default.getInstance().dataListener.removeChatListenerImp(room);
+                chatRoomComponent_1.default.getInstance().dispose();
+                notificationManager_1.default.getInstance().regisNotifyNewMessageEvent();
+            });
+        }).catch(err => {
         });
     };
 }

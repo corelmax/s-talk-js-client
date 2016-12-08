@@ -13,12 +13,6 @@ class DataManager {
         this.getContactInfoFailEvents = new Array();
         this.roomDAL = new SimpleStoreClient_1.default("rooms");
     }
-    static getInstance() {
-        if (!DataManager._instance) {
-            DataManager._instance = new DataManager();
-        }
-        return DataManager._instance;
-    }
     addContactInfoFailEvents(func) {
         this.getContactInfoFailEvents.push(func);
     }
@@ -33,6 +27,9 @@ class DataManager {
         this.sessionToken = token;
     }
     //@ Profile...
+    getMyProfile() {
+        return this.myProfile;
+    }
     setProfile(data) {
         return new Promise((resolve, reject) => {
             this.myProfile = data;
@@ -46,17 +43,22 @@ class DataManager {
     }
     updateRoomAccessForUser(data) {
         let arr = JSON.parse(JSON.stringify(data.roomAccess));
-        if (!!this.myProfile && !!this.myProfile.roomAccess) {
-            this.myProfile.roomAccess.forEach(value => {
-                if (value.roomId === arr[0].roomId) {
-                    value.accessTime = arr[0].accessTime;
-                    return;
-                }
-            });
-        }
-        else {
+        if (!this.myProfile) {
             this.myProfile = new ChatDataModels_1.StalkAccount();
             this.myProfile.roomAccess = arr;
+        }
+        else {
+            if (!this.myProfile.roomAccess) {
+                this.myProfile.roomAccess = arr;
+            }
+            else {
+                this.myProfile.roomAccess.forEach(value => {
+                    if (value.roomId === arr[0].roomId) {
+                        value.accessTime = arr[0].accessTime;
+                        return;
+                    }
+                });
+            }
         }
     }
     getRoomAccess() {
@@ -311,12 +313,10 @@ class DataManager {
     ;
     onGetMe() { }
     isMySelf(uid) {
-        if (uid === this.myProfile._id) {
+        if (uid === this.myProfile._id)
             return true;
-        }
-        else {
+        else
             return false;
-        }
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

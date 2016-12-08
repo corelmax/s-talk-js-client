@@ -5,7 +5,6 @@
  */
 
 import ChatRoomComponent from "../../chats/chatRoomComponent";
-import DataManager from "../../chats/dataManager";
 import DataListener from "../../chats/dataListener";
 import BackendFactory from "../../chats/BackendFactory";
 import SecureServiceFactory from "../../libs/chitchat/services/secureServiceFactory";
@@ -61,7 +60,7 @@ export function initChatRoom(currentRoom: Room) {
 
         let chatroomComp = ChatRoomComponent.getInstance();
         chatroomComp.setRoomId(currentRoom._id);
-        DataListener.getInstance().addChatListenerImp(chatroomComp);
+        BackendFactory.getInstance().dataListener.addChatListenerImp(chatroomComp);
 
         NotificationManager.getInstance().unsubscribeGlobalNotifyMessageEvent();
 
@@ -77,7 +76,7 @@ function onChatRoomDelegate(event, newMsg) {
          * - if message_id is mine. Replace message_id to local messages list.
          * - if not my message. Update who read this message. And tell anyone.
          */
-        if (DataManager.getInstance().isMySelf(newMsg.sender)) {
+        if (BackendFactory.getInstance().dataManager.isMySelf(newMsg.sender)) {
             // dispatch(replaceMyMessage(newMsg));
         }
         else {
@@ -305,14 +304,18 @@ export function joinRoom(roomId: string, token: string, username: string) {
     return (dispatch) => {
         dispatch(joinRoom_request());
 
-        BackendFactory.getInstance().getServer().JoinChatRoomRequest(token, username, roomId, (err, res) => {
-            if (err || res.code != HTTPStatus.success) {
-                dispatch(joinRoom_failure());
-            }
-            else {
-                dispatch(joinRoom_success());
-            }
-        });
+        BackendFactory.getInstance().getServer().then(server => {
+            server.JoinChatRoomRequest(token, username, roomId, (err, res) => {
+                if (err || res.code != HTTPStatus.success) {
+                    dispatch(joinRoom_failure());
+                }
+                else {
+                    dispatch(joinRoom_success());
+                }
+            });
+        }).catch(err => {
+            dispatch(joinRoom_failure());
+        })
     }
 }
 
@@ -323,12 +326,16 @@ export function leaveRoom() {
         let username = myProfile.email;
         let room = ChatRoomComponent.getInstance();
 
-        BackendFactory.getInstance().getServer().LeaveChatRoomRequest(token, room.getRoomId(), username, (err, res) => {
-            console.log("leaveRoom resutl", res);
+        BackendFactory.getInstance().getServer().then(server => {
+            server.LeaveChatRoomRequest(token, room.getRoomId(), username, (err, res) => {
+                console.log("leaveRoom result", res);
 
-            DataListener.getInstance().removeChatListenerImp(room);
-            ChatRoomComponent.getInstance().dispose();
-            NotificationManager.getInstance().regisNotifyNewMessageEvent();
+                BackendFactory.getInstance().dataListener.removeChatListenerImp(room);
+                ChatRoomComponent.getInstance().dispose();
+                NotificationManager.getInstance().regisNotifyNewMessageEvent();
+            });
+        }).catch(err => {
+
         });
     }
 }

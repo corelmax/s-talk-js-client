@@ -22,7 +22,8 @@ export const ChatRoomInitState = Record({
     messages: null,
     earlyMessageReady: false,
     isFetching: false,
-    state: null
+    state: null,
+    error: null,
 });
 const initialState = new ChatRoomInitState;
 
@@ -95,18 +96,19 @@ export function chatRoomReducer(state = initialState, action) {
         }
 
 
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_REQUEST: {
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST: {
             return state.set("isFetching", true);
         }
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_FAILURE: {
-            return state.set("isFetching", false);
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE: {
+            return state.set("isFetching", false)
+                .set("error", action.payload);
         }
-        case StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_SUCCESS: {
+        case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS: {
             let payload = action.payload;
             return state
                 .set("isFetching", false)
                 .set("selectRoom", payload)
-                .set("state", StalkBridgeActions.GET_PRIVATE_CHAT_ROOM_ID_SUCCESS);
+                .set("state", StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS);
         }
         default:
             return state;

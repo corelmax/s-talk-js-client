@@ -11,16 +11,18 @@ const serverEventListener_1 = require("../libs/stalk/serverEventListener");
 const messageDALFactory_1 = require("../libs/chitchat/dataAccessLayer/messageDALFactory");
 const secureServiceFactory_1 = require("../libs/chitchat/services/secureServiceFactory");
 const ChatDataModels_1 = require("./models/ChatDataModels");
-const dataManager_1 = require("./dataManager");
 const config_1 = require("../configs/config");
-const dataManager = dataManager_1.default.getInstance();
-const serverImp = BackendFactory_1.default.getInstance().getServer();
+let serverImp = null;
 class ChatRoomComponent {
     constructor() {
         this.chatMessages = [];
         this.secure = secureServiceFactory_1.default.getService();
         this.messageDAL = messageDALFactory_1.default.getObject();
         this.chatRoomApi = BackendFactory_1.default.getInstance().getChatApi();
+        BackendFactory_1.default.getInstance().getServer().then(server => {
+            serverImp = server;
+        }).catch(err => {
+        });
     }
     static getInstance() {
         if (!ChatRoomComponent.instance) {
@@ -104,7 +106,7 @@ class ChatRoomComponent {
         let self = this;
         let myMessagesArr = JSON.parse(JSON.stringify(dataEvent.data));
         self.chatMessages.forEach((originalMsg, id, arr) => {
-            if (dataManager.isMySelf(originalMsg.sender)) {
+            if (BackendFactory_1.default.getInstance().dataManager.isMySelf(originalMsg.sender)) {
                 myMessagesArr.some((myMsg, index, array) => {
                     if (originalMsg._id === myMsg._id) {
                         originalMsg.readers = myMsg.readers;
@@ -164,7 +166,7 @@ class ChatRoomComponent {
                 resolve();
             }
             else {
-                let roomAccess = dataManager.getRoomAccess();
+                let roomAccess = BackendFactory_1.default.getInstance().dataManager.getRoomAccess();
                 async.some(roomAccess, (item, cb) => {
                     if (item.roomId === self.roomId) {
                         lastMessageTime = item.accessTime;
@@ -331,10 +333,10 @@ class ChatRoomComponent {
         return 0;
     }
     getMessage(chatId, Chats, callback) {
-        var self = this;
-        var myProfile = dataManager.myProfile;
-        var chatLog = localStorage.getItem(myProfile._id + '_' + chatId);
-        var promise = new Promise(function (resolve, reject) {
+        let self = this;
+        let myProfile = BackendFactory_1.default.getInstance().dataManager.getMyProfile();
+        let chatLog = localStorage.getItem(myProfile._id + '_' + chatId);
+        let promise = new Promise(function (resolve, reject) {
             if (!!chatLog) {
                 console.log("Local chat history has a data...");
                 if (JSON.stringify(chatLog) === "") {

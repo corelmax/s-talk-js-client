@@ -1,11 +1,11 @@
 "use strict";
+var RoomType;
 (function (RoomType) {
     RoomType[RoomType["organizationGroup"] = 0] = "organizationGroup";
     RoomType[RoomType["projectBaseGroup"] = 1] = "projectBaseGroup";
     RoomType[RoomType["privateGroup"] = 2] = "privateGroup";
     RoomType[RoomType["privateChat"] = 3] = "privateChat";
-})(exports.RoomType || (exports.RoomType = {}));
-var RoomType = exports.RoomType;
+})(RoomType = exports.RoomType || (exports.RoomType = {}));
 ;
 var RoomStatus;
 (function (RoomStatus) {
@@ -29,14 +29,15 @@ class Room {
     }
 }
 exports.Room = Room;
+var MemberRole;
 (function (MemberRole) {
     MemberRole[MemberRole["member"] = 0] = "member";
     MemberRole[MemberRole["admin"] = 1] = "admin";
-})(exports.MemberRole || (exports.MemberRole = {}));
-var MemberRole = exports.MemberRole;
+})(MemberRole = exports.MemberRole || (exports.MemberRole = {}));
 /**
  * @ ContentType
  */
+var ContentType;
 (function (ContentType) {
     ContentType[ContentType["Unload"] = 0] = "Unload";
     ContentType[ContentType["File"] = 1] = "File";
@@ -46,8 +47,7 @@ var MemberRole = exports.MemberRole;
     ContentType[ContentType["Video"] = 5] = "Video";
     ContentType[ContentType["Sticker"] = 6] = "Sticker";
     ContentType[ContentType["Location"] = 7] = "Location";
-})(exports.ContentType || (exports.ContentType = {}));
-var ContentType = exports.ContentType;
+})(ContentType = exports.ContentType || (exports.ContentType = {}));
 /**
  * @StlakAccount...
  */

@@ -3,17 +3,25 @@
  *
  */
 "use strict";
-const serverImplemented_1 = require('../libs/stalk/serverImplemented');
-const chatRoomApiProvider_1 = require('../libs/stalk/chatRoomApiProvider');
+const serverImplemented_1 = require("../libs/stalk/serverImplemented");
+const chatRoomApiProvider_1 = require("../libs/stalk/chatRoomApiProvider");
 const serverEventListener_1 = require("../libs/stalk/serverEventListener");
 const dataManager_1 = require("./dataManager");
 const dataListener_1 = require("./dataListener");
-//import Parse from './Parse';
-//import Hapi from './Hapi';
+const pushDataListener_1 = require("./pushDataListener");
 class BackendFactory {
+    static getInstance() {
+        if (BackendFactory.instance == null || BackendFactory.instance == undefined) {
+            BackendFactory.instance = new BackendFactory();
+        }
+        return BackendFactory.instance;
+    }
     constructor(token = null) {
         console.log('BackendFactory: ', token);
         this.stalk = serverImplemented_1.default.getInstance();
+        this.pushDataListener = new pushDataListener_1.default();
+        this.dataManager = new dataManager_1.default();
+        this.dataListener = new dataListener_1.default(this.dataManager);
         // if (CONFIG.backend.parse) {
         //   return new Parse(token);
         // }
@@ -21,22 +29,23 @@ class BackendFactory {
         //   return new Hapi(token);
         // }
     }
-    static getInstance() {
-        if (BackendFactory.instance == null || BackendFactory.instance == undefined) {
-            BackendFactory.instance = new BackendFactory();
-        }
-        return BackendFactory.instance;
+    getServer() {
+        return new Promise((resolve, rejected) => {
+            if (this.stalk._isConnected)
+                resolve(this.stalk);
+            else
+                rejected();
+        });
     }
-    getServer() { return this.stalk; }
     getChatApi() {
         if (!this.chatRoomApiProvider) {
-            this.chatRoomApiProvider = new chatRoomApiProvider_1.default(this.getServer().getClient());
+            this.chatRoomApiProvider = new chatRoomApiProvider_1.default(this.stalk.getClient());
         }
         return this.chatRoomApiProvider;
     }
     getServerListener() {
         if (!this.serverEventsListener) {
-            this.serverEventsListener = new serverEventListener_1.default(this.getServer().getClient());
+            this.serverEventsListener = new serverEventListener_1.default(this.stalk.getClient());
         }
         return this.serverEventsListener;
     }
@@ -95,14 +104,22 @@ class BackendFactory {
                 self.stalk.logout();
                 self.stalk.dispose();
             }
+            if (!!self.pushDataListener)
+                self.pushDataListener = null;
+            if (!!self.dataManager)
+                self.dataManager = null;
+            if (!!self.dataListener)
+                self.dataListener = null;
+            BackendFactory.instance = null;
             resolve();
         });
         return promise;
     }
     startChatServerListener(resolve) {
-        this.serverEventsListener.addFrontendListener(dataManager_1.default.getInstance());
-        this.serverEventsListener.addServerListener(dataListener_1.default.getInstance());
-        this.serverEventsListener.addChatListener(dataListener_1.default.getInstance());
+        this.serverEventsListener.addFrontendListener(this.dataManager);
+        this.serverEventsListener.addServerListener(this.dataListener);
+        this.serverEventsListener.addChatListener(this.dataListener);
+        this.serverEventsListener.addPushListener(this.pushDataListener);
         this.serverEventsListener.addListenner(resolve);
     }
     checkIn(uid, token) {
