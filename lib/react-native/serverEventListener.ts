@@ -1,4 +1,10 @@
-﻿import { absSpartan } from "./spartanEvents";
+﻿/**
+ * Copyright 2016 Ahoo Studio.co.th.
+ * 
+ * Support by@ nattapon.r@live.com
+ */
+
+import { absSpartan, StalkEvents } from "./spartanEvents";
 
 export default class ServerEventListener {
     public static ON_ADD: string = "onAdd";
@@ -38,6 +44,7 @@ export default class ServerEventListener {
     private frontendListener: absSpartan.IFrontendServerListener;
     private rtcCallListener: absSpartan.IRTCListener;
     private serverListener: absSpartan.IServerListener;
+    private pushServerListener: absSpartan.IPushServerListener;
     public addFrontendListener(obj: absSpartan.IFrontendServerListener): void {
         this.frontendListener = obj;
     }
@@ -49,6 +56,9 @@ export default class ServerEventListener {
     }
     public addRTCListener(obj: absSpartan.IRTCListener): void {
         this.rtcCallListener = obj;
+    }
+    public addPushListener(obj: absSpartan.IPushServerListener) {
+        this.pushServerListener = obj;
     }
 
     pomelo: any;
@@ -62,6 +72,7 @@ export default class ServerEventListener {
         this.callChatServer();
         this.callRTCEvents();
         this.callServerEvents();
+        this.callPushEvents();
 
         if (!!resolve)
             resolve();
@@ -138,7 +149,7 @@ export default class ServerEventListener {
     }
 
     private callRTCEvents() {
-        var self = this;
+        let self = this;
 
         self.pomelo.on(ServerEventListener.ON_VIDEO_CALL, (data) => {
             console.log(ServerEventListener.ON_VIDEO_CALL, JSON.stringify(data));
@@ -163,7 +174,7 @@ export default class ServerEventListener {
     }
 
     private callServerEvents() {
-        var self = this;
+        let self = this;
 
         //<!-- AccessRoom Info -->
         self.pomelo.on(ServerEventListener.ON_ACCESS_ROOMS, (data) => {
@@ -229,6 +240,16 @@ export default class ServerEventListener {
             console.log(ServerEventListener.ON_UPDATE_MEMBER_INFO_IN_PROJECTBASE);
 
             self.serverListener.onUpdateMemberInfoInProjectBase(data);
+        });
+    }
+
+    private callPushEvents() {
+        let self = this;
+
+        self.pomelo.on(StalkEvents.ON_PUSH, function (data) {
+            console.log(StalkEvents.ON_PUSH, JSON.stringify(data));
+
+            self.pushServerListener.onPush(data);
         });
     }
 }

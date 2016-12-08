@@ -4,23 +4,24 @@
  * This is pure function action for redux app.
  */
 
+import * as async from "async";
+
 import BackendFactory from "../../chats/BackendFactory";
-import DataManager from "../../chats/dataManager";
 import ChatsLogComponent, { ChatLogMap, IUnread, Unread } from "../../chats/chatslogComponent";
+import ChatLog from "../../chats/models/chatLog";
 import StalkImp, { IDictionary } from "../../libs/stalk/serverImplemented";
 
 import Store from "../configureStore";
+import AccountService from "../../servicesAccess/accountService";
 
-const dataManager = DataManager.getInstance();
-const serverImp = BackendFactory.getInstance().getServer();
-
-export const INIT_CHATSLOG = 'INIT_CHATSLOG';
-export const GET_CHATSLOG_COMPLETE = 'GET_CHATSLOG_COMPLETE';
-export const UNREAD_MAP_CHANGED = 'UNREAD_MAP_CHANGED';
-
+export const STALK_INIT_CHATSLOG = 'STALK_INIT_CHATSLOG';
+export const STALK_GET_CHATSLOG_COMPLETE = 'STALK_GET_CHATSLOG_COMPLETE';
+export const STALK_UNREAD_MAP_CHANGED = 'STALK_UNREAD_MAP_CHANGED';
+export const STALK_CHATSLOG_CONTACT_COMPLETE = 'STALK_CHATSLOG_CONTACT_COMPLETE';
 
 const listenerImp = (newMsg) => {
-    let chatsLogComp: ChatsLogComponent = Store.getState().stalkReducer.chatslogComponent;
+    let chatsLogComp = Store.getState().stalkReducer.chatslogComponent as ChatsLogComponent;
+    let dataManager = BackendFactory.getInstance().dataManager;
     if (!dataManager.isMySelf(newMsg.sender)) {
         chatsLogComp.increaseChatsLogCount(1);
         console.warn("room to add: ", JSON.stringify(chatsLogComp.getUnreadItem(newMsg.rid)));
@@ -40,6 +41,7 @@ const listenerImp = (newMsg) => {
 
 export function initChatsLog() {
     if (!Store.getState().stalkReducer.isInit) {
+        let dataManager = BackendFactory.getInstance().dataManager;
         let chatsLogComponent = new ChatsLogComponent();
 
         dataManager.contactsProfileChanged = (contact) => {
@@ -65,12 +67,16 @@ export function initChatsLog() {
 
         let msg: IDictionary = {};
         msg["token"] = Store.getState().authReducer.token;
-        serverImp.getLastAccessRoomsInfo(msg, function (err, res) {
-            console.log("getLastAccessRoomsInfo:", JSON.stringify(res));
+        BackendFactory.getInstance().getServer().then(server => {
+            server.getLastAccessRoomsInfo(msg, function (err, res) {
+                console.log("getLastAccessRoomsInfo:", JSON.stringify(res));
+            });
+        }).catch(err => {
+            console.warn("Cannot getLastAccessRoomsInfo", err);
         });
 
         Store.dispatch({
-            type: INIT_CHATSLOG, payload: chatsLogComponent
+            type: STALK_INIT_CHATSLOG, payload: chatsLogComponent
         });
     }
 }
@@ -91,7 +97,8 @@ function updateLastAccessTimeEventHandler(newRoomAccess) {
 }
 
 function getUnreadMessages() {
-    let chatsLogComp: ChatsLogComponent = Store.getState().stalkReducer.chatslogComponent;
+    let chatsLogComp = Store.getState().stalkReducer.chatslogComponent as ChatsLogComponent;
+    let dataManager = BackendFactory.getInstance().dataManager;
     let token = Store.getState().authReducer.token;
     chatsLogComp.getUnreadMessages(token, dataManager.getRoomAccess(), function done(err, unreadLogs) {
         if (!!unreadLogs) {
@@ -121,9 +128,9 @@ function decreaseLogsCount(count: number) {
     chatsLogComp.decreaseChatsLogCount(count);
 }
 
-function getChatsLogCount() {
+export function getChatsLogCount() {
     let chatsLogComp: ChatsLogComponent = Store.getState().stalkReducer.chatslogComponent;
-    return chatsLogComp.getChatsLogCount();
+    return chatsLogComp ? chatsLogComp.getChatsLogCount() : null;
 }
 
 function getUnreadMessageMap() {
@@ -136,7 +143,7 @@ function getChatsLog() {
     let chatsLog = chatsLogComp.getChatsLog();
 
     Store.dispatch({
-        type: GET_CHATSLOG_COMPLETE,
+        type: STALK_GET_CHATSLOG_COMPLETE,
         payload: chatsLog
     });
 }
@@ -148,7 +155,7 @@ function onUnreadMessageMapChanged(unread: IUnread) {
     chatsLogComp.checkRoomInfo(unread).then(function () {
         let chatsLog = chatsLogComp.getChatsLog();
         Store.dispatch({
-            type: UNREAD_MAP_CHANGED,
+            type: STALK_UNREAD_MAP_CHANGED,
             payload: chatsLog
         });
     }).catch(function () {
@@ -161,4 +168,44 @@ function getUnreadMessageComplete() {
     chatsLogComp.getRoomsInfo();
 
     // $rootScope.$broadcast('getunreadmessagecomplete', {});
+}
+
+export function getContactOnlineStatus() {
+    const chatsLogComp: ChatsLogComponent = Store.getState().stalkReducer.chatslogComponent;
+    let chatsLog = chatsLogComp.getChatsLog();
+    let arr_chatsLog: ChatLog[] = [];
+    Object.keys(chatsLog).forEach((key) => {
+        arr_chatsLog.push(chatsLog[key]);
+    });
+    async.map(arr_chatsLog, (log, cb) => {
+        getOnlineStatus(getChatLogContact(log)).then(onlineStatus => {
+            chatsLog[log.id].contact = onlineStatus;
+            cb(null, null);
+        }).catch(err => cb(null, null));
+    }, (err, results) => {
+        // console.log("get chatslog contact_status done.", chatsLog);
+        Store.dispatch({
+            type: STALK_CHATSLOG_CONTACT_COMPLETE,
+            payload: chatsLog
+        });
+    });
+}
+
+const getOnlineStatus = async (uid: string) => {
+    let token = Store.getState().authReducer.token;
+    let response = await AccountService.getInstance().getOnlineStatus(uid, token);
+    let value = await response.json();
+
+    if (value.success) {
+        return value.result;
+    }
+}
+
+const getChatLogContact = (chatlog: ChatLog) => {
+    let dataManager = BackendFactory.getInstance().dataManager;
+    let contacts = chatlog.room.members.filter(value => {
+        return !dataManager.isMySelf(value.id);
+    });
+
+    return (contacts.length > 0) ? contacts[0].id : null;
 }

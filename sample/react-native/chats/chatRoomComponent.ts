@@ -17,11 +17,9 @@ import MessageDALFactory from "../libs/chitchat/dataAccessLayer/messageDALFactor
 import { ISecureService } from "../libs/chitchat/services/ISecureService";
 import SecureServiceFactory from "../libs/chitchat/services/secureServiceFactory";
 import { ContentType, Member, Message } from "./models/ChatDataModels";
-import DataManager from "./dataManager";
 
 import Config from "../configs/config";
-const dataManager = DataManager.getInstance();
-const serverImp = BackendFactory.getInstance().getServer();
+let serverImp: ServerImplemented = null;
 
 export default class ChatRoomComponent implements absSpartan.IChatServerListener {
     private static instance: ChatRoomComponent;
@@ -51,6 +49,11 @@ export default class ChatRoomComponent implements absSpartan.IChatServerListener
         this.secure = SecureServiceFactory.getService();
         this.messageDAL = MessageDALFactory.getObject();
         this.chatRoomApi = BackendFactory.getInstance().getChatApi();
+        BackendFactory.getInstance().getServer().then(server => {
+            serverImp = server;
+        }).catch(err => {
+
+        });
     }
 
     onChat(chatMessage: Message) {
@@ -145,7 +148,7 @@ export default class ChatRoomComponent implements absSpartan.IChatServerListener
         let myMessagesArr: Array<Ireaders> = JSON.parse(JSON.stringify(dataEvent.data));
 
         self.chatMessages.forEach((originalMsg, id, arr) => {
-            if (dataManager.isMySelf(originalMsg.sender)) {
+            if (BackendFactory.getInstance().dataManager.isMySelf(originalMsg.sender)) {
                 myMessagesArr.some((myMsg, index, array) => {
                     if (originalMsg._id === myMsg._id) {
                         originalMsg.readers = myMsg.readers;
@@ -211,7 +214,7 @@ export default class ChatRoomComponent implements absSpartan.IChatServerListener
                 resolve();
             }
             else {
-                let roomAccess = dataManager.getRoomAccess();
+                let roomAccess = BackendFactory.getInstance().dataManager.getRoomAccess();
                 async.some(roomAccess, (item, cb) => {
                     if (item.roomId === self.roomId) {
                         lastMessageTime = item.accessTime;
@@ -401,11 +404,11 @@ export default class ChatRoomComponent implements absSpartan.IChatServerListener
     }
 
     public getMessage(chatId, Chats, callback: (joinRoomRes: any) => void) {
-        var self = this;
-        var myProfile = dataManager.myProfile;
-        var chatLog = localStorage.getItem(myProfile._id + '_' + chatId);
+        let self = this;
+        let myProfile = BackendFactory.getInstance().dataManager.getMyProfile();
+        let chatLog = localStorage.getItem(myProfile._id + '_' + chatId);
 
-        var promise = new Promise(function (resolve, reject) {
+        let promise = new Promise(function (resolve, reject) {
             if (!!chatLog) {
                 console.log("Local chat history has a data...");
 

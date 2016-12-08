@@ -9,7 +9,7 @@ import {
     AppState
 } from 'react-native';
 
-import DataListener from "./dataListener";
+import BackendFactory from "./BackendFactory";
 import { Message } from "../libs/chitchat/dataModel/message";
 import PushNotifyHelper from '../libs/pushNotifyHelper';
 
@@ -34,11 +34,11 @@ export default class NotificationManager {
     regisNotifyNewMessageEvent() {
         console.log("subscribe global notify message event");
 
-        DataListener.getInstance().addNoticeNewMessageEvent(this.notify);
+        BackendFactory.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
     }
 
     unsubscribeGlobalNotifyMessageEvent() {
-        DataListener.getInstance().removeNoticeNewMessageEvent(this.notify);
+        BackendFactory.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
     }
 
     notify(messageImp: Message) {

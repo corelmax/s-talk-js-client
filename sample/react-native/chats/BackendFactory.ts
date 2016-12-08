@@ -8,11 +8,9 @@ import ChatRoomApiProvider from '../libs/stalk/chatRoomApiProvider';
 import ServerEventListener from "../libs/stalk/serverEventListener";
 import DataManager from "./dataManager";
 import DataListener from "./dataListener";
+import PushDataListener from "./pushDataListener";
 
 import CONFIG from '../configs/config';
-
-//import Parse from './Parse';
-//import Hapi from './Hapi';
 
 export default class BackendFactory {
     private static instance: BackendFactory;
@@ -27,11 +25,17 @@ export default class BackendFactory {
     stalk: Stalk;
     chatRoomApiProvider: ChatRoomApiProvider;
     serverEventsListener: ServerEventListener;
+    pushDataListener: PushDataListener;
+    dataManager: DataManager;
+    dataListener: DataListener;
 
     constructor(token = null) {
         console.log('BackendFactory: ', token);
 
         this.stalk = Stalk.getInstance();
+        this.pushDataListener = new PushDataListener();
+        this.dataManager = new DataManager();
+        this.dataListener = new DataListener(this.dataManager);
 
         // if (CONFIG.backend.parse) {
         //   return new Parse(token);
@@ -41,18 +45,25 @@ export default class BackendFactory {
         // }
     }
 
-    getServer() { return this.stalk; }
+    getServer(): Promise<Stalk> {
+        return new Promise((resolve, rejected) => {
+            if (this.stalk._isConnected)
+                resolve(this.stalk);
+            else
+                rejected();
+        });
+    }
 
     getChatApi() {
         if (!this.chatRoomApiProvider) {
-            this.chatRoomApiProvider = new ChatRoomApiProvider(this.getServer().getClient());
+            this.chatRoomApiProvider = new ChatRoomApiProvider(this.stalk.getClient());
         }
         return this.chatRoomApiProvider;
     }
 
     getServerListener() {
         if (!this.serverEventsListener) {
-            this.serverEventsListener = new ServerEventListener(this.getServer().getClient());
+            this.serverEventsListener = new ServerEventListener(this.stalk.getClient());
         }
 
         return this.serverEventsListener;
@@ -120,6 +131,11 @@ export default class BackendFactory {
                 self.stalk.dispose();
             }
 
+            if (!!self.pushDataListener) self.pushDataListener = null;
+            if (!!self.dataManager) self.dataManager = null;
+            if (!!self.dataListener) self.dataListener = null;
+
+            BackendFactory.instance = null;
             resolve();
         });
 
@@ -127,9 +143,10 @@ export default class BackendFactory {
     }
 
     startChatServerListener(resolve?) {
-        this.serverEventsListener.addFrontendListener(DataManager.getInstance());
-        this.serverEventsListener.addServerListener(DataListener.getInstance());
-        this.serverEventsListener.addChatListener(DataListener.getInstance());
+        this.serverEventsListener.addFrontendListener(this.dataManager);
+        this.serverEventsListener.addServerListener(this.dataListener);
+        this.serverEventsListener.addChatListener(this.dataListener);
+        this.serverEventsListener.addPushListener(this.pushDataListener);
 
         this.serverEventsListener.addListenner(resolve);
     }

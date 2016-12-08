@@ -1,21 +1,13 @@
 ﻿import { absSpartan } from "../libs/stalk/spartanEvents";
 import * as IRoomAccessEvents from "../libs/stalk/IRoomAccessEvents";
 import { Message, RoomAccessData, Room, StalkAccount } from "./models/ChatDataModels";
-import DataManager from "./dataManager";
 
-const dataManager = DataManager.getInstance();
+import DataManager from "./dataManager";
 
 type RoomAccessEvents = IRoomAccessEvents.absSpartan.IRoomAccessListenerImp;
 
 export default class DataListener implements absSpartan.IServerListener, absSpartan.IChatServerListener {
-    private static instance: DataListener;
-    public static getInstance(): DataListener {
-        if (!DataListener.instance) {
-            DataListener.instance = new DataListener();
-        }
-
-        return DataListener.instance;
-    }
+    private dataManager: DataManager;
 
     private notifyNewMessageEvents = new Array<(message: Message) => void>();
     public addNoticeNewMessageEvent(listener: (message: Message) => void) {
@@ -48,15 +40,15 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
         this.roomAccessListenerImps.splice(id, 1);
     }
 
-    constructor() {
-
+    constructor(dataManager: DataManager) {
+        this.dataManager = dataManager;
     }
 
     onAccessRoom(dataEvent) {
         let data = dataEvent[0];
         console.info('onAccessRoom: ', data);
 
-        dataManager.setRoomAccessForUser(data);
+        this.dataManager.setRoomAccessForUser(data);
 
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
@@ -66,7 +58,7 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
     }
 
     onUpdatedLastAccessTime(dataEvent) {
-        dataManager.updateRoomAccessForUser(dataEvent);
+        this.dataManager.updateRoomAccessForUser(dataEvent);
 
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
@@ -78,7 +70,7 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
     onAddRoomAccess(dataEvent) {
         let datas: Array<StalkAccount> = JSON.parse(JSON.stringify(dataEvent));
         if (!!datas[0].roomAccess && datas[0].roomAccess.length !== 0) {
-            dataManager.setRoomAccessForUser(dataEvent);
+            this.dataManager.setRoomAccessForUser(dataEvent);
         }
 
         if (!!this.roomAccessListenerImps) {
@@ -89,13 +81,13 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
     }
 
     onCreateGroupSuccess(dataEvent) {
-        var group: Room = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.addGroup(group);
+        let group: Room = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.addGroup(group);
     }
 
     onEditedGroupMember(dataEvent) {
-        var jsonObj: Room = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupMembers(jsonObj);
+        let jsonObj: Room = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupMembers(jsonObj);
 
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
@@ -105,23 +97,23 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
     }
 
     onEditedGroupName(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupName(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupName(jsonObj);
     }
 
     onEditedGroupImage(dataEvent) {
-        var obj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupImage(obj);
+        let obj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupImage(obj);
     }
 
     onNewGroupCreated(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.addGroup(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.addGroup(jsonObj);
     }
 
     onUpdateMemberInfoInProjectBase(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupMemberDetail(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupMemberDetail(jsonObj);
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
                 value.onUpdateMemberInfoInProjectBase(dataEvent);
@@ -133,7 +125,7 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
     //#region User.
 
     onUserLogin(dataEvent) {
-        dataManager.onUserLogin(dataEvent);
+        this.dataManager.onUserLogin(dataEvent);
     }
 
     onUserUpdateImageProfile(dataEvent) {
@@ -141,7 +133,7 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
         var _id = jsonObj._id;
         var path = jsonObj.path;
 
-        dataManager.updateContactImage(_id, path);
+        this.dataManager.updateContactImage(_id, path);
     }
 
     onUserUpdateProfile(dataEvent) {
@@ -149,7 +141,7 @@ export default class DataListener implements absSpartan.IServerListener, absSpar
         var params = jsonobj.params;
         var _id = jsonobj._id;
 
-        dataManager.updateContactProfile(_id, params);
+        this.dataManager.updateContactProfile(_id, params);
     }
 
     //#endregion

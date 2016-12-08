@@ -1,17 +1,9 @@
-"use strict";
-const dataManager_1 = require("./dataManager");
-const dataManager = dataManager_1.default.getInstance();
-class DataListener {
-    constructor() {
+export default class DataListener {
+    constructor(dataManager) {
         this.notifyNewMessageEvents = new Array();
         this.chatListenerImps = new Array();
         this.roomAccessListenerImps = new Array();
-    }
-    static getInstance() {
-        if (!DataListener.instance) {
-            DataListener.instance = new DataListener();
-        }
-        return DataListener.instance;
+        this.dataManager = dataManager;
     }
     addNoticeNewMessageEvent(listener) {
         if (this.notifyNewMessageEvents.length === 0) {
@@ -40,7 +32,7 @@ class DataListener {
     onAccessRoom(dataEvent) {
         let data = dataEvent[0];
         console.info('onAccessRoom: ', data);
-        dataManager.setRoomAccessForUser(data);
+        this.dataManager.setRoomAccessForUser(data);
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
                 value.onAccessRoom(data);
@@ -48,7 +40,7 @@ class DataListener {
         }
     }
     onUpdatedLastAccessTime(dataEvent) {
-        dataManager.updateRoomAccessForUser(dataEvent);
+        this.dataManager.updateRoomAccessForUser(dataEvent);
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
                 value.onUpdatedLastAccessTime(dataEvent);
@@ -58,7 +50,7 @@ class DataListener {
     onAddRoomAccess(dataEvent) {
         let datas = JSON.parse(JSON.stringify(dataEvent));
         if (!!datas[0].roomAccess && datas[0].roomAccess.length !== 0) {
-            dataManager.setRoomAccessForUser(dataEvent);
+            this.dataManager.setRoomAccessForUser(dataEvent);
         }
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
@@ -67,12 +59,12 @@ class DataListener {
         }
     }
     onCreateGroupSuccess(dataEvent) {
-        var group = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.addGroup(group);
+        let group = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.addGroup(group);
     }
     onEditedGroupMember(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupMembers(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupMembers(jsonObj);
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
                 value.onEditedGroupMember(dataEvent);
@@ -80,20 +72,20 @@ class DataListener {
         }
     }
     onEditedGroupName(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupName(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupName(jsonObj);
     }
     onEditedGroupImage(dataEvent) {
-        var obj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupImage(obj);
+        let obj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupImage(obj);
     }
     onNewGroupCreated(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.addGroup(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.addGroup(jsonObj);
     }
     onUpdateMemberInfoInProjectBase(dataEvent) {
-        var jsonObj = JSON.parse(JSON.stringify(dataEvent));
-        dataManager.updateGroupMemberDetail(jsonObj);
+        let jsonObj = JSON.parse(JSON.stringify(dataEvent));
+        this.dataManager.updateGroupMemberDetail(jsonObj);
         if (!!this.roomAccessListenerImps) {
             this.roomAccessListenerImps.map(value => {
                 value.onUpdateMemberInfoInProjectBase(dataEvent);
@@ -102,19 +94,19 @@ class DataListener {
     }
     //#region User.
     onUserLogin(dataEvent) {
-        dataManager.onUserLogin(dataEvent);
+        this.dataManager.onUserLogin(dataEvent);
     }
     onUserUpdateImageProfile(dataEvent) {
         var jsonObj = JSON.parse(JSON.stringify(dataEvent));
         var _id = jsonObj._id;
         var path = jsonObj.path;
-        dataManager.updateContactImage(_id, path);
+        this.dataManager.updateContactImage(_id, path);
     }
     onUserUpdateProfile(dataEvent) {
         var jsonobj = JSON.parse(JSON.stringify(dataEvent));
         var params = jsonobj.params;
         var _id = jsonobj._id;
-        dataManager.updateContactProfile(_id, params);
+        this.dataManager.updateContactProfile(_id, params);
     }
     //#endregion
     /*******************************************************************************/
@@ -166,5 +158,3 @@ class DataListener {
     }
     ;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = DataListener;

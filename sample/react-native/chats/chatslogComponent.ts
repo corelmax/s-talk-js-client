@@ -15,17 +15,17 @@ import DataListener from "./dataListener";
 import BackendFactory from "./BackendFactory";
 
 import HttpCode from "../libs/stalk/utils/httpStatusCode";
-import { IDictionary } from "../libs/stalk/serverImplemented";
+import ServerImplement, { IDictionary } from "../libs/stalk/serverImplemented";
 
-const server = BackendFactory.getInstance().getServer();
-const dataManager = DataManager.getInstance();
-const dataListener = DataListener.getInstance();
-
-export type ChatLogMap = { [key: string]: ChatLog };
+export interface ChatLogMap { [key: string]: ChatLog };
 export interface IUnread { message: DataModels.Message; rid: string; count: number };
 export class Unread { message: DataModels.Message; rid: string; count: number };
 
 export default class ChatsLogComponent implements IRoomAccessListenerImp {
+    serverImp: ServerImplement = null;
+    dataManager: DataManager = null;
+    dataListener: DataListener = null;
+
     private convertDateService;
     private chatslog: ChatLogMap = {};
     public getChatsLog(): ChatLogMap {
@@ -52,8 +52,15 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
     constructor(_convertDateService?) {
         this._isReady = false;
         this.convertDateService = _convertDateService;
+        this.dataManager = BackendFactory.getInstance().dataManager;
+        this.dataListener = BackendFactory.getInstance().dataListener;
 
-        dataListener.addRoomAccessListenerImp(this);
+        this.dataListener.addRoomAccessListenerImp(this);
+        BackendFactory.getInstance().getServer().then(server => {
+            this.serverImp = server;
+        }).catch(err => {
+            console.log(err);
+        });
 
         console.log("ChatsLogComponent : constructor");
     }
@@ -75,7 +82,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         let self = this;
         let roomAccess: DataModels.RoomAccessData[] = dataEvent.roomAccess;
 
-        dataManager.roomDAL.get().then((data: Map<string, DataModels.Room>) => {
+        this.dataManager.roomDAL.get().then((data: Map<string, DataModels.Room>) => {
             addRoomData(data);
         }).catch(err => {
             done();
@@ -88,7 +95,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
                 }
                 else {
                     let roomInfo = rooms.get(item.roomId);
-                    dataManager.addGroup(roomInfo);
+                    self.dataManager.addGroup(roomInfo);
                     resultCallback(null, null);
                 }
             }, (err, results) => {
@@ -136,7 +143,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
                 msg["token"] = token;
                 msg["roomId"] = item.roomId;
                 msg["lastAccessTime"] = item.accessTime.toString();
-                server.getUnreadMsgOfRoom(msg, function res(err, res) {
+                self.serverImp.getUnreadMsgOfRoom(msg, function res(err, res) {
                     if (err || res === null) {
                         console.warn("getUnreadMsgOfRoom: ", err);
                     }
@@ -164,7 +171,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         msg["token"] = token;
         msg["roomId"] = roomAccess.roomId;
         msg["lastAccessTime"] = roomAccess.accessTime.toString();
-        server.getUnreadMsgOfRoom(msg, function res(err, res) {
+        this.serverImp.getUnreadMsgOfRoom(msg, function res(err, res) {
             console.log("getUnreadMsgOfRoom: ", JSON.stringify(res));
             if (err || res === null) {
                 callback(err, null);
@@ -180,54 +187,57 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         });
     }
 
-    private getRoomInfo(room_id: string, callback: (err, res: DataModels.Room) => void) {
+    private updatePersistRoomInfo(roomInfo: DataModels.Room) {
+        let self = this;
+        this.dataManager.roomDAL.get().then((roomsInfos: Map<string, DataModels.Room>) => {
+            if (roomsInfos instanceof Map) {
+                save();
+            }
+            else {
+                roomsInfos = new Map();
+                save();
+            }
+
+            function save() {
+                roomsInfos.set(roomInfo._id, roomInfo);
+                self.dataManager.roomDAL.save(roomsInfos);
+            }
+        });
+    }
+
+    private decorateRoomInfoData(roomInfo: DataModels.Room) {
+        if (roomInfo.type === DataModels.RoomType.privateChat) {
+            let others = roomInfo.members.filter((value) => !this.dataManager.isMySelf(value.id));
+            if (others.length > 0) {
+                let contactProfile = this.dataManager.getContactProfile(others[0].id);
+                if (contactProfile == null) {
+                    roomInfo.name = "EMPTY ROOM";
+                }
+                else {
+                    roomInfo.name = contactProfile.displayname;
+                    roomInfo.image = contactProfile.image;
+                }
+            }
+        }
+
+        return roomInfo;
+    }
+
+    private getRoomInfo(room_id: string, callback: (err, room: DataModels.Room) => void) {
         let self = this;
 
         let msg: IDictionary = {};
-        msg["token"] = dataManager.getSessionToken();
+        msg["token"] = self.dataManager.getSessionToken();
         msg["roomId"] = room_id;
-        server.getRoomInfo(msg, function (err, res) {
+        self.serverImp.getRoomInfo(msg, function (err, res) {
+            console.log("getRoomInfo result", err, res);
+
             if (res.code === HttpCode.success) {
                 let roomInfo: DataModels.Room = JSON.parse(JSON.stringify(res.data));
-                if (roomInfo.type === DataModels.RoomType.privateChat) {
-                    let targetMemberId = "";
-                    roomInfo.members.some((member) => {
-                        if (!dataManager.isMySelf(member.id)) {
-                            targetMemberId = member.id;
-                            return true;
-                        }
-                    });
+                let room = self.decorateRoomInfoData(roomInfo);
 
-                    let contactProfile = dataManager.getContactProfile(targetMemberId);
-                    if (contactProfile == null) {
-                        roomInfo.name = "EMPTY ROOM";
-                    }
-                    else {
-                        roomInfo.name = contactProfile.displayname;
-                        roomInfo.image = contactProfile.image;
-                    }
-                }
-                else {
-                    console.warn("OMG: the god only know. May be group status is not active.");
-                }
-
-                dataManager.addGroup(roomInfo);
-                dataManager.roomDAL.get().then((roomsInfos: Map<string, DataModels.Room>) => {
-                    if (roomsInfos instanceof Map) {
-                        save();
-                    }
-                    else {
-                        roomsInfos = new Map();
-                        save();
-                    }
-
-                    function save() {
-                        roomsInfos.set(roomInfo._id, roomInfo);
-                        dataManager.roomDAL.save(roomsInfos);
-                    }
-                });
-
-                callback(null, roomInfo);
+                self.dataManager.addGroup(room);
+                callback(null, room);
             }
             else {
                 callback("Cannot get roomInfo", null);
@@ -240,75 +250,29 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         let results = new Map<string, DataModels.Room>();
 
         this.unreadMessageMap.forEach((value, key, map) => {
-            let roomInfo: DataModels.Room = dataManager.getGroup(value.rid);
+            let roomInfo: DataModels.Room = self.dataManager.getGroup(value.rid);
             if (!!roomInfo) {
-                if (roomInfo.type === DataModels.RoomType.privateChat) {
-                    let targetMemberId = "";
-                    roomInfo.members.some((member) => {
-                        if (!dataManager.isMySelf(member.id)) {
-                            targetMemberId = member.id;
-                            return true;
-                        }
-                    });
-
-                    let contactProfile = dataManager.getContactProfile(targetMemberId);
-                    if (contactProfile == null) {
-                        roomInfo.name = "EMPTY ROOM";
-                    }
-                    else {
-                        roomInfo.name = contactProfile.displayname;
-                        roomInfo.image = contactProfile.image;
-                    }
-                }
-                dataManager.addGroup(roomInfo);
-                self.organizeChatLogMap(value, roomInfo, function done() {
-                    results.set(roomInfo._id, roomInfo);
+                let room = self.decorateRoomInfoData(roomInfo);
+                self.dataManager.addGroup(room);
+                self.organizeChatLogMap(value, room, function done() {
+                    results.set(room._id, room);
                 });
             }
             else {
                 console.warn("Can't find roomInfo from persisted data: ", value.rid);
 
-                let msg: IDictionary = {};
-                msg["token"] = dataManager.getSessionToken();
-                msg["roomId"] = value.rid;
-                server.getRoomInfo(msg, function (err, res) {
-                    if (res.code === HttpCode.success) {
-                        let roomInfo: DataModels.Room = JSON.parse(JSON.stringify(res.data));
-                        if (roomInfo.type === DataModels.RoomType.privateChat) {
-                            let targetMemberId = "";
-                            roomInfo.members.some((member) => {
-                                if (!dataManager.isMySelf(member.id)) {
-                                    targetMemberId = member.id;
-                                    return true;
-                                }
-                            });
-
-                            let contactProfile = dataManager.getContactProfile(targetMemberId);
-                            if (contactProfile == null) {
-                                roomInfo.name = "EMPTY ROOM";
-                            }
-                            else {
-                                roomInfo.name = contactProfile.displayname;
-                                roomInfo.image = contactProfile.image;
-                            }
-                        }
-                        else {
-                            console.warn("OMG: the god only know. May be group status is not active.");
-                        }
-
-                        dataManager.addGroup(roomInfo);
-                        self.organizeChatLogMap(value, roomInfo, function done() {
-                            results.set(roomInfo._id, roomInfo);
+                this.getRoomInfo(value.rid, (err, room) => {
+                    if (!!room) {
+                        this.updatePersistRoomInfo(room);
+                        self.organizeChatLogMap(value, room, function done() {
+                            results.set(room._id, room);
                         });
-                    }
-                    else {
-                        console.warn("Fail to get room info of room %s", value.rid, res.message);
                     }
                 });
             }
         });
 
-        dataManager.roomDAL.save(results);
+        self.dataManager.roomDAL.save(results);
 
         console.log("getRoomsInfo Completed.");
         if (this.getRoomsInfoCompleteEvent())
@@ -323,7 +287,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         if (!!unread.message) {
             log.setLastMessageTime(unread.message.createTime.toString());
 
-            let contact = dataManager.getContactProfile(unread.message.sender);
+            let contact = self.dataManager.getContactProfile(unread.message.sender);
             let sender = (contact != null) ? contact.displayname : "";
             if (unread.message.body != null) {
                 let displayMsg = unread.message.body;
@@ -396,21 +360,20 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
     }
 
     private addChatLog(chatLog: ChatLog, done: () => void) {
-        console.log("Log", chatLog);
-
         this.chatslog[chatLog.id] = chatLog;
         done();
     }
 
     public checkRoomInfo(unread: IUnread): Promise<any> {
         return new Promise((resolve, rejected) => {
-            let roomInfo = dataManager.getGroup(unread.rid);
+            let roomInfo = this.dataManager.getGroup(unread.rid);
             if (!roomInfo) {
-                console.warn("No have roomInfo in room store.", roomInfo);
+                console.warn("No have roomInfo in room store.", unread.rid);
 
-                this.getRoomInfo(unread.rid, (err, res) => {
-                    if (!!res) {
-                        this.organizeChatLogMap(unread, res, () => {
+                this.getRoomInfo(unread.rid, (err, room) => {
+                    if (!!room) {
+                        this.updatePersistRoomInfo(room);
+                        this.organizeChatLogMap(unread, room, () => {
                             resolve();
                         });
                     }
@@ -438,6 +401,7 @@ export default class ChatsLogComponent implements IRoomAccessListenerImp {
         this.chatlog_count -= num;
     }
     public calculateChatsLogCount() {
+        this.chatlog_count = 0;
         this.unreadMessageMap.forEach((value, key) => {
             let count = value.count;
             this.chatlog_count += count;

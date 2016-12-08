@@ -4,11 +4,10 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-"use strict";
-const dataListener_1 = require("./dataListener");
-const pushNotifyHelper_1 = require('../libs/pushNotifyHelper');
-const configureStore_1 = require("../reducers/configureStore");
-class NotificationManager {
+import BackendFactory from "./BackendFactory";
+import PushNotifyHelper from '../libs/pushNotifyHelper';
+import Store from "../reducers/configureStore";
+export default class NotificationManager {
     static getInstance() {
         if (!NotificationManager.instance) {
             NotificationManager.instance = new NotificationManager();
@@ -17,28 +16,26 @@ class NotificationManager {
     }
     init(onSuccess) {
         console.log("Initialize NotificationManager.");
-        pushNotifyHelper_1.default.getInstance().configure(onSuccess);
+        PushNotifyHelper.getInstance().configure(onSuccess);
     }
     regisNotifyNewMessageEvent() {
         console.log("subscribe global notify message event");
-        dataListener_1.default.getInstance().addNoticeNewMessageEvent(this.notify);
+        BackendFactory.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
     }
     unsubscribeGlobalNotifyMessageEvent() {
-        dataListener_1.default.getInstance().removeNoticeNewMessageEvent(this.notify);
+        BackendFactory.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
     }
     notify(messageImp) {
         //@ Check app not run in background.
-        let device = configureStore_1.default.getState().deviceReducer; //active, background, inactive
+        let device = Store.getState().deviceReducer; //active, background, inactive
         console.log("Notify Message. AppState is ", device.appState);
         if (device.appState == "active") {
-            pushNotifyHelper_1.default.getInstance().localNotification(messageImp.body);
+            PushNotifyHelper.getInstance().localNotification(messageImp.body);
         }
         else if (device.appState != "active") {
             //@ When user joined room but appState is inActive.
             // sharedObjectService.getNotifyManager().notify(newMsg, appBackground, localNotifyService);
-            pushNotifyHelper_1.default.getInstance().localNotification(messageImp.body);
+            PushNotifyHelper.getInstance().localNotification(messageImp.body);
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = NotificationManager;

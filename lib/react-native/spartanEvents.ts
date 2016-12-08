@@ -37,4 +37,11 @@
         onUserUpdateImageProfile(dataEvent);
         onUserUpdateProfile(dataEvent);
     }
+    export interface IPushServerListener {
+        onPush(dataEvent);
+    }
+}
+
+export module StalkEvents {
+    export const ON_PUSH = "ON_PUSH";
 }

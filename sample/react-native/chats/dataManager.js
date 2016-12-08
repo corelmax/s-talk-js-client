@@ -1,8 +1,7 @@
-"use strict";
-const async = require("async");
-const ChatDataModels_1 = require("./models/ChatDataModels");
-const SimpleStoreClient_1 = require("../dataAccess/SimpleStoreClient");
-class DataManager {
+import * as async from "async";
+import { RoomType, MemberRole, StalkAccount } from "./models/ChatDataModels";
+import SimpleStoreClient from "../dataAccess/SimpleStoreClient";
+export default class DataManager {
     constructor() {
         this.orgGroups = {};
         this.projectBaseGroups = {};
@@ -11,13 +10,7 @@ class DataManager {
         this.contactsMember = {};
         this.isOrgMembersReady = false;
         this.getContactInfoFailEvents = new Array();
-        this.roomDAL = new SimpleStoreClient_1.default("rooms");
-    }
-    static getInstance() {
-        if (!DataManager._instance) {
-            DataManager._instance = new DataManager();
-        }
-        return DataManager._instance;
+        this.roomDAL = new SimpleStoreClient("rooms");
     }
     addContactInfoFailEvents(func) {
         this.getContactInfoFailEvents.push(func);
@@ -33,6 +26,9 @@ class DataManager {
         this.sessionToken = token;
     }
     //@ Profile...
+    getMyProfile() {
+        return this.myProfile;
+    }
     setProfile(data) {
         return new Promise((resolve, reject) => {
             this.myProfile = data;
@@ -46,17 +42,22 @@ class DataManager {
     }
     updateRoomAccessForUser(data) {
         let arr = JSON.parse(JSON.stringify(data.roomAccess));
-        if (!!this.myProfile && !!this.myProfile.roomAccess) {
-            this.myProfile.roomAccess.forEach(value => {
-                if (value.roomId === arr[0].roomId) {
-                    value.accessTime = arr[0].accessTime;
-                    return;
-                }
-            });
+        if (!this.myProfile) {
+            this.myProfile = new StalkAccount();
+            this.myProfile.roomAccess = arr;
         }
         else {
-            this.myProfile = new ChatDataModels_1.StalkAccount();
-            this.myProfile.roomAccess = arr;
+            if (!this.myProfile.roomAccess) {
+                this.myProfile.roomAccess = arr;
+            }
+            else {
+                this.myProfile.roomAccess.forEach(value => {
+                    if (value.roomId === arr[0].roomId) {
+                        value.accessTime = arr[0].accessTime;
+                        return;
+                    }
+                });
+            }
         }
     }
     getRoomAccess() {
@@ -79,16 +80,16 @@ class DataManager {
     }
     addGroup(data) {
         switch (data.type) {
-            case ChatDataModels_1.RoomType.organizationGroup:
+            case RoomType.organizationGroup:
                 this.orgGroups[data._id] = data;
                 break;
-            case ChatDataModels_1.RoomType.projectBaseGroup:
+            case RoomType.projectBaseGroup:
                 this.projectBaseGroups[data._id] = data;
                 break;
-            case ChatDataModels_1.RoomType.privateGroup:
+            case RoomType.privateGroup:
                 this.privateGroups[data._id] = data;
                 break;
-            case ChatDataModels_1.RoomType.privateChat:
+            case RoomType.privateChat:
                 if (!this.privateChats) {
                     this.privateChats = {};
                 }
@@ -125,7 +126,7 @@ class DataManager {
         //<!-- Beware please checking myself before update group members.
         //<!-- May be your id is removed from group.
         var hasMe = this.checkMySelfInNewMembersReceived(data);
-        if (data.type === ChatDataModels_1.RoomType.organizationGroup) {
+        if (data.type === RoomType.organizationGroup) {
             if (!!this.orgGroups[data._id]) {
                 //<!-- This statement call when current you still a member.
                 if (hasMe) {
@@ -139,7 +140,7 @@ class DataManager {
                 this.orgGroups[data._id] = data;
             }
         }
-        else if (data.type === ChatDataModels_1.RoomType.projectBaseGroup) {
+        else if (data.type === RoomType.projectBaseGroup) {
             if (!!this.projectBaseGroups[data._id]) {
                 if (hasMe) {
                     this.projectBaseGroups[data._id].visibility = true;
@@ -153,7 +154,7 @@ class DataManager {
                 this.projectBaseGroups[data._id] = data;
             }
         }
-        else if (data.type === ChatDataModels_1.RoomType.privateGroup) {
+        else if (data.type === RoomType.privateGroup) {
             if (!!this.privateGroups[data._id]) {
                 if (hasMe) {
                     this.privateGroups[data._id].visibility = true;
@@ -176,12 +177,12 @@ class DataManager {
         let groupMember = null;
         groupMember.id = editMember.id;
         let role = editMember.role;
-        groupMember.role = ChatDataModels_1.MemberRole[role];
+        groupMember.role = MemberRole[role];
         groupMember.jobPosition = editMember.jobPosition;
         this.getGroup(roomId).members.forEach((value, index, arr) => {
             if (value.id === groupMember.id) {
                 this.getGroup(roomId).members[index].role = groupMember.role;
-                this.getGroup(roomId).members[index].textRole = ChatDataModels_1.MemberRole[groupMember.role];
+                this.getGroup(roomId).members[index].textRole = MemberRole[groupMember.role];
                 this.getGroup(roomId).members[index].jobPosition = groupMember.jobPosition;
             }
         });
@@ -311,13 +312,9 @@ class DataManager {
     ;
     onGetMe() { }
     isMySelf(uid) {
-        if (uid === this.myProfile._id) {
+        if (uid === this.myProfile._id)
             return true;
-        }
-        else {
+        else
             return false;
-        }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = DataManager;
