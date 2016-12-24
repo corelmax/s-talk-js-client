@@ -171,7 +171,12 @@ function getUnreadMessageComplete() {
 }
 
 export function getContactOnlineStatus() {
+    if (!BackendFactory.getInstance().stalk._isConnected) return;
+
     const chatsLogComp: ChatsLogComponent = Store.getState().stalkReducer.chatslogComponent;
+
+    if(!chatsLogComp) return;
+    
     let chatsLog = chatsLogComp.getChatsLog();
     let arr_chatsLog: ChatLog[] = [];
     Object.keys(chatsLog).forEach((key) => {

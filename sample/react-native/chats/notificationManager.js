@@ -6,6 +6,7 @@
  */
 "use strict";
 const BackendFactory_1 = require("./BackendFactory");
+const ChatDataModels_1 = require("./models/ChatDataModels");
 const pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
 const configureStore_1 = require("../reducers/configureStore");
 class NotificationManager {
@@ -30,13 +31,20 @@ class NotificationManager {
         //@ Check app not run in background.
         let device = configureStore_1.default.getState().deviceReducer; //active, background, inactive
         console.log("Notify Message. AppState is ", device.appState);
+        let message = messageImp.body;
+        if (messageImp.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Location]) {
+            message = "Sent you location";
+        }
+        else if (messageImp.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Image]) {
+            message = "Sent you image";
+        }
         if (device.appState == "active") {
-            pushNotifyHelper_1.default.getInstance().localNotification(messageImp.body);
+            pushNotifyHelper_1.default.getInstance().localNotification(message);
         }
         else if (device.appState != "active") {
             //@ When user joined room but appState is inActive.
             // sharedObjectService.getNotifyManager().notify(newMsg, appBackground, localNotifyService);
-            pushNotifyHelper_1.default.getInstance().localNotification(messageImp.body);
+            pushNotifyHelper_1.default.getInstance().localNotification(message);
         }
     }
 }

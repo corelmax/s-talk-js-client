@@ -16,7 +16,6 @@
   "dependencies": {
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
-    "typescript": "^2.0.10",
     "ws": "^1.1.1"
   },
   "devDependencies": {

@@ -25,13 +25,15 @@ export const STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS = "STALK_GET_PRIVATE_CHAT_RO
 const onGetContactProfileFail = (contact_id: string) => {
     let dataManager = BackendFactory.getInstance().dataManager;
     AccountService.getInstance().getUserInfo(contact_id).then(result => result.json()).then(result => {
-        let user: Account = result.data[0];
-        let contact: DataModels.ContactInfo = {
-            _id: user._id, displayname: `${user.first_name} ${user.last_name}`, status: "", image: user.avatar
+        if (result.success) {
+            let user: Account = result.data[0];
+            let contact: DataModels.ContactInfo = {
+                _id: user._id, displayname: `${user.first_name} ${user.last_name}`, status: "", image: user.avatar
+            }
+            dataManager.setContactProfile(user._id, contact);
         }
-        dataManager.setContactProfile(user._id, contact);
     }).catch(err => {
-        console.log("get userInfo fail", err);
+        console.warn("onGetContactProfileFail", err);
     });
 };
 
@@ -50,7 +52,7 @@ export function getUserInfo(userId: string, callback: (user: DataModels.ContactI
 
             callback(contact)
         }).catch(err => {
-            console.log("get userInfo fail", err);
+            console.warn("getUserInfo fail", err);
             callback(null);
         });
     }
@@ -63,10 +65,6 @@ export function stalkLogin(uid: string, token: string) {
     console.log("stalkLogin", uid, token);
 
     const backendFactory = BackendFactory.getInstance();
-
-    console.log(backendFactory.dataManager);
-    console.log(backendFactory.pushDataListener);
-    console.log(backendFactory.dataListener);
 
     backendFactory.stalkInit().then(value => {
         backendFactory.checkIn(uid, token).then(value => {

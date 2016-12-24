@@ -148,7 +148,11 @@ function getUnreadMessageComplete() {
     // $rootScope.$broadcast('getunreadmessagecomplete', {});
 }
 function getContactOnlineStatus() {
+    if (!BackendFactory_1.default.getInstance().stalk._isConnected)
+        return;
     const chatsLogComp = configureStore_1.default.getState().stalkReducer.chatslogComponent;
+    if (!chatsLogComp)
+        return;
     let chatsLog = chatsLogComp.getChatsLog();
     let arr_chatsLog = [];
     Object.keys(chatsLog).forEach((key) => {
