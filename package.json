@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.1-f7",
+  "version": "0.0.1-f8",
   "description": "stalk javascript client.",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,7 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
-    "tslint": "^5.1.0",
+    "tslint": "^5.2.0",
     "typescript": "^2.3.2"
   },
   "scripts": {

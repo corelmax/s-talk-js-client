@@ -6,22 +6,33 @@
  */
 "use strict";
 const httpStatusCode_1 = require("./utils/httpStatusCode");
-const Pomelo = require('../pomelo/webSocketClient');
-const config_1 = require("../../configs/config");
+const EventEmitter = require("events");
+const Pomelo = require("../pomelo/reactWSClient");
+class IPomelo extends EventEmitter {
+}
+exports.IPomelo = IPomelo;
+;
 class AuthenData {
 }
 class ServerImplemented {
-    constructor() {
+    constructor(host, port) {
         this._isConnected = false;
         this._isLogedin = false;
         this.connect = this.connectServer;
-        console.log("serv imp. constructor");
+        console.log("ServerImplemented", host, port);
+        this.host = host;
+        this.port = port;
+        this.connectServer = this.connectServer.bind(this);
+        this.listenForPomeloEvents = this.listenForPomeloEvents.bind(this);
     }
     static getInstance() {
-        if (this.Instance === null || this.Instance === undefined) {
-            this.Instance = new ServerImplemented();
-        }
         return this.Instance;
+    }
+    static createInstance(host, port) {
+        if (this.Instance === null || this.Instance === undefined) {
+            this.Instance = new ServerImplemented(host, port);
+            return this.Instance;
+        }
     }
     getClient() {
         let self = this;
@@ -53,26 +64,22 @@ class ServerImplemented {
         }
     }
     logout() {
-        console.log('logout request');
-        let self = this;
+        console.log("logout request");
         let registrationId = "";
         let msg = {};
-        msg["username"] = this.username;
+        msg["username"] = null;
         msg["registrationId"] = registrationId;
-        if (self.pomelo != null)
-            self.pomelo.notify("connector.entryHandler.logout", msg);
+        if (this.pomelo != null)
+            this.pomelo.notify("connector.entryHandler.logout", msg);
         this.disConnect();
-        self.pomelo = null;
+        this.pomelo = null;
     }
     init(callback) {
-        console.log('serverImp.init()');
         let self = this;
         this._isConnected = false;
-        self.pomelo = Pomelo;
-        self.host = config_1.default.Stalk.chat;
-        self.port = parseInt(config_1.default.Stalk.port);
+        this.pomelo = Pomelo;
         if (!!self.pomelo) {
-            //<!-- Connecting gate server.
+            // <!-- Connecting gate server.
             let params = { host: self.host, port: self.port, reconnect: false };
             self.connectServer(params, (err) => {
                 callback(err, self);
@@ -84,10 +91,33 @@ class ServerImplemented {
     }
     connectServer(params, callback) {
         let self = this;
-        console.log("socket connecting to: ", params);
-        self.pomelo.init(params, function cb(err) {
-            console.log("socket init result: ", err);
+        this.pomelo.init(params, function cb(err) {
+            console.log("socket init... ", err);
+            self.pomelo.setInitCallback(null);
             callback(err);
+        });
+    }
+    listenForPomeloEvents() {
+        this.pomelo.removeAllListeners();
+        this.pomelo.on("onopen", (this.onSocketOpen) ?
+            this.onSocketOpen : (data) => console.log("onopen", data));
+        this.pomelo.on("close", (this.onSocketClose) ?
+            this.onSocketClose : (data) => {
+            console.warn("close", data);
+            this.pomelo.setInitCallback(null);
+        });
+        this.pomelo.on("reconnect", (this.onSocketReconnect) ?
+            this.onSocketReconnect : (data) => console.log("reconnect", data));
+        this.pomelo.on("disconnected", (data) => {
+            console.warn("disconnected", data);
+            this._isConnected = false;
+            this.pomelo.setInitCallback(null);
+            if (this.onDisconnected)
+                this.onDisconnected(data);
+        });
+        this.pomelo.on("io-error", (data) => {
+            console.warn("io-error", data);
+            this.pomelo.setInitCallback(null);
         });
     }
     // region <!-- Authentication...
@@ -98,13 +128,13 @@ class ServerImplemented {
         let self = this;
         if (!!self.pomelo && this._isConnected === false) {
             let msg = { uid: _username };
-            //<!-- Quering connector server.
+            // <!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
                 console.log("QueryConnectorServ", JSON.stringify(result));
                 if (result.code === httpStatusCode_1.default.success) {
                     self.disConnect();
                     let connectorPort = result.port;
-                    //<!-- Connecting to connector server.
+                    // <!-- Connecting to connector server.
                     let params = { host: self.host, port: connectorPort, reconnect: true };
                     self.connectServer(params, (err) => {
                         self._isConnected = true;
@@ -136,14 +166,14 @@ class ServerImplemented {
             });
         }
     }
-    //<!-- Authentication. request for token sign.
+    // <!-- Authentication. request for token sign.
     authenForFrontendServer(_username, _hash, deviceToken, callback) {
         let self = this;
         let msg = {};
         msg["email"] = _username;
         msg["password"] = _hash;
         msg["registrationId"] = deviceToken;
-        //<!-- Authentication.
+        // <!-- Authentication.
         self.pomelo.request("connector.entryHandler.login", msg, function (res) {
             console.log("login response: ", JSON.stringify(res));
             if (res.code === httpStatusCode_1.default.fail) {
@@ -155,9 +185,6 @@ class ServerImplemented {
                 if (callback != null) {
                     callback(null, res);
                 }
-                self.pomelo.on('disconnect', function data(reason) {
-                    self._isConnected = false;
-                });
             }
             else {
                 if (callback !== null) {
@@ -169,11 +196,11 @@ class ServerImplemented {
     gateEnter(uid) {
         let self = this;
         let msg = { uid: uid };
-        return new Promise((resolve, rejected) => {
+        let result = new Promise((resolve, rejected) => {
             if (!!self.pomelo && this._isConnected === false) {
-                //<!-- Quering connector server.
+                // <!-- Quering connector server.
                 self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
-                    console.log("gateEnter", JSON.stringify(result));
+                    console.log("gateEnter", result);
                     if (result.code === httpStatusCode_1.default.success) {
                         self.disConnect();
                         let data = { host: self.host, port: result.port };
@@ -190,20 +217,18 @@ class ServerImplemented {
                 rejected(message);
             }
         });
+        return result;
     }
-    connectorEnter(msg) {
+    signin(msg) {
         let self = this;
         return new Promise((resolve, rejected) => {
-            //<!-- Authentication.
+            // <!-- Authentication.
             self.pomelo.request("connector.entryHandler.login", msg, function (res) {
                 if (res.code === httpStatusCode_1.default.fail) {
                     rejected(res.message);
                 }
                 else if (res.code === httpStatusCode_1.default.success) {
                     resolve(res);
-                    self.pomelo.on('disconnect', function data(reason) {
-                        self._isConnected = false;
-                    });
                 }
                 else {
                     resolve(res);
@@ -261,15 +286,6 @@ class ServerImplemented {
         msg["path"] = path;
         self.pomelo.request("auth.profileHandler.profileImageChanged", msg, (result) => {
             if (callback != null) {
-                callback(null, result);
-            }
-        });
-    }
-    getLastAccessRoomsInfo(msg, callback) {
-        let self = this;
-        //<!-- Get user info.
-        self.pomelo.request("connector.entryHandler.getLastAccessRooms", msg, (result) => {
-            if (callback !== null) {
                 callback(null, result);
             }
         });
@@ -398,7 +414,7 @@ class ServerImplemented {
     }
     requestCreateProjectBaseGroup(groupName, members, callback) {
         let self = this;
-        var msg = {};
+        let msg = {};
         msg["token"] = this.authenData.token;
         msg["groupName"] = groupName;
         msg["members"] = JSON.stringify(members);
@@ -524,7 +540,7 @@ class ServerImplemented {
             }
         });
     }
-    //<!-- Join and leave chat room.
+    // <!-- Join and leave chat room.
     JoinChatRoomRequest(token, username, room_id, callback) {
         let self = this;
         let msg = {};
@@ -532,40 +548,19 @@ class ServerImplemented {
         msg["rid"] = room_id;
         msg["username"] = username;
         self.pomelo.request("connector.entryHandler.enterRoom", msg, (result) => {
-            console.log("JoinChatRoom: " + JSON.stringify(result));
             if (callback !== null) {
                 callback(null, result);
             }
         });
     }
-    LeaveChatRoomRequest(token, roomId, username, callback) {
+    LeaveChatRoomRequest(token, roomId, callback) {
         let self = this;
-        var msg = {};
+        let msg = {};
         msg["token"] = token;
         msg["rid"] = roomId;
-        msg["username"] = username;
         self.pomelo.request("connector.entryHandler.leaveRoom", msg, (result) => {
             if (callback != null)
                 callback(null, result);
-        });
-    }
-    /// <summary>
-    /// Gets the room info. For load Room info by room_id.
-    /// </summary>
-    /// <c> return data</c>
-    getRoomInfo(msg, callback) {
-        let self = this;
-        self.pomelo.request("chat.chatRoomHandler.getRoomInfo", msg, (result) => {
-            if (callback != null)
-                callback(null, result);
-        });
-    }
-    getUnreadMsgOfRoom(msg, callback) {
-        let self = this;
-        self.pomelo.request("chat.chatRoomHandler.getUnreadRoomMessage", msg, (result) => {
-            if (callback != null) {
-                callback(null, result);
-            }
         });
     }
     //endregion
@@ -618,6 +613,4 @@ class ServerImplemented {
         });
     }
 }
-ServerImplemented.connectionProblemString = 'Server connection is unstable.';
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = ServerImplemented;
+exports.ServerImplemented = ServerImplemented;
