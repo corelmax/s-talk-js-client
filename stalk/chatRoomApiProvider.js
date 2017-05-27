@@ -1,18 +1,19 @@
-export default class ChatRoomApiProvider {
-    constructor(socket) {
+"use strict";
+var ChatRoomApiProvider = (function () {
+    function ChatRoomApiProvider(socket) {
         this.pomelo = socket;
     }
-    chat(target, _message, callback) {
-        this.pomelo.request("chat.chatHandler.send", _message, (result) => {
-            let data = JSON.parse(JSON.stringify(result));
+    ChatRoomApiProvider.prototype.chat = function (target, _message, callback) {
+        this.pomelo.request("chat.chatHandler.send", _message, function (result) {
+            var data = JSON.parse(JSON.stringify(result));
             if (callback !== null)
                 callback(null, data);
         });
-    }
+    };
     /**
      * @deprecated please use chat instead.
      */
-    chatFile(room_id, target, sender_id, fileUrl, contentType, meta, callback) {
+    ChatRoomApiProvider.prototype.chatFile = function (room_id, target, sender_id, fileUrl, contentType, meta, callback) {
         console.log("Send file to ", target);
         var message = {};
         message["rid"] = room_id;
@@ -21,7 +22,7 @@ export default class ChatRoomApiProvider {
         message["target"] = target;
         message["meta"] = meta;
         message["type"] = contentType;
-        this.pomelo.request("chat.chatHandler.send", message, (result) => {
+        this.pomelo.request("chat.chatHandler.send", message, function (result) {
             var data = JSON.parse(JSON.stringify(result));
             console.log("chatFile callback: ", data);
             if (data.code == 200) {
@@ -33,15 +34,15 @@ export default class ChatRoomApiProvider {
                 console.error("WTF", "WTF god only know.");
             }
         });
-    }
-    getSyncDateTime(callback) {
+    };
+    ChatRoomApiProvider.prototype.getSyncDateTime = function (callback) {
         var message = {};
-        this.pomelo.request("chat.chatHandler.getSyncDateTime", message, (result) => {
+        this.pomelo.request("chat.chatHandler.getSyncDateTime", message, function (result) {
             if (callback != null) {
                 callback(null, result);
             }
         });
-    }
+    };
     /**
      * getChatHistory function used for pull history chat record...
      * Beware!!! please call before JoinChatRoom.
@@ -49,65 +50,68 @@ export default class ChatRoomApiProvider {
      * @param lastAccessTime
      * @param callback
      */
-    getChatHistory(room_id, lastAccessTime, callback) {
+    ChatRoomApiProvider.prototype.getChatHistory = function (room_id, lastAccessTime, callback) {
         var message = {};
         message["rid"] = room_id;
         if (lastAccessTime != null) {
             //<!-- Only first communication is has a problem.
             message["lastAccessTime"] = lastAccessTime.toString();
         }
-        this.pomelo.request("chat.chatHandler.getChatHistory", message, (result) => {
+        this.pomelo.request("chat.chatHandler.getChatHistory", message, function (result) {
             if (callback !== null)
                 callback(null, result);
         });
-    }
+    };
     /**
      * get older message histories.
      */
-    getOlderMessageChunk(roomId, topEdgeMessageTime, callback) {
+    ChatRoomApiProvider.prototype.getOlderMessageChunk = function (roomId, topEdgeMessageTime, callback) {
         var message = {};
         message["rid"] = roomId;
         message["topEdgeMessageTime"] = topEdgeMessageTime.toString();
-        this.pomelo.request("chat.chatHandler.getOlderMessageChunk", message, (result) => {
+        this.pomelo.request("chat.chatHandler.getOlderMessageChunk", message, function (result) {
             if (callback !== null)
                 callback(null, result);
         });
-    }
-    checkOlderMessagesCount(roomId, topEdgeMessageTime, callback) {
-        let message = {};
+    };
+    ChatRoomApiProvider.prototype.checkOlderMessagesCount = function (roomId, topEdgeMessageTime, callback) {
+        var message = {};
         message["rid"] = roomId;
         message["topEdgeMessageTime"] = topEdgeMessageTime.toString();
-        this.pomelo.request("chat.chatHandler.checkOlderMessagesCount", message, (result) => {
+        this.pomelo.request("chat.chatHandler.checkOlderMessagesCount", message, function (result) {
             if (callback !== null)
                 callback(null, result);
         });
-    }
-    getMessagesReaders(topEdgeMessageTime) {
+    };
+    ChatRoomApiProvider.prototype.getMessagesReaders = function (topEdgeMessageTime) {
         var message = {};
         message["topEdgeMessageTime"] = topEdgeMessageTime;
-        this.pomelo.request("chat.chatHandler.getMessagesReaders", message, (result) => {
+        this.pomelo.request("chat.chatHandler.getMessagesReaders", message, function (result) {
             console.info('getMessagesReaders respones: ', result);
         });
-    }
-    getMessageContent(messageId, callback) {
+    };
+    ChatRoomApiProvider.prototype.getMessageContent = function (messageId, callback) {
         var message = {};
         message["messageId"] = messageId;
-        this.pomelo.request("chat.chatHandler.getMessageContent", message, (result) => {
+        this.pomelo.request("chat.chatHandler.getMessageContent", message, function (result) {
             if (!!callback) {
                 callback(null, result);
             }
         });
-    }
-    updateMessageReader(messageId, roomId) {
+    };
+    ChatRoomApiProvider.prototype.updateMessageReader = function (messageId, roomId) {
         var message = {};
         message["messageId"] = messageId;
         message["roomId"] = roomId;
         this.pomelo.notify("chat.chatHandler.updateWhoReadMessage", message);
-    }
-    updateMessageReaders(messageIds, roomId) {
+    };
+    ChatRoomApiProvider.prototype.updateMessageReaders = function (messageIds, roomId) {
         var message = {};
         message["messageIds"] = JSON.stringify(messageIds);
         message["roomId"] = roomId;
         this.pomelo.notify("chat.chatHandler.updateWhoReadMessages", message);
-    }
-}
+    };
+    return ChatRoomApiProvider;
+}());
+exports.__esModule = true;
+exports["default"] = ChatRoomApiProvider;

@@ -1,5 +1,17 @@
-﻿export namespace absSpartan {
-    export interface IChatServerListener {
+﻿/**
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
+ * Support by@ nattapon.r@live.com
+ * 
+ * Ahoo Studio.co.th 
+ */
+
+export namespace StalkEvents {
+    export const ON_PUSH = "ON_PUSH";
+    export interface IPushServerListener {
+        onPush(dataEvent);
+    }
+
+    export interface IChatServerEvents {
         onChat(data);
         onMessageRead(dataEvent);
         onGetMessagesReaders(dataEvent);
@@ -37,11 +49,4 @@
         onUserUpdateImageProfile(dataEvent);
         onUserUpdateProfile(dataEvent);
     }
-    export interface IPushServerListener {
-        onPush(dataEvent);
-    }
-}
-
-export namespace StalkEvents {
-    export const ON_PUSH = "ON_PUSH";
 }

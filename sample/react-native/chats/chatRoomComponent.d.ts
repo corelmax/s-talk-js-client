@@ -1,0 +1,33 @@
+import { absSpartan } from "../libs/stalk/spartanEvents";
+import { Member, Message } from "./models/ChatDataModels";
+export default class ChatRoomComponent implements absSpartan.IChatServerListener {
+    private static instance;
+    static getInstance(): ChatRoomComponent;
+    chatMessages: Array<Message>;
+    chatroomDelegate: (eventName: string, data: any) => void;
+    outsideRoomDelegete: (eventName: string, data: any) => void;
+    private chatRoomApi;
+    private roomId;
+    getRoomId(): string;
+    setRoomId(rid: string): void;
+    private messageDAL;
+    private secure;
+    constructor();
+    onChat(chatMessage: Message): void;
+    onLeaveRoom(data: any): void;
+    onRoomJoin(data: any): void;
+    onMessageRead(dataEvent: any): void;
+    onGetMessagesReaders(dataEvent: any): void;
+    getPersistentMessage(rid: string, done: (err, messages) => void): void;
+    getNewerMessageRecord(callback: (err, res) => void): void;
+    private getNewerMessageFromNet(lastMessageTime, callback);
+    getOlderMessageChunk(callback: (err, res) => void): void;
+    checkOlderMessages(callback: (err, res) => void): void;
+    private getTopEdgeMessageTime(callback);
+    private compareMessage(a, b);
+    getMessage(chatId: any, Chats: any, callback: (joinRoomRes: any) => void): void;
+    updateReadMessages(): void;
+    updateWhoReadMyMessages(): void;
+    getMemberProfile(member: Member, callback: (err, res) => void): void;
+    dispose(): void;
+}

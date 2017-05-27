@@ -1,5 +1,5 @@
 ﻿/**
- * Stalk-JavaScript, Node.js client. Supported react-native.
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by@ nattapon.r@live.com
  * 
  * Ahoo Studio.co.th 

@@ -1,21 +1,17 @@
-import { ServerImplemented, IDictionary, ServerParam } from "./lib/browser/serverImplemented";
-import { ChatRoomApiProvider } from "./lib/browser/chatRoomApiProvider";
-import { ServerEventListener } from "./lib/browser/serverEventListener";
+/**
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
+ * Support by@ nattapon.r@live.com
+ * 
+ * Ahoo Studio.co.th 
+ */
 
-import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { TokenDecode } from "./lib/utils/tokenDecode";
+export { ServerImplemented, ServerParam, IDictionary } from "./lib/browser/serverImplemented";
+export { ChatRoomApiProvider } from "./lib/browser/chatRoomApiProvider";
+export { StalkEvents } from "./lib/browser/StalkEvents";
 
-// let Stalk = Object.create(null);
-export const Stalk = ServerImplemented; // require("./lib/browser/serverImplemented");
-export const ChatRoom = ChatRoomApiProvider; // require("./lib/browser/chatRoomApiProvider");
-export const Events = ServerEventListener;
+export { HttpStatusCode } from "./lib/utils/httpStatusCode";
+export { TokenDecode } from "./lib/utils/tokenDecode";
 
-export let Utils = Object.create(null);
-Utils.token = TokenDecode;
-Utils.statusCode = HttpStatusCode;
-
-export type ServerImplemented = ServerImplemented;
-export type IDictionary = IDictionary;
-export type ServerParam = ServerParam;
-
-// export default Stalk;
+export module Stalk {
+    export var server: any;
+};
