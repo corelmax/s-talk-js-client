@@ -4,7 +4,7 @@
  * HttpStatusCode.
  */
 
-export default class HttpStatusCode {
+export class HttpStatusCode {
     static success = 200;
     static noContent = 204;
     static fail = 500;

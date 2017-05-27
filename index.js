@@ -1,1 +1,15 @@
-module.exports = require("./lib/browser/serverImplemented");
+"use strict";
+const serverImplemented_1 = require("./lib/browser/serverImplemented");
+const chatRoomApiProvider_1 = require("./lib/browser/chatRoomApiProvider");
+const serverEventListener_1 = require("./lib/browser/serverEventListener");
+const httpStatusCode_1 = require("./lib/utils/httpStatusCode");
+const tokenDecode_1 = require("./lib/utils/tokenDecode");
+let Stalk = Object.create(null);
+Stalk.Stalk = serverImplemented_1.ServerImplemented; // require("./lib/browser/serverImplemented");
+Stalk.ChatRoom = chatRoomApiProvider_1.ChatRoomApiProvider; // require("./lib/browser/chatRoomApiProvider");
+Stalk.Events = serverEventListener_1.ServerEventListener;
+Stalk.Utils = Object.create(null);
+Stalk.Utils.token = tokenDecode_1.TokenDecode;
+Stalk.Utils.statusCode = httpStatusCode_1.HttpStatusCode;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Stalk;

@@ -1,6 +1,6 @@
 import { IDictionary, IPomelo } from "./serverImplemented";
 
-export default class ChatRoomApiProvider {
+export class ChatRoomApiProvider {
     pomelo: IPomelo;
     constructor(socket) {
         this.pomelo = socket;

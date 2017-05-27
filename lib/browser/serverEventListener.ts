@@ -6,7 +6,7 @@
 
 import { absSpartan, StalkEvents } from "./spartanEvents";
 
-export default class ServerEventListener {
+export class ServerEventListener {
     public static ON_ADD: string = "onAdd";
     public static ON_LEAVE: string = "onLeave";
     public static ON_CHAT: string = "onChat";

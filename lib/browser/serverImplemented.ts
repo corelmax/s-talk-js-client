@@ -5,10 +5,9 @@
  * Ahoo Studio.co.th 
  */
 
-import HttpStatusCode from '../utils/httpStatusCode';
-import TokenDecode from '../utils/tokenDecode';
+import { HttpStatusCode } from '../utils/httpStatusCode';
+import { TokenDecode } from '../utils/tokenDecode';
 import * as EventEmitter from "events";
-
 const Pomelo = require("../pomelo/reactWSClient");
 
 export abstract class IPomelo extends EventEmitter {
@@ -120,6 +119,8 @@ export class ServerImplemented {
         let self = this;
         this._isConnected = false;
         this.pomelo = Pomelo;
+
+        console.log("stalkInit...");
 
         if (!!self.pomelo) {
             // <!-- Connecting gate server.
