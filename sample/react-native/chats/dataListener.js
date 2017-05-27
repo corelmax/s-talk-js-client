@@ -1,5 +1,4 @@
-"use strict";
-class DataListener {
+export default class DataListener {
     constructor(dataManager) {
         this.notifyNewMessageEvents = new Array();
         this.chatListenerImps = new Array();
@@ -159,5 +158,3 @@ class DataListener {
     }
     ;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = DataListener;

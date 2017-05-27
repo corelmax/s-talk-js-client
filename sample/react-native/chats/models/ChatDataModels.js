@@ -1,11 +1,10 @@
-"use strict";
-var RoomType;
+export var RoomType;
 (function (RoomType) {
     RoomType[RoomType["organizationGroup"] = 0] = "organizationGroup";
     RoomType[RoomType["projectBaseGroup"] = 1] = "projectBaseGroup";
     RoomType[RoomType["privateGroup"] = 2] = "privateGroup";
     RoomType[RoomType["privateChat"] = 3] = "privateChat";
-})(RoomType = exports.RoomType || (exports.RoomType = {}));
+})(RoomType || (RoomType = {}));
 ;
 var RoomStatus;
 (function (RoomStatus) {
@@ -14,7 +13,7 @@ var RoomStatus;
     RoomStatus[RoomStatus["delete"] = 2] = "delete";
 })(RoomStatus || (RoomStatus = {}));
 ;
-class Room {
+export class Room {
     constructor() {
         this._visibility = true;
     }
@@ -28,16 +27,15 @@ class Room {
         this.name = name;
     }
 }
-exports.Room = Room;
-var MemberRole;
+export var MemberRole;
 (function (MemberRole) {
     MemberRole[MemberRole["member"] = 0] = "member";
     MemberRole[MemberRole["admin"] = 1] = "admin";
-})(MemberRole = exports.MemberRole || (exports.MemberRole = {}));
+})(MemberRole || (MemberRole = {}));
 /**
  * @ ContentType
  */
-var ContentType;
+export var ContentType;
 (function (ContentType) {
     ContentType[ContentType["Unload"] = 0] = "Unload";
     ContentType[ContentType["File"] = 1] = "File";
@@ -47,11 +45,10 @@ var ContentType;
     ContentType[ContentType["Video"] = 5] = "Video";
     ContentType[ContentType["Sticker"] = 6] = "Sticker";
     ContentType[ContentType["Location"] = 7] = "Location";
-})(ContentType = exports.ContentType || (exports.ContentType = {}));
+})(ContentType || (ContentType = {}));
 /**
  * @StlakAccount...
  */
-class StalkAccount {
+export class StalkAccount {
 }
-exports.StalkAccount = StalkAccount;
 ;

@@ -3,10 +3,9 @@
  *
  * This is pure function for redux app.
  */
-"use strict";
-const chatroomActions_1 = require("./chatroomActions");
-const StalkBridgeActions = require("../stalkBridge/stalkBridgeActions");
-const immutable_1 = require("immutable");
+import { ChatRoomActionsType } from "./chatroomActions";
+import * as StalkBridgeActions from "../stalkBridge/stalkBridgeActions";
+import { Record } from 'immutable';
 /**
  * ## Initial State
  */
@@ -15,7 +14,7 @@ const immutable_1 = require("immutable");
  * This Record contains the state of the form and the
  * fields it contains.
  */
-exports.ChatRoomInitState = immutable_1.Record({
+export const ChatRoomInitState = Record({
     selectRoom: null,
     responseMessage: null,
     newMessage: null,
@@ -25,61 +24,61 @@ exports.ChatRoomInitState = immutable_1.Record({
     state: null,
     error: null,
 });
-const initialState = new exports.ChatRoomInitState;
-function chatRoomReducer(state = initialState, action) {
-    if (!(state instanceof exports.ChatRoomInitState))
+const initialState = new ChatRoomInitState;
+export function chatRoomReducer(state = initialState, action) {
+    if (!(state instanceof ChatRoomInitState))
         return initialState.mergeDeep(state);
     switch (action.type) {
-        case chatroomActions_1.ChatRoomActionsType.STOP: {
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.STOP);
+        case ChatRoomActionsType.STOP: {
+            return state.set("state", ChatRoomActionsType.STOP);
         }
-        case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_REQUEST: {
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_REQUEST)
+        case ChatRoomActionsType.SEND_MESSAGE_REQUEST: {
+            let nextState = state.set("state", ChatRoomActionsType.SEND_MESSAGE_REQUEST)
                 .set("isFetching", true);
             return nextState;
         }
-        case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_SUCCESS: {
+        case ChatRoomActionsType.SEND_MESSAGE_SUCCESS: {
             let payload = action.payload;
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_SUCCESS)
+            let nextState = state.set("state", ChatRoomActionsType.SEND_MESSAGE_SUCCESS)
                 .set("isFetching", false)
                 .set("responseMessage", payload);
             return nextState;
         }
-        case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_FAILURE: {
+        case ChatRoomActionsType.SEND_MESSAGE_FAILURE: {
             let payload = action.payload;
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_FAILURE)
+            let nextState = state.set("state", ChatRoomActionsType.SEND_MESSAGE_FAILURE)
                 .set("isFetching", false)
                 .set("responseMessage", payload);
             return nextState;
         }
-        case chatroomActions_1.ChatRoomActionsType.REPLACE_MESSAGE: {
+        case ChatRoomActionsType.REPLACE_MESSAGE: {
             let payload = action.payload;
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.REPLACE_MESSAGE)
+            return state.set("state", ChatRoomActionsType.REPLACE_MESSAGE)
                 .set("newMessage", payload);
         }
-        case chatroomActions_1.ChatRoomActionsType.ON_NEW_MESSAGE: {
+        case ChatRoomActionsType.ON_NEW_MESSAGE: {
             let payload = action.payload;
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.ON_NEW_MESSAGE)
+            return state.set("state", ChatRoomActionsType.ON_NEW_MESSAGE)
                 .set("newMessage", payload);
         }
-        case chatroomActions_1.ChatRoomActionsType.ON_EARLY_MESSAGE_READY: {
+        case ChatRoomActionsType.ON_EARLY_MESSAGE_READY: {
             let payload = action.payload;
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.ON_EARLY_MESSAGE_READY)
+            return state.set("state", ChatRoomActionsType.ON_EARLY_MESSAGE_READY)
                 .set("earlyMessageReady", payload);
         }
-        case chatroomActions_1.ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS: {
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS);
+        case ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS: {
+            return state.set("state", ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS);
         }
-        case chatroomActions_1.ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS: {
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS);
+        case ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS: {
+            return state.set("state", ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS);
         }
-        case chatroomActions_1.ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS: {
-            return state.set("state", chatroomActions_1.ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS);
+        case ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS: {
+            return state.set("state", ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS);
         }
-        case chatroomActions_1.ChatRoomActionsType.SELECT_CHAT_ROOM: {
+        case ChatRoomActionsType.SELECT_CHAT_ROOM: {
             let roomInfo = (!!action.payload) ? action.payload : state.get("selectRoom");
             return state
-                .set("state", chatroomActions_1.ChatRoomActionsType.SELECT_CHAT_ROOM)
+                .set("state", ChatRoomActionsType.SELECT_CHAT_ROOM)
                 .set("selectRoom", roomInfo);
         }
         case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST: {
@@ -100,4 +99,3 @@ function chatRoomReducer(state = initialState, action) {
             return state;
     }
 }
-exports.chatRoomReducer = chatRoomReducer;

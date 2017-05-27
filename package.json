@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.2-beta10",
+  "version": "0.0.2-beta12",
   "description": "stalk javascript client.",
   "main": "index.js",
   "repository": {
