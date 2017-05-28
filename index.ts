@@ -5,13 +5,17 @@
  * Ahoo Studio.co.th 
  */
 
-export { ServerImplemented, ServerParam, IDictionary } from "./lib/browser/serverImplemented";
-export { ChatRoomApiProvider } from "./lib/browser/chatRoomApiProvider";
+export { Stalk } from "./lib/browser/serverImplemented";
+export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
 export { StalkEvents } from "./lib/browser/StalkEvents";
 
-export { HttpStatusCode } from "./lib/utils/httpStatusCode";
-export { TokenDecode } from "./lib/utils/tokenDecode";
+import { HttpStatusCode } from "./lib/utils/httpStatusCode";
+import { TokenDecode } from "./lib/utils/tokenDecode";
+import { ServerParam, DataDict } from "./lib/browser/serverImplemented";
 
-export module Stalk {
-    export var server: any;
-};
+export namespace Utils {
+    export var statusCode = HttpStatusCode;
+    export var tokenDecode = TokenDecode;
+    export var serverParam = ServerParam;
+    export var dataDict = DataDict;
+}

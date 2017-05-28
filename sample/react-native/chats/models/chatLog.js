@@ -1,21 +1,17 @@
-"use strict";
-var ChatLog = (function () {
-    function ChatLog(room) {
+export default class ChatLog {
+    constructor(room) {
         this.id = room._id;
         this.roomName = room.name;
         this.roomType = room.type;
         this.room = room;
     }
-    ChatLog.prototype.setNotiCount = function (count) {
+    setNotiCount(count) {
         this.count = count;
-    };
-    ChatLog.prototype.setLastMessage = function (lastMessage) {
+    }
+    setLastMessage(lastMessage) {
         this.lastMessage = lastMessage;
-    };
-    ChatLog.prototype.setLastMessageTime = function (lastMessageTime) {
+    }
+    setLastMessageTime(lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
-    };
-    return ChatLog;
-}());
-exports.__esModule = true;
-exports["default"] = ChatLog;
+    }
+}

@@ -5,8 +5,8 @@
  * Ahoo Studio.co.th
  */
 
-import HttpStatusCode from "../utils/httpStatusCode";
-import TokenDecode from "../utils/tokenDecode";
+import { HttpStatusCode } from "../utils/httpStatusCode";
+import { TokenDecode } from "../utils/tokenDecode";
 
 const Pomelo = require("../pomelo/nodeWSClient");
 const Config = require(dirname + "/stalk_config.json");

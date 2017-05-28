@@ -4,19 +4,16 @@
  *
  * Ahoo Studio.co.th
  */
-"use strict";
-var serverImplemented_1 = require("./lib/browser/serverImplemented");
-exports.ServerImplemented = serverImplemented_1.ServerImplemented;
-exports.ServerParam = serverImplemented_1.ServerParam;
-var chatRoomApiProvider_1 = require("./lib/browser/chatRoomApiProvider");
-exports.ChatRoomApiProvider = chatRoomApiProvider_1.ChatRoomApiProvider;
-var StalkEvents_1 = require("./lib/browser/StalkEvents");
-exports.StalkEvents = StalkEvents_1.StalkEvents;
-var httpStatusCode_1 = require("./lib/utils/httpStatusCode");
-exports.HttpStatusCode = httpStatusCode_1.HttpStatusCode;
-var tokenDecode_1 = require("./lib/utils/tokenDecode");
-exports.TokenDecode = tokenDecode_1.TokenDecode;
-var Stalk;
-(function (Stalk) {
-})(Stalk = exports.Stalk || (exports.Stalk = {}));
-;
+export { Stalk } from "./lib/browser/serverImplemented";
+export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
+export { StalkEvents } from "./lib/browser/StalkEvents";
+import { HttpStatusCode } from "./lib/utils/httpStatusCode";
+import { TokenDecode } from "./lib/utils/tokenDecode";
+import { ServerParam, DataDict } from "./lib/browser/serverImplemented";
+export var Utils;
+(function (Utils) {
+    Utils.statusCode = HttpStatusCode;
+    Utils.tokenDecode = TokenDecode;
+    Utils.serverParam = ServerParam;
+    Utils.dataDict = DataDict;
+})(Utils || (Utils = {}));
