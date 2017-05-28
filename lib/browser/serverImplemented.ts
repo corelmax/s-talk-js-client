@@ -6,11 +6,11 @@
  */
 
 import { HttpStatusCode } from '../utils/httpStatusCode';
-import { TokenDecode } from '../utils/tokenDecode';
+import { Authen } from '../utils/tokenDecode';
 import * as EventEmitter from "events";
 const Pomelo = require("../pomelo/reactWSClient");
 
-export abstract class IPomelo extends EventEmitter {
+export interface IPomelo extends EventEmitter {
     init;
     notify;
     request;
@@ -19,14 +19,6 @@ export abstract class IPomelo extends EventEmitter {
     setInitCallback: (error: string) => void;
 };
 export interface IServer { host: string; port: number; };
-export class ServerParam implements IServer {
-    host: string;
-    port: number;
-    reconnect: boolean;
-}
-export class DataDict implements Stalk.IDictionary {
-    [k: string]: string;
-}
 
 export namespace Stalk {
     export class ServerImplemented {
@@ -311,7 +303,7 @@ export namespace Stalk {
             if (tokenRes.code === HttpStatusCode.success) {
                 var data = tokenRes.data;
                 var decode = data.decoded; //["decoded"];
-                var decodedModel: TokenDecode = JSON.parse(JSON.stringify(decode));
+                var decodedModel = JSON.parse(JSON.stringify(decode)) as Authen.TokenDecoded;
                 if (onSuccessCheckToken != null)
                     onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
             }
@@ -729,5 +721,10 @@ export namespace Stalk {
     }
     export interface IDictionary {
         [k: string]: string;
+    }
+    export class ServerParam implements IServer {
+        host: string;
+        port: number;
+        reconnect: boolean;
     }
 }

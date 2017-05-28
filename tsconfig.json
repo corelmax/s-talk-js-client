@@ -1,7 +1,8 @@
 {
     "compileOnSave": true,
     "compilerOptions": {
-        "target": "es2015",
+        "target": "es5",
+        "module": "commonjs",
         "typeRoots": [
             "node_modules/@types"
         ],

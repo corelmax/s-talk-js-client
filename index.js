@@ -4,16 +4,17 @@
  *
  * Ahoo Studio.co.th
  */
-export { Stalk } from "./lib/browser/serverImplemented";
-export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
-export { StalkEvents } from "./lib/browser/StalkEvents";
-import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { TokenDecode } from "./lib/utils/tokenDecode";
-import { ServerParam, DataDict } from "./lib/browser/serverImplemented";
-export var Utils;
+"use strict";
+var serverImplemented_1 = require("./lib/browser/serverImplemented");
+exports.Stalk = serverImplemented_1.Stalk;
+var chatRoomApiProvider_1 = require("./lib/browser/chatRoomApiProvider");
+exports.ChatRoomApi = chatRoomApiProvider_1.ChatRoomApi;
+var StalkEvents_1 = require("./lib/browser/StalkEvents");
+exports.StalkEvents = StalkEvents_1.StalkEvents;
+var httpStatusCode_1 = require("./lib/utils/httpStatusCode");
+var tokenDecode_1 = require("./lib/utils/tokenDecode");
+var Utils;
 (function (Utils) {
-    Utils.statusCode = HttpStatusCode;
-    Utils.tokenDecode = TokenDecode;
-    Utils.serverParam = ServerParam;
-    Utils.dataDict = DataDict;
-})(Utils || (Utils = {}));
+    Utils.statusCode = httpStatusCode_1.HttpStatusCode;
+    Utils.tokenDecode = tokenDecode_1.Authen.TokenDecoded;
+})(Utils = exports.Utils || (exports.Utils = {}));

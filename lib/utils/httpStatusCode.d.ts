@@ -3,10 +3,10 @@
  *
  * HttpStatusCode.
  */
-export declare class HttpStatusCode {
-    static success: number;
-    static noContent: number;
-    static fail: number;
-    static requestTimeout: number;
-    static duplicateLogin: number;
+export declare namespace HttpStatusCode {
+    const success = 200;
+    const noContent = 204;
+    const fail = 500;
+    const requestTimeout = 408;
+    const duplicateLogin = 1004;
 }

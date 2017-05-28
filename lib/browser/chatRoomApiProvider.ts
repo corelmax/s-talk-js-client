@@ -1,4 +1,5 @@
-import { IPomelo, DataDict } from "./serverImplemented";
+import { IPomelo, Stalk } from "./serverImplemented";
+type DataDict = Stalk.IDictionary;
 
 export namespace ChatRoomApi {
     export class ChatRoomApiProvider {

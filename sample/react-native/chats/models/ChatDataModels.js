@@ -1,10 +1,11 @@
-export var RoomType;
+"use strict";
+var RoomType;
 (function (RoomType) {
     RoomType[RoomType["organizationGroup"] = 0] = "organizationGroup";
     RoomType[RoomType["projectBaseGroup"] = 1] = "projectBaseGroup";
     RoomType[RoomType["privateGroup"] = 2] = "privateGroup";
     RoomType[RoomType["privateChat"] = 3] = "privateChat";
-})(RoomType || (RoomType = {}));
+})(RoomType = exports.RoomType || (exports.RoomType = {}));
 ;
 var RoomStatus;
 (function (RoomStatus) {
@@ -13,29 +14,39 @@ var RoomStatus;
     RoomStatus[RoomStatus["delete"] = 2] = "delete";
 })(RoomStatus || (RoomStatus = {}));
 ;
-export class Room {
-    constructor() {
+var Room = (function () {
+    function Room() {
         this._visibility = true;
     }
-    set visibility(_boo) {
-        this._visibility = _boo;
-    }
-    get visibilty() {
-        return this._visibility;
-    }
-    setName(name) {
+    Object.defineProperty(Room.prototype, "visibility", {
+        set: function (_boo) {
+            this._visibility = _boo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Room.prototype, "visibilty", {
+        get: function () {
+            return this._visibility;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Room.prototype.setName = function (name) {
         this.name = name;
-    }
-}
-export var MemberRole;
+    };
+    return Room;
+}());
+exports.Room = Room;
+var MemberRole;
 (function (MemberRole) {
     MemberRole[MemberRole["member"] = 0] = "member";
     MemberRole[MemberRole["admin"] = 1] = "admin";
-})(MemberRole || (MemberRole = {}));
+})(MemberRole = exports.MemberRole || (exports.MemberRole = {}));
 /**
  * @ ContentType
  */
-export var ContentType;
+var ContentType;
 (function (ContentType) {
     ContentType[ContentType["Unload"] = 0] = "Unload";
     ContentType[ContentType["File"] = 1] = "File";
@@ -45,10 +56,14 @@ export var ContentType;
     ContentType[ContentType["Video"] = 5] = "Video";
     ContentType[ContentType["Sticker"] = 6] = "Sticker";
     ContentType[ContentType["Location"] = 7] = "Location";
-})(ContentType || (ContentType = {}));
+})(ContentType = exports.ContentType || (exports.ContentType = {}));
 /**
  * @StlakAccount...
  */
-export class StalkAccount {
-}
+var StalkAccount = (function () {
+    function StalkAccount() {
+    }
+    return StalkAccount;
+}());
+exports.StalkAccount = StalkAccount;
 ;

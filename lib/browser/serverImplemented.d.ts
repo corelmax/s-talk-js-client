@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import * as EventEmitter from "events";
-export declare abstract class IPomelo extends EventEmitter {
+export interface IPomelo extends EventEmitter {
     init: any;
     notify: any;
     request: any;
@@ -11,14 +11,6 @@ export declare abstract class IPomelo extends EventEmitter {
 export interface IServer {
     host: string;
     port: number;
-}
-export declare class ServerParam implements IServer {
-    host: string;
-    port: number;
-    reconnect: boolean;
-}
-export declare class DataDict implements Stalk.IDictionary {
-    [k: string]: string;
 }
 export declare namespace Stalk {
     class ServerImplemented {
@@ -86,5 +78,10 @@ export declare namespace Stalk {
     }
     interface IDictionary {
         [k: string]: string;
+    }
+    class ServerParam implements IServer {
+        host: string;
+        port: number;
+        reconnect: boolean;
     }
 }

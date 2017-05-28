@@ -10,12 +10,9 @@ export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
 export { StalkEvents } from "./lib/browser/StalkEvents";
 
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { TokenDecode } from "./lib/utils/tokenDecode";
-import { ServerParam, DataDict } from "./lib/browser/serverImplemented";
+import { Authen } from "./lib/utils/tokenDecode";
 
 export namespace Utils {
     export var statusCode = HttpStatusCode;
-    export var tokenDecode = TokenDecode;
-    export var serverParam = ServerParam;
-    export var dataDict = DataDict;
+    export var tokenDecode = Authen.TokenDecoded;
 }

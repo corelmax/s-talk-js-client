@@ -1,27 +1,31 @@
-import Stalk from "./serverImplemented";
+"use strict";
+var serverImplemented_1 = require("./serverImplemented");
 /**
  * FriendApiProvider
  */
-export default class FriendApiProvider {
-    static getInstance() {
+var FriendApiProvider = (function () {
+    function FriendApiProvider() {
+        console.log("FriendApiProvider constructor");
+    }
+    FriendApiProvider.getInstance = function () {
         if (!FriendApiProvider.instance) {
             FriendApiProvider.instance = new FriendApiProvider();
         }
         return FriendApiProvider.instance;
-    }
-    constructor() {
-        console.log("FriendApiProvider constructor");
-    }
-    friendRequest(token, myId, targetUid, callback) {
+    };
+    FriendApiProvider.prototype.friendRequest = function (token, myId, targetUid, callback) {
         console.log('friendRequest', token);
-        let self = this;
-        let msg = {};
+        var self = this;
+        var msg = {};
         msg["token"] = token;
         msg["targetUid"] = targetUid;
-        Stalk.getInstance().pomelo.request("auth.userHandler.addFriend", msg, (result) => {
+        serverImplemented_1.default.getInstance().pomelo.request("auth.userHandler.addFriend", msg, function (result) {
             if (callback != null) {
                 callback(null, result);
             }
         });
-    }
-}
+    };
+    return FriendApiProvider;
+}());
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = FriendApiProvider;

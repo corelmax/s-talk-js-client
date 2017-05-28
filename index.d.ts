@@ -8,11 +8,8 @@ export { Stalk } from "./lib/browser/serverImplemented";
 export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
 export { StalkEvents } from "./lib/browser/StalkEvents";
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { TokenDecode } from "./lib/utils/tokenDecode";
-import { ServerParam, DataDict } from "./lib/browser/serverImplemented";
+import { Authen } from "./lib/utils/tokenDecode";
 export declare namespace Utils {
     var statusCode: typeof HttpStatusCode;
-    var tokenDecode: typeof TokenDecode;
-    var serverParam: typeof ServerParam;
-    var dataDict: typeof DataDict;
+    var tokenDecode: typeof Authen.TokenDecoded;
 }
