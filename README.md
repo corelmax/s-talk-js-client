@@ -1,5 +1,5 @@
 # stalk-javascript-client
-Stalk client-api for javascript client.
+Stalk javascript client-api.
 
 ```javascript
 $ npm install stalk-js --save
@@ -11,7 +11,7 @@ $ yarn add stalk-js
 ### Example
 ```javascript
  /**
- * Copyright 2016 Ahoo Studio.co.th.
+ * Copyright 2016-2017 Ahoo Studio.co.th.
  *
  */
 
