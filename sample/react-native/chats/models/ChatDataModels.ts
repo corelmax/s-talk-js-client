@@ -81,7 +81,7 @@ export type ContactInfo = {
 export type Message = {
     _id: string;
     rid: string;
-    type: ContentType;
+    type: string;
     body: string;
     sender: string;
     duration: string;

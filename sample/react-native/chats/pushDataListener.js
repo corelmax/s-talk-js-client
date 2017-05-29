@@ -1,18 +1,19 @@
 "use strict";
-class PushDataListener {
-    constructor() {
+var PushDataListener = (function () {
+    function PushDataListener() {
         this.onPushEvents = new Array();
     }
-    addPushEvents(fx) {
+    PushDataListener.prototype.addPushEvents = function (fx) {
         this.onPushEvents.push(fx);
-    }
-    removePushEvents(fx) {
-        let id = this.onPushEvents.indexOf(fx);
+    };
+    PushDataListener.prototype.removePushEvents = function (fx) {
+        var id = this.onPushEvents.indexOf(fx);
         this.onPushEvents.splice(id, 1);
-    }
-    onPush(dataEvent) {
-        this.onPushEvents.forEach(fx => fx(dataEvent));
-    }
-}
+    };
+    PushDataListener.prototype.onPush = function (dataEvent) {
+        this.onPushEvents.forEach(function (fx) { return fx(dataEvent); });
+    };
+    return PushDataListener;
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = PushDataListener;

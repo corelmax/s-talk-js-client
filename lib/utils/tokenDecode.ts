@@ -1,5 +1,7 @@
-export default class TokenDecode {
-    public _id: string;
-    public email: string;
-    public password: string;
+export namespace Authen {
+    export class TokenDecoded {
+        _id: string;
+        email: string;
+        password: string;
+    }
 }

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import BackendFactory from "./BackendFactory";
-import { Message } from "../libs/chitchat/dataModel/message";
+import { Message, ContentType } from "./models/ChatDataModels";
 import PushNotifyHelper from '../libs/pushNotifyHelper';
 
 import Store from "../reducers/configureStore";
@@ -47,14 +47,22 @@ export default class NotificationManager {
 
         console.log("Notify Message. AppState is ", device.appState);
 
+        let message = messageImp.body;
+        if (messageImp.type == ContentType[ContentType.Location]) {
+            message = "Sent you location";
+        }
+        else if (messageImp.type == ContentType[ContentType.Image]) {
+            message = "Sent you image";
+        }
+
         if (device.appState == "active") {
-            PushNotifyHelper.getInstance().localNotification(messageImp.body);
+            PushNotifyHelper.getInstance().localNotification(message);
         }
         else if (device.appState != "active") {
             //@ When user joined room but appState is inActive.
             // sharedObjectService.getNotifyManager().notify(newMsg, appBackground, localNotifyService);
 
-            PushNotifyHelper.getInstance().localNotification(messageImp.body);
+            PushNotifyHelper.getInstance().localNotification(message);
         }
     }
 }

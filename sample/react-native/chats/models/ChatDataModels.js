@@ -14,20 +14,29 @@ var RoomStatus;
     RoomStatus[RoomStatus["delete"] = 2] = "delete";
 })(RoomStatus || (RoomStatus = {}));
 ;
-class Room {
-    constructor() {
+var Room = (function () {
+    function Room() {
         this._visibility = true;
     }
-    set visibility(_boo) {
-        this._visibility = _boo;
-    }
-    get visibilty() {
-        return this._visibility;
-    }
-    setName(name) {
+    Object.defineProperty(Room.prototype, "visibility", {
+        set: function (_boo) {
+            this._visibility = _boo;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Room.prototype, "visibilty", {
+        get: function () {
+            return this._visibility;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Room.prototype.setName = function (name) {
         this.name = name;
-    }
-}
+    };
+    return Room;
+}());
 exports.Room = Room;
 var MemberRole;
 (function (MemberRole) {
@@ -51,7 +60,10 @@ var ContentType;
 /**
  * @StlakAccount...
  */
-class StalkAccount {
-}
+var StalkAccount = (function () {
+    function StalkAccount() {
+    }
+    return StalkAccount;
+}());
 exports.StalkAccount = StalkAccount;
 ;

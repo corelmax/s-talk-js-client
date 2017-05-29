@@ -3,20 +3,15 @@
  *
  */
 "use strict";
-const serverImplemented_1 = require("../libs/stalk/serverImplemented");
-const chatRoomApiProvider_1 = require("../libs/stalk/chatRoomApiProvider");
-const serverEventListener_1 = require("../libs/stalk/serverEventListener");
-const dataManager_1 = require("./dataManager");
-const dataListener_1 = require("./dataListener");
-const pushDataListener_1 = require("./pushDataListener");
-class BackendFactory {
-    static getInstance() {
-        if (BackendFactory.instance == null || BackendFactory.instance == undefined) {
-            BackendFactory.instance = new BackendFactory();
-        }
-        return BackendFactory.instance;
-    }
-    constructor(token = null) {
+var serverImplemented_1 = require("../libs/stalk/serverImplemented");
+var chatRoomApiProvider_1 = require("../libs/stalk/chatRoomApiProvider");
+var serverEventListener_1 = require("../libs/stalk/serverEventListener");
+var dataManager_1 = require("./dataManager");
+var dataListener_1 = require("./dataListener");
+var pushDataListener_1 = require("./pushDataListener");
+var BackendFactory = (function () {
+    function BackendFactory(token) {
+        if (token === void 0) { token = null; }
         console.log('BackendFactory: ', token);
         this.stalk = serverImplemented_1.default.getInstance();
         this.pushDataListener = new pushDataListener_1.default();
@@ -29,32 +24,39 @@ class BackendFactory {
         //   return new Hapi(token);
         // }
     }
-    getServer() {
-        return new Promise((resolve, rejected) => {
-            if (this.stalk._isConnected)
-                resolve(this.stalk);
+    BackendFactory.getInstance = function () {
+        if (BackendFactory.instance == null || BackendFactory.instance == undefined) {
+            BackendFactory.instance = new BackendFactory();
+        }
+        return BackendFactory.instance;
+    };
+    BackendFactory.prototype.getServer = function () {
+        var _this = this;
+        return new Promise(function (resolve, rejected) {
+            if (_this.stalk._isConnected)
+                resolve(_this.stalk);
             else
                 rejected();
         });
-    }
-    getChatApi() {
+    };
+    BackendFactory.prototype.getChatApi = function () {
         if (!this.chatRoomApiProvider) {
             this.chatRoomApiProvider = new chatRoomApiProvider_1.default(this.stalk.getClient());
         }
         return this.chatRoomApiProvider;
-    }
-    getServerListener() {
+    };
+    BackendFactory.prototype.getServerListener = function () {
         if (!this.serverEventsListener) {
             this.serverEventsListener = new serverEventListener_1.default(this.stalk.getClient());
         }
         return this.serverEventsListener;
-    }
-    stalkInit() {
+    };
+    BackendFactory.prototype.stalkInit = function () {
         console.log('stalkInit...');
-        let self = this;
-        let promise = new Promise((resolve, reject) => {
+        var self = this;
+        var promise = new Promise(function (resolve, reject) {
             self.stalk.disConnect(function done() {
-                self.stalk.init((err, res) => {
+                self.stalk.init(function (err, res) {
                     if (!!err) {
                         reject(err);
                     }
@@ -65,11 +67,11 @@ class BackendFactory {
             });
         });
         return promise;
-    }
-    login(username, hexPassword, deviceToken) {
-        let email = username;
-        let promise = new Promise(function executor(resolve, reject) {
-            serverImplemented_1.default.getInstance().logIn(email, hexPassword, deviceToken, (err, res) => {
+    };
+    BackendFactory.prototype.login = function (username, hexPassword, deviceToken) {
+        var email = username;
+        var promise = new Promise(function executor(resolve, reject) {
+            serverImplemented_1.default.getInstance().logIn(email, hexPassword, deviceToken, function (err, res) {
                 if (!!err) {
                     reject(err);
                 }
@@ -79,12 +81,12 @@ class BackendFactory {
             });
         });
         return promise;
-    }
-    loginByToken(tokenBearer) {
-        let token = tokenBearer;
-        let promise = new Promise((resolved, rejected) => {
+    };
+    BackendFactory.prototype.loginByToken = function (tokenBearer) {
+        var token = tokenBearer;
+        var promise = new Promise(function (resolved, rejected) {
             console.warn(token);
-            serverImplemented_1.default.getInstance().TokenAuthen(token, (err, res) => {
+            serverImplemented_1.default.getInstance().TokenAuthen(token, function (err, res) {
                 if (!!err) {
                     rejected(err);
                 }
@@ -94,10 +96,10 @@ class BackendFactory {
             });
         });
         return promise;
-    }
-    logout() {
-        let self = this;
-        let promise = new Promise(function exe(resolve, reject) {
+    };
+    BackendFactory.prototype.logout = function () {
+        var self = this;
+        var promise = new Promise(function exe(resolve, reject) {
             if (serverImplemented_1.default.getInstance) {
                 if (!!self.stalk.pomelo)
                     self.stalk.pomelo.setReconnect(false);
@@ -114,21 +116,21 @@ class BackendFactory {
             resolve();
         });
         return promise;
-    }
-    startChatServerListener(resolve) {
+    };
+    BackendFactory.prototype.startChatServerListener = function (resolve) {
         this.serverEventsListener.addFrontendListener(this.dataManager);
         this.serverEventsListener.addServerListener(this.dataListener);
         this.serverEventsListener.addChatListener(this.dataListener);
         this.serverEventsListener.addPushListener(this.pushDataListener);
         this.serverEventsListener.addListenner(resolve);
-    }
-    checkIn(uid, token) {
-        let self = this;
-        return new Promise((resolve, rejected) => {
-            self.stalk.gateEnter(uid).then(value => {
+    };
+    BackendFactory.prototype.checkIn = function (uid, token) {
+        var self = this;
+        return new Promise(function (resolve, rejected) {
+            self.stalk.gateEnter(uid).then(function (value) {
                 //<!-- Connecting to connector server.
-                let params = { host: value.host, port: value.port, reconnect: false };
-                self.stalk.connect(params, (err) => {
+                var params = { host: value.host, port: value.port, reconnect: false };
+                self.stalk.connect(params, function (err) {
                     self.stalk._isConnected = true;
                     if (!!self.stalk.pomelo)
                         self.stalk.pomelo.setReconnect(true);
@@ -136,21 +138,22 @@ class BackendFactory {
                         rejected(err);
                     }
                     else {
-                        let msg = {};
+                        var msg = {};
                         msg["token"] = token;
-                        self.stalk.connectorEnter(msg).then(value => {
+                        self.stalk.connectorEnter(msg).then(function (value) {
                             resolve(value);
-                        }).catch(err => {
+                        }).catch(function (err) {
                             rejected(err);
                         });
                     }
                 });
-            }).catch(err => {
+            }).catch(function (err) {
                 console.warn("Cannot connect gate-server.", err);
                 rejected(err);
             });
         });
-    }
-}
+    };
+    return BackendFactory;
+}());
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = BackendFactory;
