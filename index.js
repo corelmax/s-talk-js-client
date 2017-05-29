@@ -139,4 +139,14 @@ var StalkFactory;
         });
     }
     StalkFactory.checkIn = checkIn;
+    function checkOut(server) {
+        if (server) {
+            if (!!server.socket) {
+                server.socket.setReconnect(false);
+            }
+            server.logout();
+            server.dispose();
+        }
+    }
+    StalkFactory.checkOut = checkOut;
 })(StalkFactory = exports.StalkFactory || (exports.StalkFactory = {}));

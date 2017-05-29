@@ -21,4 +21,5 @@ export declare namespace StalkFactory {
     function geteEnter(server: ServerImplemented, message: Stalk.IDictionary): Promise<IServer>;
     function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<any>;
     function checkIn(server: ServerImplemented, message: Stalk.IDictionary): Promise<any>;
+    function checkOut(server: ServerImplemented): void;
 }

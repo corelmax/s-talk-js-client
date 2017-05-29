@@ -71,4 +71,15 @@ export namespace StalkFactory {
         let result = await server.checkIn(message);
         return result;
     }
+
+    export function checkOut(server: ServerImplemented) {
+        if (server) {
+            if (!!server.socket) {
+                server.socket.setReconnect(false);
+            }
+
+            server.logout();
+            server.dispose();
+        }
+    }
 }
