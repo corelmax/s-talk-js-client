@@ -6,6 +6,10 @@
         "typeRoots": [
             "node_modules/@types"
         ],
-        "declaration": true
+        "declaration": true,
+        "lib": [
+            "es2015.promise",
+            "es5"
+        ]
     }
 }

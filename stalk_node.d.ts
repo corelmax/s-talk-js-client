@@ -1,7 +1,7 @@
 import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
 export declare type Dict = IDictionary;
 export declare type Stalk = ServerImp;
-export declare function init(): any;
+export declare function init(): Promise<void>;
 /**
  * For test call api omly...
  */

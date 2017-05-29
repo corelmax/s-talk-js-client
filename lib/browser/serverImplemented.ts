@@ -34,7 +34,7 @@ export namespace Stalk {
             }
         }
 
-        pomelo: IPomelo;
+        socket: IPomelo;
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -57,8 +57,8 @@ export namespace Stalk {
 
         public getClient() {
             let self = this;
-            if (self.pomelo !== null) {
-                return self.pomelo;
+            if (self.socket !== null) {
+                return self.socket;
             }
             else {
                 console.warn("disconnected.");
@@ -77,9 +77,9 @@ export namespace Stalk {
 
         public disConnect(callBack?: Function) {
             let self = this;
-            if (!!self.pomelo) {
-                self.pomelo.removeAllListeners();
-                self.pomelo.disconnect().then(() => {
+            if (!!self.socket) {
+                self.socket.removeAllListeners();
+                self.socket.disconnect().then(() => {
                     if (callBack)
                         callBack();
                 });
@@ -97,25 +97,25 @@ export namespace Stalk {
             let msg = {} as Stalk.IDictionary;
             msg["username"] = null;
             msg["registrationId"] = registrationId;
-            if (this.pomelo != null)
-                this.pomelo.notify("connector.entryHandler.logout", msg);
+            if (this.socket != null)
+                this.socket.notify("connector.entryHandler.logout", msg);
 
             this.disConnect();
-            this.pomelo = null;
+            this.socket = null;
         }
 
-        public init(callback: (err, res) => void) {
+        public init(callback: (err, res: IPomelo) => void) {
             let self = this;
             this._isConnected = false;
-            this.pomelo = Pomelo;
+            this.socket = Pomelo;
 
             console.log("stalkInit...");
 
-            if (!!self.pomelo) {
+            if (!!self.socket) {
                 // <!-- Connecting gate server.
                 let params = { host: self.host, port: self.port, reconnect: false } as ServerParam;
                 self.connectServer(params, (err) => {
-                    callback(err, self);
+                    callback(err, self.socket);
                 });
             }
             else {
@@ -125,35 +125,35 @@ export namespace Stalk {
 
         private connectServer(params: ServerParam, callback: (err) => void) {
             let self = this;
-            this.pomelo.init(params, function cb(err) {
+            this.socket.init(params, function cb(err) {
                 console.log("socket init... ", err);
-                self.pomelo.setInitCallback(null);
+                self.socket.setInitCallback(null);
                 callback(err);
             });
         }
 
         public listenForPomeloEvents() {
-            this.pomelo.removeAllListeners();
+            this.socket.removeAllListeners();
 
-            this.pomelo.on("onopen", (this.onSocketOpen) ?
+            this.socket.on("onopen", (this.onSocketOpen) ?
                 this.onSocketOpen : (data) => console.log("onopen", data));
-            this.pomelo.on("close", (this.onSocketClose) ?
+            this.socket.on("close", (this.onSocketClose) ?
                 this.onSocketClose : (data) => {
                     console.warn("close", data);
-                    this.pomelo.setInitCallback(null);
+                    this.socket.setInitCallback(null);
                 });
-            this.pomelo.on("reconnect", (this.onSocketReconnect) ?
+            this.socket.on("reconnect", (this.onSocketReconnect) ?
                 this.onSocketReconnect : (data) => console.log("reconnect", data));
-            this.pomelo.on("disconnected", (data) => {
+            this.socket.on("disconnected", (data) => {
                 console.warn("disconnected", data);
                 this._isConnected = false;
-                this.pomelo.setInitCallback(null);
+                this.socket.setInitCallback(null);
                 if (this.onDisconnected)
                     this.onDisconnected(data);
             });
-            this.pomelo.on("io-error", (data) => {
+            this.socket.on("io-error", (data) => {
                 console.warn("io-error", data);
-                this.pomelo.setInitCallback(null);
+                this.socket.setInitCallback(null);
             });
         }
 
@@ -164,10 +164,10 @@ export namespace Stalk {
         public logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
             let self = this;
 
-            if (!!self.pomelo && this._isConnected === false) {
+            if (!!self.socket && this._isConnected === false) {
                 let msg = { uid: _username };
                 // <!-- Quering connector server.
-                self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
+                self.socket.request("gate.gateHandler.queryEntry", msg, function (result) {
 
                     console.log("QueryConnectorServ", JSON.stringify(result));
 
@@ -190,7 +190,7 @@ export namespace Stalk {
                     }
                 });
             }
-            else if (!!self.pomelo && this._isConnected) {
+            else if (!!self.socket && this._isConnected) {
                 self.authenForFrontendServer(_username, _hash, deviceToken, callback);
             }
             else {
@@ -221,7 +221,7 @@ export namespace Stalk {
             msg["password"] = _hash;
             msg["registrationId"] = deviceToken;
             // <!-- Authentication.
-            self.pomelo.request("connector.entryHandler.login", msg, function (res) {
+            self.socket.request("connector.entryHandler.login", msg, function (res) {
                 console.log("login response: ", JSON.stringify(res));
 
                 if (res.code === HttpStatusCode.fail) {
@@ -245,9 +245,9 @@ export namespace Stalk {
         gateEnter(msg: Stalk.IDictionary) {
             let self = this;
             let result = new Promise((resolve: (data: IServer) => void, rejected) => {
-                if (!!self.pomelo && this._isConnected === false) {
+                if (!!self.socket && this._isConnected === false) {
                     // <!-- Quering connector server.
-                    self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
+                    self.socket.request("gate.gateHandler.queryEntry", msg, function (result) {
                         console.log("gateEnter", result);
                         if (result.code === HttpStatusCode.success) {
                             self.disConnect();
@@ -276,7 +276,7 @@ export namespace Stalk {
 
             return new Promise((resolve, rejected) => {
                 // <!-- Authentication.
-                self.pomelo.request("connector.entryHandler.login", msg, function (res) {
+                self.socket.request("connector.entryHandler.login", msg, function (res) {
                     if (res.code === HttpStatusCode.fail) {
                         rejected(res.message);
                     }
@@ -294,7 +294,7 @@ export namespace Stalk {
             let self = this;
             let msg: Stalk.IDictionary = {};
             msg["token"] = tokenBearer;
-            self.pomelo.request("gate.gateHandler.authenGateway", msg, (result) => {
+            self.socket.request("gate.gateHandler.authenGateway", msg, (result) => {
                 this.OnTokenAuthenticate(result, checkTokenCallback);
             });
         }
@@ -315,9 +315,9 @@ export namespace Stalk {
 
         public kickMeAllSession(uid: string) {
             let self = this;
-            if (self.pomelo !== null) {
+            if (self.socket !== null) {
                 var msg = { uid: uid };
-                self.pomelo.request("connector.entryHandler.kickMe", msg, function (result) {
+                self.socket.request("connector.entryHandler.kickMe", msg, function (result) {
                     console.log("kickMe", JSON.stringify(result));
                 });
             }
@@ -332,7 +332,7 @@ export namespace Stalk {
 
             profileFields["token"] = this.authenData.token;
             profileFields["_id"] = myId;
-            self.pomelo.request("auth.profileHandler.profileUpdate", profileFields, (result) => {
+            self.socket.request("auth.profileHandler.profileUpdate", profileFields, (result) => {
                 if (callback != null) {
                     callback(null, result);
                 }
@@ -345,7 +345,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["userId"] = userId;
             msg["path"] = path;
-            self.pomelo.request("auth.profileHandler.profileImageChanged", msg, (result) => {
+            self.socket.request("auth.profileHandler.profileImageChanged", msg, (result) => {
                 if (callback != null) {
                     callback(null, result);
                 }
@@ -355,7 +355,7 @@ export namespace Stalk {
         public getMe(msg: Stalk.IDictionary, callback: (err, res) => void) {
             let self = this;
             //<!-- Get user info.
-            self.pomelo.request("connector.entryHandler.getMe", msg, (result) => {
+            self.socket.request("connector.entryHandler.getMe", msg, (result) => {
                 if (callback !== null) {
                     callback(null, result);
                 }
@@ -369,7 +369,7 @@ export namespace Stalk {
             msg["member"] = member;
             msg["token"] = this.authenData.token;
             //<!-- Get user info.
-            self.pomelo.request("auth.profileHandler.editFavoriteMembers", msg, (result) => {
+            self.socket.request("auth.profileHandler.editFavoriteMembers", msg, (result) => {
                 console.log("updateFavoriteMember: ", JSON.stringify(result));
                 callback(null, result);
             });
@@ -382,7 +382,7 @@ export namespace Stalk {
             msg["group"] = group;
             msg["token"] = this.authenData.token;
             //<!-- Get user info.
-            self.pomelo.request("auth.profileHandler.updateFavoriteGroups", msg, (result) => {
+            self.socket.request("auth.profileHandler.updateFavoriteGroups", msg, (result) => {
                 console.log("updateFavoriteGroups: ", JSON.stringify(result));
                 callback(null, result);
             });
@@ -395,7 +395,7 @@ export namespace Stalk {
             msg["member"] = member;
             msg["token"] = this.authenData.token;
             //<!-- Get user info.
-            self.pomelo.request("auth.profileHandler.updateClosedNoticeUsers", msg, (result) => {
+            self.socket.request("auth.profileHandler.updateClosedNoticeUsers", msg, (result) => {
                 console.log("updateClosedNoticeUsers: ", JSON.stringify(result));
                 callback(null, result);
             });
@@ -408,7 +408,7 @@ export namespace Stalk {
             msg["group"] = group;
             msg["token"] = this.authenData.token;
             //<!-- Get user info.
-            self.pomelo.request("auth.profileHandler.updateClosedNoticeGroups", msg, (result) => {
+            self.socket.request("auth.profileHandler.updateClosedNoticeGroups", msg, (result) => {
                 console.log("updateClosedNoticeGroups: ", JSON.stringify(result));
                 callback(null, result);
             });
@@ -419,7 +419,7 @@ export namespace Stalk {
             var msg: Stalk.IDictionary = {};
             msg["userId"] = userId;
 
-            self.pomelo.request("auth.profileHandler.getMemberProfile", msg, (result) => {
+            self.socket.request("auth.profileHandler.getMemberProfile", msg, (result) => {
                 if (callback != null) {
                     callback(null, result);
                 }
@@ -439,7 +439,7 @@ export namespace Stalk {
             let self = this;
             var msg: Stalk.IDictionary = {};
             msg["token"] = this.authenData.token;
-            self.pomelo.request("connector.entryHandler.getCompanyInfo", msg, (result) => {
+            self.socket.request("connector.entryHandler.getCompanyInfo", msg, (result) => {
                 if (callBack != null)
                     callBack(null, result);
             });
@@ -453,7 +453,7 @@ export namespace Stalk {
             let self = this;
             var msg: Stalk.IDictionary = {};
             msg["token"] = this.authenData.token;
-            self.pomelo.request("connector.entryHandler.getCompanyMember", msg, (result) => {
+            self.socket.request("connector.entryHandler.getCompanyMember", msg, (result) => {
                 console.log("getCompanyMembers", JSON.stringify(result));
                 if (callBack != null)
                     callBack(null, result);
@@ -468,7 +468,7 @@ export namespace Stalk {
             let self = this;
             var msg: Stalk.IDictionary = {};
             msg["token"] = this.authenData.token;
-            self.pomelo.request("connector.entryHandler.getCompanyChatRoom", msg, (result) => {
+            self.socket.request("connector.entryHandler.getCompanyChatRoom", msg, (result) => {
                 console.log("getOrganizationGroups: " + JSON.stringify(result));
                 if (callBack != null)
                     callBack(null, result);
@@ -483,7 +483,7 @@ export namespace Stalk {
             let self = this;
             var msg: Stalk.IDictionary = {};
             msg["token"] = this.authenData.token;
-            self.pomelo.request("connector.entryHandler.getProjectBaseGroups", msg, (result) => {
+            self.socket.request("connector.entryHandler.getProjectBaseGroups", msg, (result) => {
                 console.log("getProjectBaseGroups: " + JSON.stringify(result));
                 if (callback != null)
                     callback(null, result);
@@ -496,7 +496,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["groupName"] = groupName;
             msg["members"] = JSON.stringify(members);
-            self.pomelo.request("chat.chatRoomHandler.requestCreateProjectBase", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.requestCreateProjectBase", msg, (result) => {
                 console.log("requestCreateProjectBaseGroup: " + JSON.stringify(result));
                 if (callback != null)
                     callback(null, result);
@@ -510,7 +510,7 @@ export namespace Stalk {
             msg["roomId"] = roomId;
             msg["roomType"] = roomType.toString();
             msg["member"] = JSON.stringify(member);
-            self.pomelo.request("chat.chatRoomHandler.editMemberInfoInProjectBase", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.editMemberInfoInProjectBase", msg, (result) => {
                 if (callback != null)
                     callback(null, result);
             });
@@ -532,7 +532,7 @@ export namespace Stalk {
             let self = this;
             var msg: Stalk.IDictionary = {};
             msg["token"] = this.authenData.token;
-            self.pomelo.request("connector.entryHandler.getMyPrivateGroupChat", msg, (result) => {
+            self.socket.request("connector.entryHandler.getMyPrivateGroupChat", msg, (result) => {
                 console.log("getPrivateGroups: " + JSON.stringify(result));
                 if (callback != null) {
                     callback(null, result);
@@ -546,7 +546,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["groupName"] = groupName;
             msg["memberIds"] = JSON.stringify(memberIds);
-            self.pomelo.request("chat.chatRoomHandler.userCreateGroupChat", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.userCreateGroupChat", msg, (result) => {
                 console.log("RequestCreateGroupChat", JSON.stringify(result));
 
                 if (callback != null)
@@ -560,7 +560,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["groupId"] = groupId;
             msg["path"] = path;
-            self.pomelo.request("chat.chatRoomHandler.updateGroupImage", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.updateGroupImage", msg, (result) => {
                 console.log("UpdatedGroupImage", JSON.stringify(result));
 
                 if (callback != null) {
@@ -582,7 +582,7 @@ export namespace Stalk {
             msg["roomId"] = roomId;
             msg["roomType"] = roomType.toString();
             msg["members"] = JSON.stringify(members);
-            self.pomelo.request("chat.chatRoomHandler.editGroupMembers", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.editGroupMembers", msg, (result) => {
                 console.log("editGroupMembers response." + result.toString());
 
                 if (callback != null) {
@@ -602,7 +602,7 @@ export namespace Stalk {
             msg["roomId"] = roomId;
             msg["roomType"] = roomType.toString();
             msg["newGroupName"] = newGroupName;
-            self.pomelo.request("chat.chatRoomHandler.editGroupName", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.editGroupName", msg, (result) => {
                 console.log("editGroupName response." + result.toString());
 
                 if (callback != null) {
@@ -622,7 +622,7 @@ export namespace Stalk {
             msg["token"] = token;
             msg["ownerId"] = myId;
             msg["roommateId"] = myRoommateId;
-            self.pomelo.request("chat.chatRoomHandler.getRoomById", msg, (result) => {
+            self.socket.request("chat.chatRoomHandler.getRoomById", msg, (result) => {
                 if (callback != null) {
                     callback(null, result);
                 }
@@ -636,7 +636,7 @@ export namespace Stalk {
             msg["token"] = token;
             msg["rid"] = room_id;
             msg["username"] = username;
-            self.pomelo.request("connector.entryHandler.enterRoom", msg, (result) => {
+            self.socket.request("connector.entryHandler.enterRoom", msg, (result) => {
                 if (callback !== null) {
                     callback(null, result);
                 }
@@ -648,7 +648,7 @@ export namespace Stalk {
             let msg: Stalk.IDictionary = {};
             msg["token"] = token;
             msg["rid"] = roomId;
-            self.pomelo.request("connector.entryHandler.leaveRoom", msg, (result) => {
+            self.socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
                 if (callback != null)
                     callback(null, result);
             });
@@ -670,7 +670,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["targetId"] = targetId;
             msg["myRtcId"] = myRtcId;
-            self.pomelo.request("connector.entryHandler.videoCallRequest", msg, (result) => {
+            self.socket.request("connector.entryHandler.videoCallRequest", msg, (result) => {
                 console.log("videoCallRequesting =>: " + JSON.stringify(result));
                 if (callback != null)
                     callback(null, result);
@@ -683,7 +683,7 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             msg["targetId"] = targetId;
             msg["myRtcId"] = myRtcId;
-            self.pomelo.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
+            self.socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
                 console.log("voiceCallRequesting =>: " + JSON.stringify(result));
 
                 if (callback != null)
@@ -698,7 +698,7 @@ export namespace Stalk {
             msg["contactId"] = contactId;
             msg["token"] = this.authenData.token;
 
-            self.pomelo.request("connector.entryHandler.hangupCall", msg, (result) => {
+            self.socket.request("connector.entryHandler.hangupCall", msg, (result) => {
                 console.log("hangupCall: ", JSON.stringify(result));
             });
         }
@@ -708,7 +708,7 @@ export namespace Stalk {
             var msg: Stalk.IDictionary = {};
             msg["contactId"] = contactId;
 
-            self.pomelo.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
+            self.socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
                 console.log("theLineIsBusy response: " + JSON.stringify(result));
             });
         }
