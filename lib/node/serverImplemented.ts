@@ -6,7 +6,7 @@
  */
 
 import { HttpStatusCode } from "../utils/httpStatusCode";
-import { TokenDecode } from "../utils/tokenDecode";
+import { Authen } from "../utils/tokenDecode";
 
 const Pomelo = require("../pomelo/nodeWSClient");
 const Config = require(dirname + "/stalk_config.json");
@@ -310,7 +310,7 @@ export default class ServerImplemented {
         if (tokenRes.code === HttpStatusCode.success) {
             let data = tokenRes.data;
             let decode = data.decoded; // ["decoded"];
-            let decodedModel: TokenDecode = JSON.parse(JSON.stringify(decode));
+            let decodedModel = JSON.parse(JSON.stringify(decode)) as Authen.TokenDecoded;
             if (onSuccessCheckToken != null)
                 onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
         }

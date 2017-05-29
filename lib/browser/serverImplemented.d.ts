@@ -17,7 +17,8 @@ export declare namespace Stalk {
         private static Instance;
         static getInstance(): ServerImplemented;
         static createInstance(host: string, port: number): ServerImplemented;
-        socket: IPomelo;
+        private socket;
+        getSocket(): IPomelo;
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -29,7 +30,6 @@ export declare namespace Stalk {
         onSocketReconnect: (data) => void;
         onDisconnected: (data) => void;
         constructor(host: string, port: number);
-        getClient(): IPomelo;
         dispose(): void;
         disConnect(callBack?: Function): void;
         logout(): void;

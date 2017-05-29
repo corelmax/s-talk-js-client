@@ -5,15 +5,17 @@
  * Ahoo Studio.co.th 
  */
 
-export { Stalk } from "./lib/browser/serverImplemented";
+export { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
 export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
-export { StalkEvents } from "./lib/browser/StalkEvents";
+export * from "./lib/browser/StalkEvents";
 
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
+import { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
 
 export type ServerImplemented = Stalk.ServerImplemented;
+export type ChatRoomApiProvider = ChatRoomApi.ChatRoomApiProvider;
 
 export namespace Utils {
     export var statusCode = HttpStatusCode;
@@ -52,9 +54,10 @@ export namespace StalkFactory {
         return await new Promise<any>((resolve, reject) => {
             server.connect(params, (err) => {
                 server._isConnected = true;
-                if (!!server.socket) {
+                let socket = server.getSocket();
+                if (!!socket) {
                     server.listenForPomeloEvents();
-                    server.socket.setReconnect(true);
+                    socket.setReconnect(true);
                 }
 
                 if (!!err) {
@@ -74,8 +77,9 @@ export namespace StalkFactory {
 
     export function checkOut(server: ServerImplemented) {
         if (server) {
-            if (!!server.socket) {
-                server.socket.setReconnect(false);
+            let socket = server.getSocket();
+            if (!!socket) {
+                socket.setReconnect(false);
             }
 
             server.logout();

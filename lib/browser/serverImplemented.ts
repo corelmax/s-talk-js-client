@@ -34,7 +34,16 @@ export namespace Stalk {
             }
         }
 
-        socket: IPomelo;
+        private socket: IPomelo;
+        public getSocket() {
+            if (this.socket !== null) {
+                return this.socket;
+            }
+            else {
+                throw new Error("No socket instance!");
+            }
+        }
+
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -53,16 +62,6 @@ export namespace Stalk {
 
             this.connectServer = this.connectServer.bind(this);
             this.listenForPomeloEvents = this.listenForPomeloEvents.bind(this);
-        }
-
-        public getClient() {
-            let self = this;
-            if (self.socket !== null) {
-                return self.socket;
-            }
-            else {
-                console.warn("disconnected.");
-            }
         }
 
         public dispose() {

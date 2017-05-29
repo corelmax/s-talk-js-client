@@ -4,13 +4,15 @@
  *
  * Ahoo Studio.co.th
  */
-export { Stalk } from "./lib/browser/serverImplemented";
+export { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
 export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
-export { StalkEvents } from "./lib/browser/StalkEvents";
+export * from "./lib/browser/StalkEvents";
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
+import { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
 export declare type ServerImplemented = Stalk.ServerImplemented;
+export declare type ChatRoomApiProvider = ChatRoomApi.ChatRoomApiProvider;
 export declare namespace Utils {
     var statusCode: typeof HttpStatusCode;
     var tokenDecode: typeof Authen.TokenDecoded;

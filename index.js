@@ -40,12 +40,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 var serverImplemented_1 = require("./lib/browser/serverImplemented");
 exports.Stalk = serverImplemented_1.Stalk;
 var chatRoomApiProvider_1 = require("./lib/browser/chatRoomApiProvider");
 exports.ChatRoomApi = chatRoomApiProvider_1.ChatRoomApi;
-var StalkEvents_1 = require("./lib/browser/StalkEvents");
-exports.StalkEvents = StalkEvents_1.StalkEvents;
+__export(require("./lib/browser/StalkEvents"));
 var httpStatusCode_1 = require("./lib/utils/httpStatusCode");
 var tokenDecode_1 = require("./lib/utils/tokenDecode");
 var serverImplemented_2 = require("./lib/browser/serverImplemented");
@@ -107,9 +109,10 @@ var StalkFactory;
                     case 0: return [4 /*yield*/, new Promise(function (resolve, reject) {
                             server.connect(params, function (err) {
                                 server._isConnected = true;
-                                if (!!server.socket) {
+                                var socket = server.getSocket();
+                                if (!!socket) {
                                     server.listenForPomeloEvents();
-                                    server.socket.setReconnect(true);
+                                    socket.setReconnect(true);
                                 }
                                 if (!!err) {
                                     reject(err);
@@ -141,8 +144,9 @@ var StalkFactory;
     StalkFactory.checkIn = checkIn;
     function checkOut(server) {
         if (server) {
-            if (!!server.socket) {
-                server.socket.setReconnect(false);
+            var socket = server.getSocket();
+            if (!!socket) {
+                socket.setReconnect(false);
             }
             server.logout();
             server.dispose();
