@@ -6,12 +6,14 @@
  */
 export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 export * from "./lib/browser/StalkEvents";
+export * from "./lib/browser/API";
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 import { API } from "./lib/browser/API";
 export declare type ServerImplemented = Stalk.ServerImplemented;
 export declare type LobbyAPI = API.LobbyAPI;
+export declare type ChatRoomAPI = API.ChatRoomAPI;
 export declare namespace Utils {
     var statusCode: typeof HttpStatusCode;
     var tokenDecode: typeof Authen.TokenDecoded;

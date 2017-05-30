@@ -46,6 +46,7 @@ function __export(m) {
 var serverImplemented_1 = require("./lib/browser/serverImplemented");
 exports.Stalk = serverImplemented_1.Stalk;
 __export(require("./lib/browser/StalkEvents"));
+__export(require("./lib/browser/API"));
 var httpStatusCode_1 = require("./lib/utils/httpStatusCode");
 var tokenDecode_1 = require("./lib/utils/tokenDecode");
 var serverImplemented_2 = require("./lib/browser/serverImplemented");

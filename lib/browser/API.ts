@@ -12,10 +12,11 @@ export namespace API {
 
         public checkIn(msg: IDictionary) {
             let self = this;
+            let socket = this.server.getSocket();
 
             return new Promise((resolve, rejected) => {
                 // <!-- Authentication.
-                self.socket.request("connector.entryHandler.login", msg, function (res) {
+                socket.request("connector.entryHandler.login", msg, function (res) {
                     if (res.code === HttpStatusCode.fail) {
                         rejected(res.message);
                     }
