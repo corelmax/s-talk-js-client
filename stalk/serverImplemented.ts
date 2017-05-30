@@ -5,7 +5,7 @@
  * Ahoo Studio.co.th 
  */
 
-import HttpStatusCode from './utils/httpStatusCode';
+import { HttpStatusCode } from '../lib/utils/httpStatusCode';
 import TokenDecode from './utils/tokenDecode';
 import EventEmitter = require("events");
 const Pomelo = require("../pomelo/reactWSClient");
@@ -26,7 +26,7 @@ export interface IPomeloParam {
 export interface IDictionary {
     [k: string]: string;
 }
-interface IAuthenData {
+export interface IAuthenData {
     userId: string;
     token: string;
 }
@@ -51,7 +51,7 @@ export class ServerImplemented {
     pomelo: IPomelo;
     host: string;
     port: number | string;
-    authenData: AuthenData;
+    authenData: IAuthenData;
     _isConnected = false;
     _isLogedin = false;
     connect = this.connectServer;

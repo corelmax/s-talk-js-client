@@ -18,11 +18,13 @@ export declare namespace ChatEvents {
         onLeaveRoom(data: any): any;
     }
 }
-export declare namespace StalkEvents {
+export declare namespace PushEvents {
     const ON_PUSH = "ON_PUSH";
     interface IPushServerListener {
         onPush(dataEvent: any): any;
     }
+}
+export declare namespace StalkEvents {
     interface IRTCListener {
         onVideoCall(dataEvent: any): any;
         onVoiceCall(dataEvent: any): any;
@@ -33,17 +35,7 @@ export declare namespace StalkEvents {
         onAccessRoom(dataEvent: any): any;
         onUpdatedLastAccessTime(dataEvent: any): any;
         onAddRoomAccess(dataEvent: any): any;
-        onCreateGroupSuccess(dataEvent: any): any;
-        onEditedGroupMember(dataEvent: any): any;
-        onEditedGroupName(dataEvent: any): any;
-        onEditedGroupImage(dataEvent: any): any;
-        onNewGroupCreated(dataEvent: any): any;
-        onUpdateMemberInfoInProjectBase(dataEvent: any): any;
-        onUserUpdateImageProfile(dataEvent: any): any;
-        onUserUpdateProfile(dataEvent: any): any;
     }
-}
-export declare namespace ConnectorEvents {
     const ON_USER_LOGIN = "onUserLogin";
     const ON_USER_LOGOUT = "onUserLogout";
     interface BaseEvents {

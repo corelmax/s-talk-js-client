@@ -45,8 +45,6 @@ function __export(m) {
 }
 var serverImplemented_1 = require("./lib/browser/serverImplemented");
 exports.Stalk = serverImplemented_1.Stalk;
-var chatRoomApiProvider_1 = require("./lib/browser/chatRoomApiProvider");
-exports.ChatRoomApi = chatRoomApiProvider_1.ChatRoomApi;
 __export(require("./lib/browser/StalkEvents"));
 var httpStatusCode_1 = require("./lib/utils/httpStatusCode");
 var tokenDecode_1 = require("./lib/utils/tokenDecode");
@@ -133,7 +131,7 @@ var StalkFactory;
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, server.checkIn(message)];
+                    case 0: return [4 /*yield*/, server.getLobby().checkIn(message)];
                     case 1:
                         result = _a.sent();
                         return [2 /*return*/, result];
@@ -148,7 +146,7 @@ var StalkFactory;
             if (!!socket) {
                 socket.setReconnect(false);
             }
-            server.logout();
+            server.getLobby().logout();
             server.dispose();
         }
     }

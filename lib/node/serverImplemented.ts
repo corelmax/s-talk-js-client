@@ -14,7 +14,7 @@ const Config = require(dirname + "/stalk_config.json");
 export interface IDictionary {
     [k: string]: any;
 }
-interface IAuthenData {
+export interface IAuthenData {
     userId: string;
     token: string;
 }
@@ -50,7 +50,7 @@ export default class ServerImplemented {
     pomelo: PomeloClient;
     host: string;
     port: number | string;
-    authenData: AuthenData;
+    authenData: IAuthenData;
     _isConnected = false;
     _isLogedin = false;
     connect = this.connectServer;

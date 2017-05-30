@@ -5,17 +5,16 @@
  * Ahoo Studio.co.th 
  */
 
-export { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
-export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
+export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 export * from "./lib/browser/StalkEvents";
 
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
-import { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
-import { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
+import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+import { API } from "./lib/browser/API";
 
 export type ServerImplemented = Stalk.ServerImplemented;
-export type ChatRoomApiProvider = ChatRoomApi.ChatRoomApiProvider;
+export type LobbyAPI = API.LobbyAPI;
 
 export namespace Utils {
     export var statusCode = HttpStatusCode;
@@ -45,7 +44,7 @@ export namespace StalkFactory {
         return await promise;
     }
 
-    export async function geteEnter(server: ServerImplemented, message: Stalk.IDictionary) {
+    export async function geteEnter(server: ServerImplemented, message: IDictionary) {
         let connector = await server.gateEnter(message);
         return connector;
     }
@@ -70,8 +69,8 @@ export namespace StalkFactory {
         });
     }
 
-    export async function checkIn(server: ServerImplemented, message: Stalk.IDictionary) {
-        let result = await server.checkIn(message);
+    export async function checkIn(server: ServerImplemented, message: IDictionary) {
+        let result = await server.getLobby().checkIn(message);
         return result;
     }
 
@@ -82,7 +81,7 @@ export namespace StalkFactory {
                 socket.setReconnect(false);
             }
 
-            server.logout();
+            server.getLobby().logout();
             server.dispose();
         }
     }
