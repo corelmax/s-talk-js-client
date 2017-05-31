@@ -46,7 +46,13 @@ export namespace Stalk {
             }
         }
         private lobby: API.LobbyAPI;
-        public getLobby() { return this.lobby; }
+        public getLobby() {
+            return this.lobby;
+        }
+        private chatroomAPI: API.ChatRoomAPI;
+        public getChatRoomAPI() {
+            return this.chatroomAPI;
+        }
 
         host: string;
         port: number | string;
@@ -65,6 +71,7 @@ export namespace Stalk {
             this.host = host;
             this.port = port;
             this.lobby = new API.LobbyAPI(this);
+            this.chatroomAPI = new API.ChatRoomAPI(this);
 
             this.connectServer = this.connectServer.bind(this);
             this.listenForPomeloEvents = this.listenForPomeloEvents.bind(this);

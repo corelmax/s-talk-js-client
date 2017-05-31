@@ -4,10 +4,8 @@ import { HttpStatusCode } from '../utils/httpStatusCode';
 export namespace API {
     export class LobbyAPI {
         private server: Stalk.ServerImplemented;
-        private socket: IPomelo;
         constructor(_server: Stalk.ServerImplemented) {
             this.server = _server;
-            this.socket = _server.getSocket();
         }
 
         public checkIn(msg: IDictionary) {
@@ -35,8 +33,10 @@ export namespace API {
             let msg = {} as IDictionary;
             msg["username"] = null;
             msg["registrationId"] = registrationId;
-            if (this.socket != null) {
-                this.socket.notify("connector.entryHandler.logout", msg);
+
+            let socket = this.server.getSocket();
+            if (socket != null) {
+                socket.notify("connector.entryHandler.logout", msg);
             }
 
             this.server.disConnect();
@@ -50,7 +50,9 @@ export namespace API {
             msg["token"] = token;
             msg["rid"] = room_id;
             msg["username"] = username;
-            self.socket.request("connector.entryHandler.enterRoom", msg, (result) => {
+
+            let socket = this.server.getSocket();
+            socket.request("connector.entryHandler.enterRoom", msg, (result) => {
                 if (callback !== null) {
                     callback(null, result);
                 }
@@ -61,7 +63,9 @@ export namespace API {
             let msg = {} as IDictionary;
             msg["token"] = token;
             msg["rid"] = roomId;
-            self.socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
+
+            let socket = this.server.getSocket();
+            socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
                 if (callback != null)
                     callback(null, result);
             });
@@ -70,14 +74,14 @@ export namespace API {
 
     export class ChatRoomAPI {
         private server: Stalk.ServerImplemented;
-        private socket: IPomelo;
+
         constructor(_server: Stalk.ServerImplemented) {
             this.server = _server;
-            this.socket = _server.getSocket();
         }
 
-        public chat(target: string, _message: IDictionary, callback: (err, res) => void) {
-            this.socket.request("chat.chatHandler.send", _message, (result) => {
+        public chat(target: string, _message: any, callback: (err, res) => void) {
+            let socket = this.server.getSocket();
+            socket.request("chat.chatHandler.send", _message, (result) => {
                 if (callback !== null) {
                     if (result instanceof Error)
                         callback(result, null);
@@ -88,8 +92,9 @@ export namespace API {
         }
 
         public getSyncDateTime(callback: (err, res) => void) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
-            this.socket.request("chat.chatHandler.getSyncDateTime", message, (result) => {
+            socket.request("chat.chatHandler.getSyncDateTime", message, (result) => {
                 if (callback != null) {
                     callback(null, result);
                 }
@@ -100,11 +105,12 @@ export namespace API {
          * get older message histories.
          */
         public getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err, res) => void) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
             message["rid"] = roomId;
             message["topEdgeMessageTime"] = topEdgeMessageTime.toString();
 
-            this.socket.request("chat.chatHandler.getOlderMessageChunk", message, (result) => {
+            socket.request("chat.chatHandler.getOlderMessageChunk", message, (result) => {
                 console.log("getOlderMessageChunk", result);
                 if (callback !== null)
                     callback(null, result);
@@ -112,17 +118,19 @@ export namespace API {
         }
 
         public getMessagesReaders(topEdgeMessageTime: string) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
             message["topEdgeMessageTime"] = topEdgeMessageTime;
-            this.socket.request("chat.chatHandler.getMessagesReaders", message, (result) => {
+            socket.request("chat.chatHandler.getMessagesReaders", message, (result) => {
                 console.info("getMessagesReaders respones: ", result);
             });
         }
 
         public getMessageContent(messageId: string, callback: (err: Error, res: any) => void) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
             message["messageId"] = messageId;
-            this.socket.request("chat.chatHandler.getMessageContent", message, (result) => {
+            socket.request("chat.chatHandler.getMessageContent", message, (result) => {
                 if (!!callback) {
                     callback(null, result);
                 }
@@ -130,17 +138,19 @@ export namespace API {
         }
 
         public updateMessageReader(messageId: string, roomId: string) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
             message["messageId"] = messageId;
             message["roomId"] = roomId;
-            this.socket.notify("chat.chatHandler.updateWhoReadMessage", message);
+            socket.notify("chat.chatHandler.updateWhoReadMessage", message);
         }
 
         public updateMessageReaders(messageIds: string[], roomId: string) {
+            let socket = this.server.getSocket();
             let message = {} as IDictionary;
             message["messageIds"] = JSON.stringify(messageIds);
             message["roomId"] = roomId;
-            this.socket.notify("chat.chatHandler.updateWhoReadMessages", message);
+            socket.notify("chat.chatHandler.updateWhoReadMessages", message);
         }
     }
 }

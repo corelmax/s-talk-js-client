@@ -2,7 +2,6 @@ import { IDictionary, Stalk } from "./serverImplemented";
 export declare namespace API {
     class LobbyAPI {
         private server;
-        private socket;
         constructor(_server: Stalk.ServerImplemented);
         checkIn(msg: IDictionary): Promise<{}>;
         logout(): void;
@@ -11,9 +10,8 @@ export declare namespace API {
     }
     class ChatRoomAPI {
         private server;
-        private socket;
         constructor(_server: Stalk.ServerImplemented);
-        chat(target: string, _message: IDictionary, callback: (err, res) => void): void;
+        chat(target: string, _message: any, callback: (err, res) => void): void;
         getSyncDateTime(callback: (err, res) => void): void;
         /**
          * get older message histories.

@@ -31,6 +31,8 @@ export declare namespace Stalk {
         getSocket(): IPomelo;
         private lobby;
         getLobby(): API.LobbyAPI;
+        private chatroomAPI;
+        getChatRoomAPI(): API.ChatRoomAPI;
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
