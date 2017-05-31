@@ -1,5 +1,9 @@
 # stalk-javascript-client
-Stalk javascript client-api.
+Universal javascript client-api for Stalk long polling realtime platform. 
+- [x] node.js server
+- [x] browser
+- [x] react-native
+
 
 ```javascript
 $ npm install stalk-js --save
