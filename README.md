@@ -7,6 +7,7 @@ or
 $ yarn add stalk-js
 
 ```
+[![https://nodei.co/npm/stalk-js.png?downloads=true&downloadRank=true&stars=true](https://nodei.co/npm/stalk-js.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/stalk-js)
 
 ### Example
 ```javascript
