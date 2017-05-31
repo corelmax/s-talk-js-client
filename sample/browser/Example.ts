@@ -6,7 +6,9 @@
 import {
     Stalk, IDictionary, IServer, API, Utils, StalkFactory, ServerImplemented,
     IPomelo, StalkEvents, PushEvents, ChatEvents
-} from "../../index";
+}
+    // from "stalk-js";
+    from "../../index";
 
 export namespace StalkCodeExam {
 
