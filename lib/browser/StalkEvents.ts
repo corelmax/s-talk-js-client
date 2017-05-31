@@ -35,7 +35,6 @@ export namespace StalkEvents {
         onAccessRoom(dataEvent);
         onUpdatedLastAccessTime(dataEvent);
         onAddRoomAccess(dataEvent);
-
     }
 
     export const ON_USER_LOGIN = "onUserLogin";
