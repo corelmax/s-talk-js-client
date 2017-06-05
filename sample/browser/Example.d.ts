@@ -2,7 +2,7 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { IServer, ServerImplemented, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
+import { IDictionary, IServer, API, ServerImplemented, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
@@ -32,6 +32,8 @@ export declare namespace StalkCodeExam {
 export declare class YourApp {
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
+    chatApi: API.ChatRoomAPI;
+    pushApi: API.PushAPI;
     constructor();
     /**
      *
@@ -42,4 +44,6 @@ export declare class YourApp {
      * logout and disconnections.
      */
     stalkLogout(): void;
+    chat(message: any): void;
+    push(message: IDictionary): void;
 }

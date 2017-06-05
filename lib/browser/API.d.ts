@@ -22,4 +22,9 @@ export declare namespace API {
         updateMessageReader(messageId: string, roomId: string): void;
         updateMessageReaders(messageIds: string[], roomId: string): void;
     }
+    class PushAPI {
+        private server;
+        constructor(_server: Stalk.ServerImplemented);
+        push(_message: IDictionary): Promise<{}>;
+    }
 }

@@ -153,4 +153,28 @@ export namespace API {
             socket.notify("chat.chatHandler.updateWhoReadMessages", message);
         }
     }
+
+    export class PushAPI {
+        private server: Stalk.ServerImplemented;
+
+        constructor(_server: Stalk.ServerImplemented) {
+            this.server = _server;
+        }
+
+        public async push(_message: IDictionary) {
+            return await new Promise((resolve, reject) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("push.pushHandler.push", _message, (result: any) => {
+                        console.log("push result", result);
+
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    reject(ex.message);
+                }
+            });
+        }
+    }
 }

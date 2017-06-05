@@ -179,6 +179,8 @@ var StalkCodeExam;
 var YourApp = (function () {
     function YourApp() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
+        this.chatApi = new index_1.API.ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new index_1.API.PushAPI(this.exam.stalk);
     }
     /**
      *
@@ -214,6 +216,20 @@ var YourApp = (function () {
      */
     YourApp.prototype.stalkLogout = function () {
         this.exam.checkOut();
+    };
+    YourApp.prototype.chat = function (message) {
+        this.chatApi.chat("*", message, function (err, res) {
+        });
+    };
+    YourApp.prototype.push = function (message) {
+        // let msg: IDictionary = {};
+        // msg["event"] = "Test api.";
+        // msg["message"] = "test api from express.js client.";
+        // msg["timestamp"] = new Date();
+        // msg["members"] = "*";
+        this.pushApi.push(message).then(function (result) {
+        }).catch(function (err) {
+        });
     };
     return YourApp;
 }());

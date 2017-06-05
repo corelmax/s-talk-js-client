@@ -141,8 +141,13 @@ export class YourApp {
 
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
+    chatApi: API.ChatRoomAPI;
+    pushApi: API.PushAPI;
+
     constructor() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
+        this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new API.PushAPI(this.exam.stalk);
     }
     /**
      * 
@@ -179,5 +184,25 @@ export class YourApp {
      */
     stalkLogout() {
         this.exam.checkOut();
+    }
+
+    chat(message: any) {
+        this.chatApi.chat("*", message, (err, res) => {
+
+        });
+    }
+
+    push(message: IDictionary) {
+        // let msg: IDictionary = {};
+        // msg["event"] = "Test api.";
+        // msg["message"] = "test api from express.js client.";
+        // msg["timestamp"] = new Date();
+        // msg["members"] = "*";
+
+        this.pushApi.push(message).then(result => {
+
+        }).catch(err => {
+
+        });
     }
 }
