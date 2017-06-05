@@ -5,15 +5,18 @@
  * Ahoo Studio.co.th 
  */
 
-export { Stalk } from "./lib/browser/serverImplemented";
-export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
-export { StalkEvents } from "./lib/browser/StalkEvents";
+export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+export * from "./lib/browser/StalkEvents";
+export * from "./lib/browser/API";
 
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
-import { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
+import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+import { API } from "./lib/browser/API";
 
 export type ServerImplemented = Stalk.ServerImplemented;
+export type LobbyAPI = API.LobbyAPI;
+export type ChatRoomAPI = API.ChatRoomAPI;
 
 export namespace Utils {
     export var statusCode = HttpStatusCode;
@@ -43,7 +46,7 @@ export namespace StalkFactory {
         return await promise;
     }
 
-    export async function geteEnter(server: ServerImplemented, message: Stalk.IDictionary) {
+    export async function geteEnter(server: ServerImplemented, message: IDictionary) {
         let connector = await server.gateEnter(message);
         return connector;
     }
@@ -52,9 +55,10 @@ export namespace StalkFactory {
         return await new Promise<any>((resolve, reject) => {
             server.connect(params, (err) => {
                 server._isConnected = true;
-                if (!!server.socket) {
+                let socket = server.getSocket();
+                if (!!socket) {
                     server.listenForPomeloEvents();
-                    server.socket.setReconnect(true);
+                    socket.setReconnect(true);
                 }
 
                 if (!!err) {
@@ -67,8 +71,20 @@ export namespace StalkFactory {
         });
     }
 
-    export async function checkIn(server: ServerImplemented, message: Stalk.IDictionary) {
-        let result = await server.checkIn(message);
+    export async function checkIn(server: ServerImplemented, message: IDictionary) {
+        let result = await server.getLobby().checkIn(message);
         return result;
+    }
+
+    export function checkOut(server: ServerImplemented) {
+        if (server) {
+            let socket = server.getSocket();
+            if (!!socket) {
+                socket.setReconnect(false);
+            }
+
+            server.getLobby().logout();
+            server.dispose();
+        }
     }
 }

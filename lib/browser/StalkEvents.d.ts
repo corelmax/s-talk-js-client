@@ -4,11 +4,12 @@
  *
  * Ahoo Studio.co.th
  */
-export declare namespace StalkEvents {
-    const ON_PUSH = "ON_PUSH";
-    interface IPushServerListener {
-        onPush(dataEvent: any): any;
-    }
+export declare namespace ChatEvents {
+    const ON_ADD = "onAdd";
+    const ON_LEAVE: string;
+    const ON_CHAT: string;
+    const ON_MESSAGE_READ: string;
+    const ON_GET_MESSAGES_READERS: string;
     interface IChatServerEvents {
         onChat(data: any): any;
         onMessageRead(dataEvent: any): any;
@@ -16,14 +17,14 @@ export declare namespace StalkEvents {
         onRoomJoin(data: any): any;
         onLeaveRoom(data: any): any;
     }
-    interface IFrontendServerListener {
-        onGetMe(dataEvent: any): any;
-        onGetCompanyInfo(dataEvent: any): any;
-        onGetCompanyMemberComplete(dataEvent: any): any;
-        onGetPrivateGroupsComplete(dataEvent: any): any;
-        onGetOrganizeGroupsComplete(dataEvent: any): any;
-        onGetProjectBaseGroupsComplete(dataEvent: any): any;
+}
+export declare namespace PushEvents {
+    const ON_PUSH = "ON_PUSH";
+    interface IPushServerListener {
+        onPush(dataEvent: any): any;
     }
+}
+export declare namespace StalkEvents {
     interface IRTCListener {
         onVideoCall(dataEvent: any): any;
         onVoiceCall(dataEvent: any): any;
@@ -34,14 +35,11 @@ export declare namespace StalkEvents {
         onAccessRoom(dataEvent: any): any;
         onUpdatedLastAccessTime(dataEvent: any): any;
         onAddRoomAccess(dataEvent: any): any;
-        onCreateGroupSuccess(dataEvent: any): any;
-        onEditedGroupMember(dataEvent: any): any;
-        onEditedGroupName(dataEvent: any): any;
-        onEditedGroupImage(dataEvent: any): any;
-        onNewGroupCreated(dataEvent: any): any;
-        onUpdateMemberInfoInProjectBase(dataEvent: any): any;
+    }
+    const ON_USER_LOGIN = "onUserLogin";
+    const ON_USER_LOGOUT = "onUserLogout";
+    interface BaseEvents {
         onUserLogin(dataEvent: any): any;
-        onUserUpdateImageProfile(dataEvent: any): any;
-        onUserUpdateProfile(dataEvent: any): any;
+        onUserLogout(dataEvent: any): any;
     }
 }

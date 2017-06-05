@@ -1,5 +1,12 @@
 /// <reference types="node" />
+/**
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
+ * Support by@ nattapon.r@live.com
+ *
+ * Ahoo Studio.co.th
+ */
 import * as EventEmitter from "events";
+import { API } from './API';
 export interface IPomelo extends EventEmitter {
     init: any;
     notify: any;
@@ -12,12 +19,20 @@ export interface IServer {
     host: string;
     port: number;
 }
+export interface IDictionary {
+    [k: string]: string;
+}
 export declare namespace Stalk {
     class ServerImplemented {
         private static Instance;
         static getInstance(): ServerImplemented;
         static createInstance(host: string, port: number): ServerImplemented;
-        socket: IPomelo;
+        private socket;
+        getSocket(): IPomelo;
+        private lobby;
+        getLobby(): API.LobbyAPI;
+        private chatroomAPI;
+        getChatRoomAPI(): API.ChatRoomAPI;
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -29,17 +44,14 @@ export declare namespace Stalk {
         onSocketReconnect: (data) => void;
         onDisconnected: (data) => void;
         constructor(host: string, port: number);
-        getClient(): IPomelo;
         dispose(): void;
         disConnect(callBack?: Function): void;
-        logout(): void;
         init(callback: (err, res: IPomelo) => void): void;
         private connectServer(params, callback);
         listenForPomeloEvents(): void;
         logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void): void;
         private authenForFrontendServer(_username, _hash, deviceToken, callback);
-        gateEnter(msg: Stalk.IDictionary): Promise<IServer>;
-        checkIn(msg: Stalk.IDictionary): Promise<any>;
+        gateEnter(msg: IDictionary): Promise<IServer>;
         TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void): void;
         private OnTokenAuthenticate(tokenRes, onSuccessCheckToken);
         kickMeAllSession(uid: string): void;
@@ -47,7 +59,7 @@ export declare namespace Stalk {
             [k: string]: string;
         }, callback: (err, res) => void): void;
         ProfileImageChanged(userId: string, path: string, callback: (err, res) => void): void;
-        getMe(msg: Stalk.IDictionary, callback: (err, res) => void): void;
+        getMe(msg: IDictionary, callback: (err, res) => void): void;
         updateFavoriteMember(editType: string, member: string, callback: (err, ress) => void): void;
         updateFavoriteGroups(editType: string, group: string, callback: (err, res) => void): void;
         updateClosedNoticeMemberList(editType: string, member: string, callback: (err, res) => void): void;
@@ -65,8 +77,6 @@ export declare namespace Stalk {
         editGroupMembers(editType: string, roomId: string, roomType: any, members: string[], callback: (err, res) => void): void;
         editGroupName(roomId: string, roomType: any, newGroupName: string, callback: (err, res) => void): void;
         getPrivateChatRoomId(token: string, myId: string, myRoommateId: string, callback: (err, res) => void): void;
-        JoinChatRoomRequest(token: string, username: any, room_id: string, callback: (err, res) => void): void;
-        LeaveChatRoomRequest(token: string, roomId: string, callback: (err, res) => void): void;
         videoCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void): void;
         voiceCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void): void;
         hangupCall(myId: string, contactId: string): void;
@@ -75,9 +85,6 @@ export declare namespace Stalk {
     interface IAuthenData {
         userId: string;
         token: string;
-    }
-    interface IDictionary {
-        [k: string]: string;
     }
     class ServerParam implements IServer {
         host: string;

@@ -4,13 +4,12 @@
  * 
  * Ahoo Studio.co.th 
  */
-
-export namespace StalkEvents {
-    export const ON_PUSH = "ON_PUSH";
-    export interface IPushServerListener {
-        onPush(dataEvent);
-    }
-
+export namespace ChatEvents {
+    export const ON_ADD = "onAdd";
+    export const ON_LEAVE: string = "onLeave";
+    export const ON_CHAT: string = "onChat";
+    export const ON_MESSAGE_READ: string = "onMessageRead";
+    export const ON_GET_MESSAGES_READERS: string = "onGetMessagesReaders";
     export interface IChatServerEvents {
         onChat(data);
         onMessageRead(dataEvent);
@@ -18,14 +17,14 @@ export namespace StalkEvents {
         onRoomJoin(data);
         onLeaveRoom(data);
     }
-    export interface IFrontendServerListener {
-        onGetMe(dataEvent);
-        onGetCompanyInfo(dataEvent);
-        onGetCompanyMemberComplete(dataEvent);
-        onGetPrivateGroupsComplete(dataEvent);
-        onGetOrganizeGroupsComplete(dataEvent);
-        onGetProjectBaseGroupsComplete(dataEvent);
+}
+export namespace PushEvents {
+    export const ON_PUSH = "ON_PUSH";
+    export interface IPushServerListener {
+        onPush(dataEvent);
     }
+}
+export namespace StalkEvents {
     export interface IRTCListener {
         onVideoCall(dataEvent);
         onVoiceCall(dataEvent);
@@ -36,17 +35,12 @@ export namespace StalkEvents {
         onAccessRoom(dataEvent);
         onUpdatedLastAccessTime(dataEvent);
         onAddRoomAccess(dataEvent);
+    }
 
-        onCreateGroupSuccess(dataEvent);
-        onEditedGroupMember(dataEvent);
-        onEditedGroupName(dataEvent);
-        onEditedGroupImage(dataEvent);
-        onNewGroupCreated(dataEvent);
-
-        onUpdateMemberInfoInProjectBase(dataEvent);
-
+    export const ON_USER_LOGIN = "onUserLogin";
+    export const ON_USER_LOGOUT = "onUserLogout";
+    export interface BaseEvents {
         onUserLogin(dataEvent);
-        onUserUpdateImageProfile(dataEvent);
-        onUserUpdateProfile(dataEvent);
+        onUserLogout(dataEvent);
     }
 }

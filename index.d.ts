@@ -4,13 +4,16 @@
  *
  * Ahoo Studio.co.th
  */
-export { Stalk } from "./lib/browser/serverImplemented";
-export { ChatRoomApi } from "./lib/browser/chatRoomApiProvider";
-export { StalkEvents } from "./lib/browser/StalkEvents";
+export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+export * from "./lib/browser/StalkEvents";
+export * from "./lib/browser/API";
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
-import { Stalk, IPomelo, IServer } from "./lib/browser/serverImplemented";
+import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+import { API } from "./lib/browser/API";
 export declare type ServerImplemented = Stalk.ServerImplemented;
+export declare type LobbyAPI = API.LobbyAPI;
+export declare type ChatRoomAPI = API.ChatRoomAPI;
 export declare namespace Utils {
     var statusCode: typeof HttpStatusCode;
     var tokenDecode: typeof Authen.TokenDecoded;
@@ -18,7 +21,8 @@ export declare namespace Utils {
 export declare namespace StalkFactory {
     function create(_host: string, _port: number): Stalk.ServerImplemented;
     function init(server: ServerImplemented): Promise<IPomelo>;
-    function geteEnter(server: ServerImplemented, message: Stalk.IDictionary): Promise<IServer>;
+    function geteEnter(server: ServerImplemented, message: IDictionary): Promise<IServer>;
     function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<any>;
-    function checkIn(server: ServerImplemented, message: Stalk.IDictionary): Promise<any>;
+    function checkIn(server: ServerImplemented, message: IDictionary): Promise<{}>;
+    function checkOut(server: ServerImplemented): void;
 }

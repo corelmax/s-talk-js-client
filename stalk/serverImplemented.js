@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
-var httpStatusCode_1 = require("./utils/httpStatusCode");
+var httpStatusCode_1 = require("../lib/utils/httpStatusCode");
 var EventEmitter = require("events");
 var Pomelo = require("../pomelo/reactWSClient");
 var IPomelo = (function (_super) {
@@ -145,7 +145,7 @@ var ServerImplemented = (function () {
             // <!-- Quering connector server.
             self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
                 console.log("QueryConnectorServ", JSON.stringify(result));
-                if (result.code === httpStatusCode_1.default.success) {
+                if (result.code === httpStatusCode_1.HttpStatusCode.success) {
                     self.disConnect();
                     var connectorPort = result.port;
                     // <!-- Connecting to connector server.
@@ -190,12 +190,12 @@ var ServerImplemented = (function () {
         // <!-- Authentication.
         self.pomelo.request("connector.entryHandler.login", msg, function (res) {
             console.log("login response: ", JSON.stringify(res));
-            if (res.code === httpStatusCode_1.default.fail) {
+            if (res.code === httpStatusCode_1.HttpStatusCode.fail) {
                 if (callback != null) {
                     callback(res.message, null);
                 }
             }
-            else if (res.code === httpStatusCode_1.default.success) {
+            else if (res.code === httpStatusCode_1.HttpStatusCode.success) {
                 if (callback != null) {
                     callback(null, res);
                 }
@@ -216,7 +216,7 @@ var ServerImplemented = (function () {
                 // <!-- Quering connector server.
                 self.pomelo.request("gate.gateHandler.queryEntry", msg, function (result) {
                     console.log("gateEnter", result);
-                    if (result.code === httpStatusCode_1.default.success) {
+                    if (result.code === httpStatusCode_1.HttpStatusCode.success) {
                         self.disConnect();
                         var data = { host: self.host, port: result.port };
                         resolve(data);
@@ -239,10 +239,10 @@ var ServerImplemented = (function () {
         return new Promise(function (resolve, rejected) {
             // <!-- Authentication.
             self.pomelo.request("connector.entryHandler.login", msg, function (res) {
-                if (res.code === httpStatusCode_1.default.fail) {
+                if (res.code === httpStatusCode_1.HttpStatusCode.fail) {
                     rejected(res.message);
                 }
-                else if (res.code === httpStatusCode_1.default.success) {
+                else if (res.code === httpStatusCode_1.HttpStatusCode.success) {
                     resolve(res);
                 }
                 else {
@@ -261,7 +261,7 @@ var ServerImplemented = (function () {
         });
     };
     ServerImplemented.prototype.OnTokenAuthenticate = function (tokenRes, onSuccessCheckToken) {
-        if (tokenRes.code === httpStatusCode_1.default.success) {
+        if (tokenRes.code === httpStatusCode_1.HttpStatusCode.success) {
             var data = tokenRes.data;
             var decode = data.decoded; //["decoded"];
             var decodedModel = JSON.parse(JSON.stringify(decode));

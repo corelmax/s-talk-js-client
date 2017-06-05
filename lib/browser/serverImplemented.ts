@@ -4,10 +4,11 @@
  * 
  * Ahoo Studio.co.th 
  */
+import * as EventEmitter from "events";
 
 import { HttpStatusCode } from '../utils/httpStatusCode';
 import { Authen } from '../utils/tokenDecode';
-import * as EventEmitter from "events";
+import { API } from './API';
 const Pomelo = require("../pomelo/reactWSClient");
 
 export interface IPomelo extends EventEmitter {
@@ -19,6 +20,7 @@ export interface IPomelo extends EventEmitter {
     setInitCallback: (error: string) => void;
 };
 export interface IServer { host: string; port: number; };
+export interface IDictionary { [k: string]: string; }
 
 export namespace Stalk {
     export class ServerImplemented {
@@ -34,7 +36,24 @@ export namespace Stalk {
             }
         }
 
-        socket: IPomelo;
+        private socket: IPomelo;
+        public getSocket() {
+            if (this.socket !== null) {
+                return this.socket;
+            }
+            else {
+                throw new Error("No socket instance!");
+            }
+        }
+        private lobby: API.LobbyAPI;
+        public getLobby() {
+            return this.lobby;
+        }
+        private chatroomAPI: API.ChatRoomAPI;
+        public getChatRoomAPI() {
+            return this.chatroomAPI;
+        }
+
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -48,21 +67,14 @@ export namespace Stalk {
 
         constructor(host: string, port: number) {
             console.log("ServerImplemented", host, port);
+
             this.host = host;
             this.port = port;
+            this.lobby = new API.LobbyAPI(this);
+            this.chatroomAPI = new API.ChatRoomAPI(this);
 
             this.connectServer = this.connectServer.bind(this);
             this.listenForPomeloEvents = this.listenForPomeloEvents.bind(this);
-        }
-
-        public getClient() {
-            let self = this;
-            if (self.socket !== null) {
-                return self.socket;
-            }
-            else {
-                console.warn("disconnected.");
-            }
         }
 
         public dispose() {
@@ -88,20 +100,6 @@ export namespace Stalk {
                 if (callBack)
                     callBack();
             }
-        }
-
-        public logout() {
-            console.log("logout request");
-
-            let registrationId = "";
-            let msg = {} as Stalk.IDictionary;
-            msg["username"] = null;
-            msg["registrationId"] = registrationId;
-            if (this.socket != null)
-                this.socket.notify("connector.entryHandler.logout", msg);
-
-            this.disConnect();
-            this.socket = null;
         }
 
         public init(callback: (err, res: IPomelo) => void) {
@@ -216,7 +214,7 @@ export namespace Stalk {
         private authenForFrontendServer(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
             let self = this;
 
-            let msg = {} as Stalk.IDictionary;
+            let msg = {} as IDictionary;
             msg["email"] = _username;
             msg["password"] = _hash;
             msg["registrationId"] = deviceToken;
@@ -242,7 +240,7 @@ export namespace Stalk {
             });
         }
 
-        gateEnter(msg: Stalk.IDictionary) {
+        gateEnter(msg: IDictionary) {
             let self = this;
             let result = new Promise((resolve: (data: IServer) => void, rejected) => {
                 if (!!self.socket && this._isConnected === false) {
@@ -271,28 +269,9 @@ export namespace Stalk {
             return result;
         }
 
-        public checkIn(msg: Stalk.IDictionary): Promise<any> {
-            let self = this;
-
-            return new Promise((resolve, rejected) => {
-                // <!-- Authentication.
-                self.socket.request("connector.entryHandler.login", msg, function (res) {
-                    if (res.code === HttpStatusCode.fail) {
-                        rejected(res.message);
-                    }
-                    else if (res.code === HttpStatusCode.success) {
-                        resolve(res);
-                    }
-                    else {
-                        resolve(res);
-                    }
-                });
-            });
-        }
-
         public TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void) {
             let self = this;
-            let msg: Stalk.IDictionary = {};
+            let msg = {} as IDictionary;
             msg["token"] = tokenBearer;
             self.socket.request("gate.gateHandler.authenGateway", msg, (result) => {
                 this.OnTokenAuthenticate(result, checkTokenCallback);
@@ -352,7 +331,7 @@ export namespace Stalk {
             });
         }
 
-        public getMe(msg: Stalk.IDictionary, callback: (err, res) => void) {
+        public getMe(msg: IDictionary, callback: (err, res) => void) {
             let self = this;
             //<!-- Get user info.
             self.socket.request("connector.entryHandler.getMe", msg, (result) => {
@@ -364,7 +343,7 @@ export namespace Stalk {
 
         public updateFavoriteMember(editType: string, member: string, callback: (err, ress) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["editType"] = editType;
             msg["member"] = member;
             msg["token"] = this.authenData.token;
@@ -377,7 +356,7 @@ export namespace Stalk {
 
         public updateFavoriteGroups(editType: string, group: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["editType"] = editType;
             msg["group"] = group;
             msg["token"] = this.authenData.token;
@@ -390,7 +369,7 @@ export namespace Stalk {
 
         public updateClosedNoticeMemberList(editType: string, member: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["editType"] = editType;
             msg["member"] = member;
             msg["token"] = this.authenData.token;
@@ -403,7 +382,7 @@ export namespace Stalk {
 
         public updateClosedNoticeGroupsList(editType: string, group: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["editType"] = editType;
             msg["group"] = group;
             msg["token"] = this.authenData.token;
@@ -416,7 +395,7 @@ export namespace Stalk {
 
         public getMemberProfile(userId: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["userId"] = userId;
 
             self.socket.request("auth.profileHandler.getMemberProfile", msg, (result) => {
@@ -437,7 +416,7 @@ export namespace Stalk {
         /// </summary>
         public getCompanyInfo(callBack: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyInfo", msg, (result) => {
                 if (callBack != null)
@@ -451,7 +430,7 @@ export namespace Stalk {
         /// </summary>
         public getCompanyMembers(callBack: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyMember", msg, (result) => {
                 console.log("getCompanyMembers", JSON.stringify(result));
@@ -466,7 +445,7 @@ export namespace Stalk {
         /// </summary>
         public getOrganizationGroups(callBack: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyChatRoom", msg, (result) => {
                 console.log("getOrganizationGroups: " + JSON.stringify(result));
@@ -481,7 +460,7 @@ export namespace Stalk {
         //region Project base.
         public getProjectBaseGroups(callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getProjectBaseGroups", msg, (result) => {
                 console.log("getProjectBaseGroups: " + JSON.stringify(result));
@@ -492,7 +471,7 @@ export namespace Stalk {
 
         public requestCreateProjectBaseGroup(groupName: string, members: any[], callback: (err, res) => void) {
             let self = this;
-            let msg: Stalk.IDictionary = {};
+            let msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["groupName"] = groupName;
             msg["members"] = JSON.stringify(members);
@@ -505,7 +484,7 @@ export namespace Stalk {
 
         public editMemberInfoInProjectBase(roomId: string, roomType: any, member: any, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["roomId"] = roomId;
             msg["roomType"] = roomType.toString();
@@ -530,7 +509,7 @@ export namespace Stalk {
 
         public getPrivateGroups(callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getMyPrivateGroupChat", msg, (result) => {
                 console.log("getPrivateGroups: " + JSON.stringify(result));
@@ -542,7 +521,7 @@ export namespace Stalk {
 
         public UserRequestCreateGroupChat(groupName: string, memberIds: string[], callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["groupName"] = groupName;
             msg["memberIds"] = JSON.stringify(memberIds);
@@ -556,7 +535,7 @@ export namespace Stalk {
 
         public UpdatedGroupImage(groupId: string, path: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["groupId"] = groupId;
             msg["path"] = path;
@@ -576,7 +555,7 @@ export namespace Stalk {
             if (roomType === null) return;
             if (members == null || members.length === 0) return;
 
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["editType"] = editType;
             msg["roomId"] = roomId;
@@ -597,7 +576,7 @@ export namespace Stalk {
             if (roomType === null) return;
             if (newGroupName == null || newGroupName.length === 0) return;
 
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["roomId"] = roomId;
             msg["roomType"] = roomType.toString();
@@ -618,7 +597,7 @@ export namespace Stalk {
         /// <param name="myRoommateId">My roommate identifier.</param>
         public getPrivateChatRoomId(token: string, myId: string, myRoommateId: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = token;
             msg["ownerId"] = myId;
             msg["roommateId"] = myRoommateId;
@@ -626,31 +605,6 @@ export namespace Stalk {
                 if (callback != null) {
                     callback(null, result);
                 }
-            });
-        }
-
-        // <!-- Join and leave chat room.
-        public JoinChatRoomRequest(token: string, username, room_id: string, callback: (err, res) => void) {
-            let self = this;
-            let msg = {} as Stalk.IDictionary;
-            msg["token"] = token;
-            msg["rid"] = room_id;
-            msg["username"] = username;
-            self.socket.request("connector.entryHandler.enterRoom", msg, (result) => {
-                if (callback !== null) {
-                    callback(null, result);
-                }
-            });
-        }
-
-        public LeaveChatRoomRequest(token: string, roomId: string, callback: (err, res) => void) {
-            let self = this;
-            let msg: Stalk.IDictionary = {};
-            msg["token"] = token;
-            msg["rid"] = roomId;
-            self.socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
-                if (callback != null)
-                    callback(null, result);
             });
         }
 
@@ -666,7 +620,7 @@ export namespace Stalk {
         /// </summary>
         public videoCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["targetId"] = targetId;
             msg["myRtcId"] = myRtcId;
@@ -679,7 +633,7 @@ export namespace Stalk {
 
         public voiceCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             msg["targetId"] = targetId;
             msg["myRtcId"] = myRtcId;
@@ -693,7 +647,7 @@ export namespace Stalk {
 
         public hangupCall(myId: string, contactId: string) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["userId"] = myId;
             msg["contactId"] = contactId;
             msg["token"] = this.authenData.token;
@@ -705,7 +659,7 @@ export namespace Stalk {
 
         public theLineIsBusy(contactId: string) {
             let self = this;
-            var msg: Stalk.IDictionary = {};
+            var msg = {} as IDictionary;
             msg["contactId"] = contactId;
 
             self.socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
@@ -718,9 +672,6 @@ export namespace Stalk {
     export interface IAuthenData {
         userId: string;
         token: string;
-    }
-    export interface IDictionary {
-        [k: string]: string;
     }
     export class ServerParam implements IServer {
         host: string;
