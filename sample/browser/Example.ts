@@ -52,7 +52,7 @@ export namespace StalkCodeExam {
             return result;
         }
 
-        private async checkOut() {
+        async checkOut() {
             await StalkFactory.checkOut(this.stalk);
         }
     }
@@ -137,35 +137,47 @@ export namespace StalkCodeExam {
     }
 }
 
+export class YourApp {
 
-/**
- * 
- * login to stalk.
- */
-export function stalkLogin(user: any) {
-    const exam = new StalkCodeExam.Factory("stalk.com", 3010);
+    exam: StalkCodeExam.Factory;
+    listeners: StalkCodeExam.ServerListener;
+    constructor() {
+        this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
+    }
+    /**
+     * 
+     * login to stalk.
+     */
+    stalkLogin(user: any) {
+        this.exam.stalkInit().then(socket => {
+            this.exam.handshake(user._id).then((connector) => {
+                this.exam.checkIn(user).then((value) => {
+                    console.log("Joined stalk-service success", value);
+                    let result: { success: boolean, token: any } = JSON.parse(JSON.stringify(value.data));
+                    if (result.success) {
+                        // Save token for your session..
 
-    exam.stalkInit().then(socket => {
-        exam.handshake(user._id).then((connector) => {
-            exam.checkIn(user).then((value) => {
-                console.log("Joined stalk-service success", value);
-                let result: { success: boolean, token: any } = JSON.parse(JSON.stringify(value.data));
-                if (result.success) {
-                    // Save token for your session..
-
-                    // Listen for message...
-                    new StalkCodeExam.ServerListener(exam.stalk.getSocket());
-                }
-                else {
-                    console.warn("Joined chat-server fail: ", result);
-                }
+                        // Listen for message...
+                        this.listeners = new StalkCodeExam.ServerListener(this.exam.stalk.getSocket());
+                    }
+                    else {
+                        console.warn("Joined chat-server fail: ", result);
+                    }
+                }).catch(err => {
+                    console.warn("Cannot checkIn", err);
+                });
             }).catch(err => {
-                console.warn("Cannot checkIn", err);
+                console.warn("Hanshake fail: ", err);
             });
         }).catch(err => {
-            console.warn("Hanshake fail: ", err);
+            console.log("StalkInit Fail.", err);
         });
-    }).catch(err => {
-        console.log("StalkInit Fail.", err);
-    });
+    }
+
+    /**
+     * logout and disconnections.
+     */
+    stalkLogout() {
+        this.exam.checkOut();
+    }
 }

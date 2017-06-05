@@ -176,33 +176,45 @@ var StalkCodeExam;
     }());
     StalkCodeExam.ServerListener = ServerListener;
 })(StalkCodeExam = exports.StalkCodeExam || (exports.StalkCodeExam = {}));
-/**
- *
- * login to stalk.
- */
-function stalkLogin(user) {
-    var exam = new StalkCodeExam.Factory("stalk.com", 3010);
-    exam.stalkInit().then(function (socket) {
-        exam.handshake(user._id).then(function (connector) {
-            exam.checkIn(user).then(function (value) {
-                console.log("Joined stalk-service success", value);
-                var result = JSON.parse(JSON.stringify(value.data));
-                if (result.success) {
-                    // Save token for your session..
-                    // Listen for message...
-                    new StalkCodeExam.ServerListener(exam.stalk.getSocket());
-                }
-                else {
-                    console.warn("Joined chat-server fail: ", result);
-                }
+var YourApp = (function () {
+    function YourApp() {
+        this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
+    }
+    /**
+     *
+     * login to stalk.
+     */
+    YourApp.prototype.stalkLogin = function (user) {
+        var _this = this;
+        this.exam.stalkInit().then(function (socket) {
+            _this.exam.handshake(user._id).then(function (connector) {
+                _this.exam.checkIn(user).then(function (value) {
+                    console.log("Joined stalk-service success", value);
+                    var result = JSON.parse(JSON.stringify(value.data));
+                    if (result.success) {
+                        // Save token for your session..
+                        // Listen for message...
+                        _this.listeners = new StalkCodeExam.ServerListener(_this.exam.stalk.getSocket());
+                    }
+                    else {
+                        console.warn("Joined chat-server fail: ", result);
+                    }
+                }).catch(function (err) {
+                    console.warn("Cannot checkIn", err);
+                });
             }).catch(function (err) {
-                console.warn("Cannot checkIn", err);
+                console.warn("Hanshake fail: ", err);
             });
         }).catch(function (err) {
-            console.warn("Hanshake fail: ", err);
+            console.log("StalkInit Fail.", err);
         });
-    }).catch(function (err) {
-        console.log("StalkInit Fail.", err);
-    });
-}
-exports.stalkLogin = stalkLogin;
+    };
+    /**
+     * logout and disconnections.
+     */
+    YourApp.prototype.stalkLogout = function () {
+        this.exam.checkOut();
+    };
+    return YourApp;
+}());
+exports.YourApp = YourApp;

@@ -13,7 +13,7 @@ export declare namespace StalkCodeExam {
         stalkInit(): Promise<IPomelo>;
         handshake(uid: string): Promise<IServer>;
         checkIn(user: any): Promise<{}>;
-        private checkOut();
+        checkOut(): Promise<void>;
     }
     /**
      * Listenning for messages...
@@ -29,8 +29,17 @@ export declare namespace StalkCodeExam {
         addChatListener(obj: ChatEvents.IChatServerEvents): void;
     }
 }
-/**
- *
- * login to stalk.
- */
-export declare function stalkLogin(user: any): void;
+export declare class YourApp {
+    exam: StalkCodeExam.Factory;
+    listeners: StalkCodeExam.ServerListener;
+    constructor();
+    /**
+     *
+     * login to stalk.
+     */
+    stalkLogin(user: any): void;
+    /**
+     * logout and disconnections.
+     */
+    stalkLogout(): void;
+}
