@@ -25,6 +25,7 @@ export namespace Utils {
 
 export namespace StalkFactory {
     export function create(_host: string, _port: number) {
+        // "ws://stalk.com"
         let server = Stalk.ServerImplemented.createInstance(_host, _port);
         return server;
     }

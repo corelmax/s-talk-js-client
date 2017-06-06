@@ -125,7 +125,7 @@ export default class WebSocketClient {
     encode = params.encode || defaultEncode;
     decode = params.decode || defaultDecode;
 
-    let url = "ws://" + host;
+    let url = host;
     if (port) {
       url += ":" + port;
     }
@@ -148,7 +148,9 @@ export default class WebSocketClient {
   pomelo.disconnect = function (): Promise<any> {
     return new Promise((resolve, rejected) => {
       if (!!socket) {
-        if (socket.close) socket.close();
+        if (socket.close) {
+          socket.close();
+        }
         socket = null;
 
         console.log("disconnected socket is", socket);
