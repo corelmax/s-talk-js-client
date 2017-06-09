@@ -111,7 +111,7 @@ var StalkFactory;
                                 server._isConnected = true;
                                 var socket = server.getSocket();
                                 if (!!socket) {
-                                    server.listenForPomeloEvents();
+                                    server.listenSocketEvents();
                                     socket.setReconnect(true);
                                 }
                                 if (!!err) {

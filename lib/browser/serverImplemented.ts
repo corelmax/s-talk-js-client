@@ -74,7 +74,7 @@ export namespace Stalk {
             this.chatroomAPI = new API.ChatRoomAPI(this);
 
             this.connectServer = this.connectServer.bind(this);
-            this.listenForPomeloEvents = this.listenForPomeloEvents.bind(this);
+            this.listenSocketEvents = this.listenSocketEvents.bind(this);
         }
 
         public dispose() {
@@ -92,13 +92,15 @@ export namespace Stalk {
             if (!!self.socket) {
                 self.socket.removeAllListeners();
                 self.socket.disconnect().then(() => {
-                    if (callBack)
+                    if (callBack) {
                         callBack();
+                    }
                 });
             }
             else {
-                if (callBack)
+                if (callBack) {
                     callBack();
+                }
             }
         }
 
@@ -130,12 +132,12 @@ export namespace Stalk {
             });
         }
 
-        public listenForPomeloEvents() {
+        public listenSocketEvents() {
             this.socket.removeAllListeners();
 
             this.socket.on("onopen", (this.onSocketOpen) ?
                 this.onSocketOpen : (data) => console.log("onopen", data));
-            this.socket.on("close", (this.onSocketClose) ?
+            this.socket.on("close", (!!this.onSocketClose) ?
                 this.onSocketClose : (data) => {
                     console.warn("close", data);
                     this.socket.setInitCallback(null);
@@ -146,8 +148,9 @@ export namespace Stalk {
                 console.warn("disconnected", data);
                 this._isConnected = false;
                 this.socket.setInitCallback(null);
-                if (this.onDisconnected)
+                if (this.onDisconnected) {
                     this.onDisconnected(data);
+                }
             });
             this.socket.on("io-error", (data) => {
                 console.warn("io-error", data);
@@ -283,12 +286,14 @@ export namespace Stalk {
                 var data = tokenRes.data;
                 var decode = data.decoded; //["decoded"];
                 var decodedModel = JSON.parse(JSON.stringify(decode)) as Authen.TokenDecoded;
-                if (onSuccessCheckToken != null)
+                if (onSuccessCheckToken != null) {
                     onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
+                }
             }
             else {
-                if (onSuccessCheckToken != null)
+                if (onSuccessCheckToken != null) {
                     onSuccessCheckToken(tokenRes, null);
+                }
             }
         }
 
@@ -419,8 +424,9 @@ export namespace Stalk {
             var msg = {} as IDictionary;
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyInfo", msg, (result) => {
-                if (callBack != null)
+                if (callBack != null) {
                     callBack(null, result);
+                }
             });
         }
 
@@ -434,8 +440,9 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyMember", msg, (result) => {
                 console.log("getCompanyMembers", JSON.stringify(result));
-                if (callBack != null)
+                if (callBack != null) {
                     callBack(null, result);
+                }
             });
         }
 
@@ -449,8 +456,9 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getCompanyChatRoom", msg, (result) => {
                 console.log("getOrganizationGroups: " + JSON.stringify(result));
-                if (callBack != null)
+                if (callBack != null) {
                     callBack(null, result);
+                }
             });
         }
 
@@ -464,8 +472,9 @@ export namespace Stalk {
             msg["token"] = this.authenData.token;
             self.socket.request("connector.entryHandler.getProjectBaseGroups", msg, (result) => {
                 console.log("getProjectBaseGroups: " + JSON.stringify(result));
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -477,8 +486,9 @@ export namespace Stalk {
             msg["members"] = JSON.stringify(members);
             self.socket.request("chat.chatRoomHandler.requestCreateProjectBase", msg, (result) => {
                 console.log("requestCreateProjectBaseGroup: " + JSON.stringify(result));
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -490,8 +500,9 @@ export namespace Stalk {
             msg["roomType"] = roomType.toString();
             msg["member"] = JSON.stringify(member);
             self.socket.request("chat.chatRoomHandler.editMemberInfoInProjectBase", msg, (result) => {
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -528,8 +539,9 @@ export namespace Stalk {
             self.socket.request("chat.chatRoomHandler.userCreateGroupChat", msg, (result) => {
                 console.log("RequestCreateGroupChat", JSON.stringify(result));
 
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -626,8 +638,9 @@ export namespace Stalk {
             msg["myRtcId"] = myRtcId;
             self.socket.request("connector.entryHandler.videoCallRequest", msg, (result) => {
                 console.log("videoCallRequesting =>: " + JSON.stringify(result));
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -640,8 +653,9 @@ export namespace Stalk {
             self.socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
                 console.log("voiceCallRequesting =>: " + JSON.stringify(result));
 
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
 

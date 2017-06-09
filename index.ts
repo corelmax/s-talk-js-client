@@ -58,7 +58,7 @@ export namespace StalkFactory {
                 server._isConnected = true;
                 let socket = server.getSocket();
                 if (!!socket) {
-                    server.listenForPomeloEvents();
+                    server.listenSocketEvents();
                     socket.setReconnect(true);
                 }
 
