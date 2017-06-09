@@ -25,6 +25,7 @@ export namespace Utils {
 
 export namespace StalkFactory {
     export function create(_host: string, _port: number) {
+        // "ws://stalk.com"
         let server = Stalk.ServerImplemented.createInstance(_host, _port);
         return server;
     }
@@ -57,7 +58,7 @@ export namespace StalkFactory {
                 server._isConnected = true;
                 let socket = server.getSocket();
                 if (!!socket) {
-                    server.listenForPomeloEvents();
+                    server.listenSocketEvents();
                     socket.setReconnect(true);
                 }
 

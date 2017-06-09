@@ -48,7 +48,7 @@ export declare namespace Stalk {
         disConnect(callBack?: Function): void;
         init(callback: (err, res: IPomelo) => void): void;
         private connectServer(params, callback);
-        listenForPomeloEvents(): void;
+        listenSocketEvents(): void;
         logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void): void;
         private authenForFrontendServer(_username, _hash, deviceToken, callback);
         gateEnter(msg: IDictionary): Promise<IServer>;

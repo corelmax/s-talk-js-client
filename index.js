@@ -58,6 +58,7 @@ var Utils;
 var StalkFactory;
 (function (StalkFactory) {
     function create(_host, _port) {
+        // "ws://stalk.com"
         var server = serverImplemented_2.Stalk.ServerImplemented.createInstance(_host, _port);
         return server;
     }
@@ -110,7 +111,7 @@ var StalkFactory;
                                 server._isConnected = true;
                                 var socket = server.getSocket();
                                 if (!!socket) {
-                                    server.listenForPomeloEvents();
+                                    server.listenSocketEvents();
                                     socket.setReconnect(true);
                                 }
                                 if (!!err) {
