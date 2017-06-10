@@ -122,7 +122,7 @@ import WebSocket = require('ws');
     encode = params.encode || defaultEncode;
     decode = params.decode || defaultDecode;
 
-    let url = "ws://" + host; //'ws://' 
+    let url = host;
     if (port) {
       url += ':' + port;
     }
