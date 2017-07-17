@@ -1,5 +1,5 @@
 # stalk-javascript-client
-Universal javascript client-api for Stalk long polling realtime platform. 
+Universal javascript client-api for Stalk long polling realtime platform. https://github.com/mzget/stalk-realtime-platform/wiki
 - [x] node.js server
 - [x] browser
 - [x] react-native
