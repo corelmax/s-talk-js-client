@@ -20,7 +20,7 @@ export interface IPomelo extends EventEmitter {
     setInitCallback: (error: string) => void;
 };
 export interface IServer { host: string; port: number; };
-export interface IDictionary { [k: string]: string; }
+export interface IDictionary { [k: string]: string | any; }
 
 export namespace Stalk {
     export class ServerImplemented {

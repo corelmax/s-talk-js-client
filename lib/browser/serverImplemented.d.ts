@@ -20,7 +20,7 @@ export interface IServer {
     port: number;
 }
 export interface IDictionary {
-    [k: string]: string;
+    [k: string]: string | any;
 }
 export declare namespace Stalk {
     class ServerImplemented {

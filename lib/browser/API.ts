@@ -202,16 +202,23 @@ export namespace API {
             this.server = _server;
         }
 
-        public async videoCallRequest(targetUid: string, myRtcUid: string) {
+        public async videoCallRequest(target_ids: string[], user_id: string, room_id: string, api_key: string) {
             let _message = {} as IDictionary;
-            _message["targetId"] = targetUid;
-            _message["myRtcId"] = myRtcUid;
+            _message["target_ids"] = target_ids;
+            _message["user_id"] = user_id;
+            _message["room_id"] = room_id;
+            _message["x-api-key"] = api_key;
 
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
                     socket.request("connector.entryHandler.videoCallRequest", _message, (result) => {
-                        resolve(result);
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {
@@ -220,16 +227,22 @@ export namespace API {
             });
         }
 
-        public async avoiceCallRequest(targetUid: string, myRtcUid: string) {
+        public async voiceCallRequest(target_ids: string[], user_id: string, api_key: string) {
             let msg = {} as IDictionary;
-            msg["targetId"] = targetUid;
-            msg["myRtcId"] = myRtcUid;
+            msg["target_ids"] = target_ids;
+            msg["user_id"] = user_id;
+            msg["x-api-key"] = api_key;
 
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
                     socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
-                        resolve(result);
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {
@@ -247,7 +260,12 @@ export namespace API {
                 try {
                     let socket = this.server.getSocket();
                     socket.request("connector.entryHandler.hangupCall", msg, (result) => {
-                        resolve(result);
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {
@@ -264,7 +282,12 @@ export namespace API {
                 try {
                     let socket = this.server.getSocket();
                     socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
-                        resolve(result);
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {
