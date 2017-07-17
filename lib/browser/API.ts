@@ -91,6 +91,20 @@ export namespace API {
             });
         }
 
+        public async pushByUids(_message: IDictionary) {
+            return new Promise((resolve, rejected) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("chat.chatHandler.pushByUids", _message, (result) => {
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
+            });
+        }
+
         public getSyncDateTime(callback: (err, res) => void) {
             let socket = this.server.getSocket();
             let message = {} as IDictionary;
@@ -173,6 +187,88 @@ export namespace API {
                 }
                 catch (ex) {
                     reject(ex.message);
+                }
+            });
+        }
+    }
+
+    /**
+     * calling experiences between phones, apps and VoIP systems
+     */
+    export class CallingAPI {
+        private server: Stalk.ServerImplemented;
+
+        constructor(_server: Stalk.ServerImplemented) {
+            this.server = _server;
+        }
+
+        public async videoCallRequest(targetUid: string, myRtcUid: string) {
+            let _message = {} as IDictionary;
+            _message["targetId"] = targetUid;
+            _message["myRtcId"] = myRtcUid;
+
+            return new Promise((resolve, rejected) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("connector.entryHandler.videoCallRequest", _message, (result) => {
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
+            });
+        }
+
+        public async avoiceCallRequest(targetUid: string, myRtcUid: string) {
+            let msg = {} as IDictionary;
+            msg["targetId"] = targetUid;
+            msg["myRtcId"] = myRtcUid;
+
+            return new Promise((resolve, rejected) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
+            });
+        }
+
+        public async hangupCall(myId: string, contactId: string) {
+            let msg = {} as IDictionary;
+            msg["userId"] = myId;
+            msg["contactId"] = contactId;
+
+            return new Promise((resolve, rejected) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("connector.entryHandler.hangupCall", msg, (result) => {
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
+            });
+        }
+
+        public async theLineIsBusy(contactId: string) {
+            let msg = {} as IDictionary;
+            msg["contactId"] = contactId;
+
+            return new Promise((resolve, rejected) => {
+                try {
+                    let socket = this.server.getSocket();
+                    socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
+                        resolve(result);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
                 }
             });
         }

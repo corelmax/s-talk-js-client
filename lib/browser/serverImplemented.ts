@@ -53,6 +53,10 @@ export namespace Stalk {
         public getChatRoomAPI() {
             return this.chatroomAPI;
         }
+        private callingAPI: API.CallingAPI;
+        public getCallingAPI() {
+            return this.callingAPI;
+        }
 
         host: string;
         port: number | string;
@@ -66,12 +70,13 @@ export namespace Stalk {
         onDisconnected: (data) => void;
 
         constructor(host: string, port: number) {
-            console.log("ServerImplemented", host, port);
+            console.log("ServerImp", host, port);
 
             this.host = host;
             this.port = port;
             this.lobby = new API.LobbyAPI(this);
             this.chatroomAPI = new API.ChatRoomAPI(this);
+            this.callingAPI = new API.CallingAPI(this);
 
             this.connectServer = this.connectServer.bind(this);
             this.listenSocketEvents = this.listenSocketEvents.bind(this);
@@ -617,67 +622,6 @@ export namespace Stalk {
                 if (callback != null) {
                     callback(null, result);
                 }
-            });
-        }
-
-        //endregion
-
-
-        // region <!-- Web RTC Calling...
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Videos the call requesting.
-        /// - tell target client for your call requesting...
-        /// </summary>
-        public videoCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
-            let self = this;
-            var msg = {} as IDictionary;
-            msg["token"] = this.authenData.token;
-            msg["targetId"] = targetId;
-            msg["myRtcId"] = myRtcId;
-            self.socket.request("connector.entryHandler.videoCallRequest", msg, (result) => {
-                console.log("videoCallRequesting =>: " + JSON.stringify(result));
-                if (callback != null) {
-                    callback(null, result);
-                }
-            });
-        }
-
-        public voiceCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void) {
-            let self = this;
-            var msg = {} as IDictionary;
-            msg["token"] = this.authenData.token;
-            msg["targetId"] = targetId;
-            msg["myRtcId"] = myRtcId;
-            self.socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
-                console.log("voiceCallRequesting =>: " + JSON.stringify(result));
-
-                if (callback != null) {
-                    callback(null, result);
-                }
-            });
-        }
-
-        public hangupCall(myId: string, contactId: string) {
-            let self = this;
-            var msg = {} as IDictionary;
-            msg["userId"] = myId;
-            msg["contactId"] = contactId;
-            msg["token"] = this.authenData.token;
-
-            self.socket.request("connector.entryHandler.hangupCall", msg, (result) => {
-                console.log("hangupCall: ", JSON.stringify(result));
-            });
-        }
-
-        public theLineIsBusy(contactId: string) {
-            let self = this;
-            var msg = {} as IDictionary;
-            msg["contactId"] = contactId;
-
-            self.socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
-                console.log("theLineIsBusy response: " + JSON.stringify(result));
             });
         }
 

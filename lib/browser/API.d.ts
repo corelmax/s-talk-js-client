@@ -12,6 +12,7 @@ export declare namespace API {
         private server;
         constructor(_server: Stalk.ServerImplemented);
         chat(target: string, _message: any, callback: (err, res) => void): void;
+        pushByUids(_message: IDictionary): Promise<{}>;
         getSyncDateTime(callback: (err, res) => void): void;
         /**
          * get older message histories.
@@ -26,5 +27,16 @@ export declare namespace API {
         private server;
         constructor(_server: Stalk.ServerImplemented);
         push(_message: IDictionary): Promise<{}>;
+    }
+    /**
+     * calling experiences between phones, apps and VoIP systems
+     */
+    class CallingAPI {
+        private server;
+        constructor(_server: Stalk.ServerImplemented);
+        videoCallRequest(targetUid: string, myRtcUid: string): Promise<{}>;
+        avoiceCallRequest(targetUid: string, myRtcUid: string): Promise<{}>;
+        hangupCall(myId: string, contactId: string): Promise<{}>;
+        theLineIsBusy(contactId: string): Promise<{}>;
     }
 }
