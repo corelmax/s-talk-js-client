@@ -1,8 +1,9 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var serverImplemented_1 = require("../libs/stalk/serverImplemented");
 var chatRoomApiProvider_1 = require("../libs/stalk/chatRoomApiProvider");
 var serverEventListener_1 = require("../libs/stalk/serverEventListener");
@@ -155,5 +156,4 @@ var BackendFactory = (function () {
     };
     return BackendFactory;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = BackendFactory;

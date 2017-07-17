@@ -1,9 +1,10 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * ChatRoomComponent for handle some business logic of chat room.
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var async = require("async");
 var BackendFactory_1 = require("./BackendFactory");
 var serverImplemented_1 = require("../libs/stalk/serverImplemented");
@@ -405,6 +406,7 @@ var ChatRoomComponent = (function () {
                                 histories = result.data;
                             }
                             else {
+                                //console.warn("WTF god only know.", result.message);
                             }
                             var his_length = histories.length;
                             //console.log("new chat log", histories.length);
@@ -484,5 +486,4 @@ var ChatRoomComponent = (function () {
     };
     return ChatRoomComponent;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ChatRoomComponent;

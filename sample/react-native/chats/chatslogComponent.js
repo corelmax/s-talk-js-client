@@ -1,9 +1,10 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * ChatRoomComponent for handle some business logic of chat room.
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var async = require("async");
 var DataModels = require("./models/ChatDataModels");
 var chatLog_1 = require("./models/chatLog");
@@ -363,5 +364,4 @@ var ChatsLogComponent = (function () {
     };
     return ChatsLogComponent;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ChatsLogComponent;

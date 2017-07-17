@@ -1,9 +1,10 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * This is pure function action for redux app.
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var chatRoomComponent_1 = require("../../chats/chatRoomComponent");
 var BackendFactory_1 = require("../../chats/BackendFactory");
 var secureServiceFactory_1 = require("../../libs/chitchat/services/secureServiceFactory");
@@ -19,25 +20,25 @@ var config_1 = require("../../configs/config");
 var ChatRoomActionsType = (function () {
     function ChatRoomActionsType() {
     }
+    ChatRoomActionsType.STOP = "STOP_CHATROOM_REDUCER";
+    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_REQUEST = "GET_PERSISTEND_MESSAGE_REQUEST";
+    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS = "GET_PERSISTEND_MESSAGE_SUCCESS";
+    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_FAILURE = "GET_PERSISTEND_MESSAGE_FAILURE";
+    ChatRoomActionsType.GET_NEWER_MESSAGE_FAILURE = "GET_NEWER_MESSAGE_FAILURE";
+    ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS = "GET_NEWER_MESSAGE_SUCCESS";
+    ChatRoomActionsType.SEND_MESSAGE_REQUEST = "SEND_MESSAGE_REQUEST";
+    ChatRoomActionsType.SEND_MESSAGE_SUCCESS = "SEND_MESSAGE_SUCCESS";
+    ChatRoomActionsType.SEND_MESSAGE_FAILURE = "SEND_MESSAGE_FAILURE";
+    ChatRoomActionsType.JOIN_ROOM_REQUEST = "JOIN_ROOM_REQUEST";
+    ChatRoomActionsType.JOIN_ROOM_SUCCESS = "JOIN_ROOM_SUCCESS";
+    ChatRoomActionsType.JOIN_ROOM_FAILURE = "JOIN_ROOM_FAILURE";
+    ChatRoomActionsType.REPLACE_MESSAGE = "REPLACE_MESSAGE";
+    ChatRoomActionsType.ON_NEW_MESSAGE = "ON_NEW_MESSAGE";
+    ChatRoomActionsType.ON_EARLY_MESSAGE_READY = "ON_EARLY_MESSAGE_READY";
+    ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS = "LOAD_EARLY_MESSAGE_SUCCESS";
+    ChatRoomActionsType.SELECT_CHAT_ROOM = "SELECT_CHAT_ROOM";
     return ChatRoomActionsType;
 }());
-ChatRoomActionsType.STOP = "STOP_CHATROOM_REDUCER";
-ChatRoomActionsType.GET_PERSISTEND_MESSAGE_REQUEST = "GET_PERSISTEND_MESSAGE_REQUEST";
-ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS = "GET_PERSISTEND_MESSAGE_SUCCESS";
-ChatRoomActionsType.GET_PERSISTEND_MESSAGE_FAILURE = "GET_PERSISTEND_MESSAGE_FAILURE";
-ChatRoomActionsType.GET_NEWER_MESSAGE_FAILURE = "GET_NEWER_MESSAGE_FAILURE";
-ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS = "GET_NEWER_MESSAGE_SUCCESS";
-ChatRoomActionsType.SEND_MESSAGE_REQUEST = "SEND_MESSAGE_REQUEST";
-ChatRoomActionsType.SEND_MESSAGE_SUCCESS = "SEND_MESSAGE_SUCCESS";
-ChatRoomActionsType.SEND_MESSAGE_FAILURE = "SEND_MESSAGE_FAILURE";
-ChatRoomActionsType.JOIN_ROOM_REQUEST = "JOIN_ROOM_REQUEST";
-ChatRoomActionsType.JOIN_ROOM_SUCCESS = "JOIN_ROOM_SUCCESS";
-ChatRoomActionsType.JOIN_ROOM_FAILURE = "JOIN_ROOM_FAILURE";
-ChatRoomActionsType.REPLACE_MESSAGE = "REPLACE_MESSAGE";
-ChatRoomActionsType.ON_NEW_MESSAGE = "ON_NEW_MESSAGE";
-ChatRoomActionsType.ON_EARLY_MESSAGE_READY = "ON_EARLY_MESSAGE_READY";
-ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS = "LOAD_EARLY_MESSAGE_SUCCESS";
-ChatRoomActionsType.SELECT_CHAT_ROOM = "SELECT_CHAT_ROOM";
 exports.ChatRoomActionsType = ChatRoomActionsType;
 function stop() {
     return function (dispatch) { return { type: ChatRoomActionsType.STOP }; };
@@ -65,6 +66,7 @@ function onChatRoomDelegate(event, newMsg) {
          * - if not my message. Update who read this message. And tell anyone.
          */
         if (BackendFactory_1.default.getInstance().dataManager.isMySelf(newMsg.sender)) {
+            // dispatch(replaceMyMessage(newMsg));
         }
         else {
             console.log("is contact message");
@@ -84,6 +86,7 @@ function onChatRoomDelegate(event, newMsg) {
     }
     else if (event === serverEventListener_1.default.ON_MESSAGE_READ) {
         console.log("serviceListener: ", serverEventListener_1.default.ON_MESSAGE_READ, newMsg);
+        //                service.set(chatRoomComponent.chatMessages);
     }
 }
 function onOutSideRoomDelegate(event, data) {

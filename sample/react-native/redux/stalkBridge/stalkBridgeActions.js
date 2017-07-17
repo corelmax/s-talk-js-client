@@ -1,9 +1,10 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * This is pure function action for redux app.
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var BackendFactory_1 = require("../../chats/BackendFactory");
 var notificationManager_1 = require("../../chats/notificationManager");
 var DataModels = require("../../chats/models/ChatDataModels");
