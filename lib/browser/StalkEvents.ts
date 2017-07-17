@@ -24,13 +24,18 @@ export namespace PushEvents {
         onPush(dataEvent);
     }
 }
-export namespace StalkEvents {
-    export interface IRTCListener {
-        onVideoCall(dataEvent);
-        onVoiceCall(dataEvent);
-        onHangupCall(dataEvent);
-        onTheLineIsBusy(dataEvent);
+export namespace CallingEvents {
+    export const ON_CALL = "ON_CALL";
+    export interface ICallingListener {
+        onCall(dataEvent);
     }
+
+    export const VideoCall = "VideoCall";
+    export const VoiceCall = "VoiceCall";
+    export const HangupCall = "HangupCall";
+    export const TheLineIsBusy = "TheLineIsBusy";
+}
+export namespace StalkEvents {
     export interface IServerListener {
         onAccessRoom(dataEvent);
         onUpdatedLastAccessTime(dataEvent);

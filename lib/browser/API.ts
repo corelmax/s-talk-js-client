@@ -202,41 +202,17 @@ export namespace API {
             this.server = _server;
         }
 
-        public async videoCallRequest(target_ids: string[], user_id: string, room_id: string, api_key: string) {
+        public async callingRequest(members: string[], event: string, api_key: string, payload: any) {
             let _message = {} as IDictionary;
-            _message["target_ids"] = target_ids;
-            _message["user_id"] = user_id;
-            _message["room_id"] = room_id;
+            _message["members"] = members;
+            _message["event"] = event;
             _message["x-api-key"] = api_key;
+            _message["payload"] = payload;
 
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.videoCallRequest", _message, (result) => {
-                        if (result.code == 200) {
-                            resolve(result);
-                        }
-                        else {
-                            rejected(result.message);
-                        }
-                    });
-                }
-                catch (ex) {
-                    rejected(ex);
-                }
-            });
-        }
-
-        public async voiceCallRequest(target_ids: string[], user_id: string, api_key: string) {
-            let msg = {} as IDictionary;
-            msg["target_ids"] = target_ids;
-            msg["user_id"] = user_id;
-            msg["x-api-key"] = api_key;
-
-            return new Promise((resolve, rejected) => {
-                try {
-                    let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
+                    socket.request("connector.entryHandler.callingRequest", _message, (result) => {
                         if (result.code == 200) {
                             resolve(result);
                         }

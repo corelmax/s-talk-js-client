@@ -34,8 +34,7 @@ export declare namespace API {
     class CallingAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        videoCallRequest(target_ids: string[], user_id: string, room_id: string, api_key: string): Promise<{}>;
-        voiceCallRequest(target_ids: string[], user_id: string, api_key: string): Promise<{}>;
+        callingRequest(members: string[], event: string, api_key: string, payload: any): Promise<{}>;
         hangupCall(myId: string, contactId: string): Promise<{}>;
         theLineIsBusy(contactId: string): Promise<{}>;
     }
