@@ -1,10 +1,11 @@
+"use strict";
 /**
  *  NotificationManager
  *
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var BackendFactory_1 = require("./BackendFactory");
 var ChatDataModels_1 = require("./models/ChatDataModels");
 var pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
@@ -51,5 +52,4 @@ var NotificationManager = (function () {
     };
     return NotificationManager;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = NotificationManager;

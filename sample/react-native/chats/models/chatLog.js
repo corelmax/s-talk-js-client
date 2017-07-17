@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ChatLog = (function () {
     function ChatLog(room) {
         this.id = room._id;
@@ -17,5 +18,4 @@ var ChatLog = (function () {
     };
     return ChatLog;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ChatLog;

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var PushDataListener = (function () {
     function PushDataListener() {
         this.onPushEvents = new Array();
@@ -15,5 +16,4 @@ var PushDataListener = (function () {
     };
     return PushDataListener;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = PushDataListener;

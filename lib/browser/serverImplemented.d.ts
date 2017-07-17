@@ -33,6 +33,8 @@ export declare namespace Stalk {
         getLobby(): API.LobbyAPI;
         private chatroomAPI;
         getChatRoomAPI(): API.ChatRoomAPI;
+        private callingAPI;
+        getCallingAPI(): API.CallingAPI;
         host: string;
         port: number | string;
         authenData: Stalk.IAuthenData;
@@ -77,10 +79,6 @@ export declare namespace Stalk {
         editGroupMembers(editType: string, roomId: string, roomType: any, members: string[], callback: (err, res) => void): void;
         editGroupName(roomId: string, roomType: any, newGroupName: string, callback: (err, res) => void): void;
         getPrivateChatRoomId(token: string, myId: string, myRoommateId: string, callback: (err, res) => void): void;
-        videoCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void): void;
-        voiceCallRequest(targetId: string, myRtcId: string, callback: (err, res) => void): void;
-        hangupCall(myId: string, contactId: string): void;
-        theLineIsBusy(contactId: string): void;
     }
     interface IAuthenData {
         userId: string;

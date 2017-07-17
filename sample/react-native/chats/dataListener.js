@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var DataListener = (function () {
     function DataListener(dataManager) {
         this.notifyNewMessageEvents = new Array();
@@ -160,5 +161,4 @@ var DataListener = (function () {
     ;
     return DataListener;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = DataListener;

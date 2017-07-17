@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ServerEventListener = (function () {
     function ServerEventListener(socket) {
         this.pomelo = socket;
@@ -147,38 +148,37 @@ var ServerEventListener = (function () {
             self.serverListener.onUpdateMemberInfoInProjectBase(data);
         });
     };
+    ServerEventListener.ON_ADD = "onAdd";
+    ServerEventListener.ON_LEAVE = "onLeave";
+    ServerEventListener.ON_CHAT = "onChat";
+    ServerEventListener.ON_MESSAGE_READ = "onMessageRead";
+    ServerEventListener.ON_GET_MESSAGES_READERS = "onGetMessagesReaders";
+    ServerEventListener.ON_VIDEO_CALL = "onVideoCall";
+    ServerEventListener.ON_VOICE_CALL = "onVoiceCall";
+    ServerEventListener.ON_HANGUP_CALL = "onHangupCall";
+    ServerEventListener.ON_THE_LINE_IS_BUSY = "onTheLineIsBusy";
+    //<!-- AccessRoom Info -->
+    ServerEventListener.ON_ACCESS_ROOMS = "onAccessRooms";
+    ServerEventListener.ON_ADD_ROOM_ACCESS = "onAddRoomAccess";
+    ServerEventListener.ON_UPDATED_LASTACCESSTIME = "onUpdatedLastAccessTime";
+    //<!-- Group -->
+    ServerEventListener.ON_CREATE_GROUP_SUCCESS = "onCreateGroupSuccess";
+    ServerEventListener.ON_EDITED_GROUP_MEMBER = "onEditGroupMembers";
+    ServerEventListener.ON_EDITED_GROUP_NAME = "onEditGroupName";
+    ServerEventListener.ON_EDITED_GROUP_IMAGE = "onEditGroupImage";
+    ServerEventListener.ON_NEW_GROUP_CREATED = "onNewGroupCreated";
+    ServerEventListener.ON_UPDATE_MEMBER_INFO_IN_PROJECTBASE = "onUpdateMemberInfoInProjectBase";
+    //<!-- User -->
+    ServerEventListener.ON_USER_LOGIN = "onUserLogin";
+    ServerEventListener.ON_USER_UPDATE_IMAGE_PROFILE = "onUserUpdateImgProfile";
+    ServerEventListener.ON_USER_UPDATE_PROFILE = "onUserUpdateProfile";
+    //<!-- Frontend server --->
+    ServerEventListener.ON_GET_ME = "onGetMe";
+    ServerEventListener.ON_GET_COMPANY_INFO = "onGetCompanyInfo";
+    ServerEventListener.ON_GET_COMPANY_MEMBERS = "onGetCompanyMembers";
+    ServerEventListener.ON_GET_PRIVATE_GROUPS = "onGetPrivateGroups";
+    ServerEventListener.ON_GET_ORGANIZE_GROUPS = "onGetOrganizeGroups";
+    ServerEventListener.ON_GET_PROJECT_BASE_GROUPS = "onGetProjectBaseGroups";
     return ServerEventListener;
 }());
-ServerEventListener.ON_ADD = "onAdd";
-ServerEventListener.ON_LEAVE = "onLeave";
-ServerEventListener.ON_CHAT = "onChat";
-ServerEventListener.ON_MESSAGE_READ = "onMessageRead";
-ServerEventListener.ON_GET_MESSAGES_READERS = "onGetMessagesReaders";
-ServerEventListener.ON_VIDEO_CALL = "onVideoCall";
-ServerEventListener.ON_VOICE_CALL = "onVoiceCall";
-ServerEventListener.ON_HANGUP_CALL = "onHangupCall";
-ServerEventListener.ON_THE_LINE_IS_BUSY = "onTheLineIsBusy";
-//<!-- AccessRoom Info -->
-ServerEventListener.ON_ACCESS_ROOMS = "onAccessRooms";
-ServerEventListener.ON_ADD_ROOM_ACCESS = "onAddRoomAccess";
-ServerEventListener.ON_UPDATED_LASTACCESSTIME = "onUpdatedLastAccessTime";
-//<!-- Group -->
-ServerEventListener.ON_CREATE_GROUP_SUCCESS = "onCreateGroupSuccess";
-ServerEventListener.ON_EDITED_GROUP_MEMBER = "onEditGroupMembers";
-ServerEventListener.ON_EDITED_GROUP_NAME = "onEditGroupName";
-ServerEventListener.ON_EDITED_GROUP_IMAGE = "onEditGroupImage";
-ServerEventListener.ON_NEW_GROUP_CREATED = "onNewGroupCreated";
-ServerEventListener.ON_UPDATE_MEMBER_INFO_IN_PROJECTBASE = "onUpdateMemberInfoInProjectBase";
-//<!-- User -->
-ServerEventListener.ON_USER_LOGIN = "onUserLogin";
-ServerEventListener.ON_USER_UPDATE_IMAGE_PROFILE = "onUserUpdateImgProfile";
-ServerEventListener.ON_USER_UPDATE_PROFILE = "onUserUpdateProfile";
-//<!-- Frontend server --->
-ServerEventListener.ON_GET_ME = "onGetMe";
-ServerEventListener.ON_GET_COMPANY_INFO = "onGetCompanyInfo";
-ServerEventListener.ON_GET_COMPANY_MEMBERS = "onGetCompanyMembers";
-ServerEventListener.ON_GET_PRIVATE_GROUPS = "onGetPrivateGroups";
-ServerEventListener.ON_GET_ORGANIZE_GROUPS = "onGetOrganizeGroups";
-ServerEventListener.ON_GET_PROJECT_BASE_GROUPS = "onGetProjectBaseGroups";
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ServerEventListener;
