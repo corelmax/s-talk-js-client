@@ -7,9 +7,10 @@
 export namespace ChatEvents {
     export const ON_ADD = "onAdd";
     export const ON_LEAVE: string = "onLeave";
-    export const ON_CHAT: string = "onChat";
     export const ON_MESSAGE_READ: string = "onMessageRead";
     export const ON_GET_MESSAGES_READERS: string = "onGetMessagesReaders";
+
+    export const ON_CHAT: string = "ON_CHAT";
     export interface IChatServerEvents {
         onChat(data);
         onMessageRead(dataEvent);
