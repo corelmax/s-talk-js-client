@@ -66,8 +66,9 @@ export namespace API {
 
             let socket = this.server.getSocket();
             socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
         }
     }
@@ -83,10 +84,12 @@ export namespace API {
             let socket = this.server.getSocket();
             socket.request("chat.chatHandler.send", _message, (result) => {
                 if (callback !== null) {
-                    if (result instanceof Error)
+                    if (result instanceof Error) {
                         callback(result, null);
-                    else
+                    }
+                    else {
                         callback(null, result);
+                    }
                 }
             });
         }
@@ -126,8 +129,9 @@ export namespace API {
 
             socket.request("chat.chatHandler.getOlderMessageChunk", message, (result) => {
                 console.log("getOlderMessageChunk", result);
-                if (callback !== null)
+                if (callback !== null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -202,7 +206,7 @@ export namespace API {
             this.server = _server;
         }
 
-        public async callingRequest(members: string[], event: string, api_key: string, payload: any) {
+        public async calling(api_key: string, event: string, members: string[], payload: any) {
             let _message = {} as IDictionary;
             _message["members"] = members;
             _message["event"] = event;
@@ -212,30 +216,7 @@ export namespace API {
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.callingRequest", _message, (result) => {
-                        if (result.code == 200) {
-                            resolve(result);
-                        }
-                        else {
-                            rejected(result.message);
-                        }
-                    });
-                }
-                catch (ex) {
-                    rejected(ex);
-                }
-            });
-        }
-
-        public async hangupCall(myId: string, contactId: string) {
-            let msg = {} as IDictionary;
-            msg["userId"] = myId;
-            msg["contactId"] = contactId;
-
-            return new Promise((resolve, rejected) => {
-                try {
-                    let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.hangupCall", msg, (result) => {
+                    socket.request("connector.entryHandler.calling", _message, (result) => {
                         if (result.code == 200) {
                             resolve(result);
                         }

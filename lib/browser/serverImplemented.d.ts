@@ -57,28 +57,6 @@ export declare namespace Stalk {
         TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void): void;
         private OnTokenAuthenticate(tokenRes, onSuccessCheckToken);
         kickMeAllSession(uid: string): void;
-        UpdateUserProfile(myId: string, profileFields: {
-            [k: string]: string;
-        }, callback: (err, res) => void): void;
-        ProfileImageChanged(userId: string, path: string, callback: (err, res) => void): void;
-        getMe(msg: IDictionary, callback: (err, res) => void): void;
-        updateFavoriteMember(editType: string, member: string, callback: (err, ress) => void): void;
-        updateFavoriteGroups(editType: string, group: string, callback: (err, res) => void): void;
-        updateClosedNoticeMemberList(editType: string, member: string, callback: (err, res) => void): void;
-        updateClosedNoticeGroupsList(editType: string, group: string, callback: (err, res) => void): void;
-        getMemberProfile(userId: string, callback: (err, res) => void): void;
-        getCompanyInfo(callBack: (err, res) => void): void;
-        getCompanyMembers(callBack: (err, res) => void): void;
-        getOrganizationGroups(callBack: (err, res) => void): void;
-        getProjectBaseGroups(callback: (err, res) => void): void;
-        requestCreateProjectBaseGroup(groupName: string, members: any[], callback: (err, res) => void): void;
-        editMemberInfoInProjectBase(roomId: string, roomType: any, member: any, callback: (err, res) => void): void;
-        getPrivateGroups(callback: (err, res) => void): void;
-        UserRequestCreateGroupChat(groupName: string, memberIds: string[], callback: (err, res) => void): void;
-        UpdatedGroupImage(groupId: string, path: string, callback: (err, res) => void): void;
-        editGroupMembers(editType: string, roomId: string, roomType: any, members: string[], callback: (err, res) => void): void;
-        editGroupName(roomId: string, roomType: any, newGroupName: string, callback: (err, res) => void): void;
-        getPrivateChatRoomId(token: string, myId: string, myRoommateId: string, callback: (err, res) => void): void;
     }
     interface IAuthenData {
         userId: string;

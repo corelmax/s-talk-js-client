@@ -34,8 +34,7 @@ export declare namespace API {
     class CallingAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        callingRequest(members: string[], event: string, api_key: string, payload: any): Promise<{}>;
-        hangupCall(myId: string, contactId: string): Promise<{}>;
+        calling(api_key: string, event: string, members: string[], payload: any): Promise<{}>;
         theLineIsBusy(contactId: string): Promise<{}>;
     }
 }
