@@ -1,36 +1,4 @@
-﻿/**
- * Facebook.Inc react-native websocket sample.
- */
-/*
-export default class WebSocketClient {
-   init2() {
-       let ws = new WebSocket('ws://git.animation-genius.com:3010');
-
-       ws.onopen = () => {
-           // connection opened
-           console.log('onOpen: ');
-           ws.send('something');
-       };
-
-       ws.onmessage = (e) => {
-           // a message was received
-           console.log('message: ', e.data);
-       };
-
-       ws.onerror = (e) => {
-           // an error occurred
-           console.log('connection error: ', e);
-       };
-
-       ws.onclose = (e) => {
-           // connection closed
-           console.log('connection closed: ', e.code, e.reason);
-       };
-   };
-}
-*/
-
-// @ts-check
+﻿// @ts-check
 
 (function () {
   let JS_WS_CLIENT_TYPE = "js-websocket";
@@ -89,7 +57,7 @@ export default class WebSocketClient {
   let connectParams = null;
   let decode = null;
   let encode = null;
-  let reconnect = false;
+  let reconnect: boolean = false;
   let reconncetTimer = null;
   let reconnectUrl = null;
   let reconnectAttempts = 0;
@@ -170,8 +138,9 @@ export default class WebSocketClient {
   };
 
   pomelo.request = function (route, msg, cb) {
-    if (socket.readyState == socket.CLOSED)
+    if (socket.readyState == socket.CLOSED) {
       return cb(new Error("Socket is closed"));
+    }
 
     if (arguments.length === 2 && typeof msg === "function") {
       cb = msg;
@@ -279,7 +248,7 @@ export default class WebSocketClient {
     console.log("onSocketOpen:", event.type);
 
     pomelo.emit("onopen", event);
-    if (!!reconnect) {
+    if (reconnect == true) {
       pomelo.emit("reconnect", event);
     }
 
@@ -309,7 +278,7 @@ export default class WebSocketClient {
   let onclose = function (event) {
     pomelo.emit("close", event);
 
-    if (!!reconnect && reconnectAttempts < maxReconnectAttempts) {
+    if (reconnect == true && reconnectAttempts < maxReconnectAttempts) {
       console.log("reconnection", reconnect, reconnectAttempts, reconnectionDelay, connectParams);
       reconnect = true;
       reconnectAttempts++;
@@ -405,8 +374,9 @@ export default class WebSocketClient {
     let obj = Package.encode(Package.TYPE_HANDSHAKE_ACK);
     send(obj);
 
-    if (initCallback)
+    if (initCallback) {
       initCallback(null);
+    }
   };
 
   let onData = function (data) {
