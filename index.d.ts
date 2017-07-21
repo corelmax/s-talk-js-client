@@ -22,7 +22,7 @@ export declare namespace StalkFactory {
     function create(_host: string, _port: number): Stalk.ServerImplemented;
     function init(server: ServerImplemented): Promise<IPomelo>;
     function geteEnter(server: ServerImplemented, message: IDictionary): Promise<IServer>;
-    function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<any>;
+    function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<IPomelo>;
     function checkIn(server: ServerImplemented, message: IDictionary): Promise<{}>;
     function checkOut(server: ServerImplemented): void;
 }

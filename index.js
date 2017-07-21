@@ -113,13 +113,12 @@ var StalkFactory;
                                 var socket = server.getSocket();
                                 if (!!socket) {
                                     server.listenSocketEvents();
-                                    socket.setReconnect(true);
                                 }
                                 if (!!err) {
                                     reject(err);
                                 }
                                 else {
-                                    resolve();
+                                    resolve(socket);
                                 }
                             });
                         })];

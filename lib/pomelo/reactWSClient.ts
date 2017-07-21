@@ -1,5 +1,18 @@
 ﻿// @ts-check
 
+export interface IServerParam {
+  host: string;
+  port: number;
+  reconnect: boolean;
+  maxReconnectAttempts?: number;
+  handshakeCallback?: any;
+  encode?: any;
+  decode?: any;
+  user?: any;
+  encrypt?: any;
+}
+
+
 (function () {
   let JS_WS_CLIENT_TYPE = "js-websocket";
   let JS_WS_CLIENT_VERSION = "0.0.1";
@@ -53,8 +66,7 @@
   let heartbeatTimeoutId = null;
   let handshakeCallback = null;
 
-
-  let connectParams = null;
+  let connectParams: IServerParam = null;
   let decode = null;
   let encode = null;
   let reconnect: boolean = false;
@@ -83,7 +95,7 @@
     initCallback = cb;
   }
 
-  pomelo.init = function (params, cb) {
+  pomelo.init = function (params: IServerParam, cb) {
     initCallback = cb;
 
     connectParams = params;
@@ -208,7 +220,7 @@
     return Message.encode(reqId, type, compressRoute, route, msg);
   };
 
-  let connect = function (params, url) {
+  let connect = function (params: IServerParam, url) {
     console.log("connect to " + url, params);
 
     maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS;
@@ -245,7 +257,7 @@
   };
 
   let onopen = function (event) {
-    console.log("onSocketOpen:", event.type);
+    console.log("onSocketOpen:", event.type, "reconnect", reconnect);
 
     pomelo.emit("onopen", event);
     if (reconnect == true) {
@@ -278,8 +290,9 @@
   let onclose = function (event) {
     pomelo.emit("close", event);
 
+    console.log("reconnect", reconnect);
     if (reconnect == true && reconnectAttempts < maxReconnectAttempts) {
-      console.log("reconnection", reconnect, reconnectAttempts, reconnectionDelay, connectParams);
+      console.log("reconnectAttempts", reconnectAttempts);
       reconnect = true;
       reconnectAttempts++;
       reconncetTimer = setTimeout(function () {

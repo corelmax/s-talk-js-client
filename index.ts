@@ -53,20 +53,19 @@ export namespace StalkFactory {
     }
 
     export async function handshake(server: ServerImplemented, params: Stalk.ServerParam) {
-        return await new Promise<any>((resolve, reject) => {
+        return await new Promise<IPomelo>((resolve, reject) => {
             server.connect(params, (err) => {
                 server._isConnected = true;
                 let socket = server.getSocket();
                 if (!!socket) {
                     server.listenSocketEvents();
-                    socket.setReconnect(true);
                 }
 
                 if (!!err) {
                     reject(err);
                 }
                 else {
-                    resolve();
+                    resolve(socket);
                 }
             });
         });

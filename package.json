@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.3-f16",
+  "version": "0.0.3-f20",
   "description": "stalk javascript client.",
   "main": "index.js",
   "repository": {
@@ -17,12 +17,12 @@
     "events": "^1.1.1",
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
-    "ws": "^1.1.1"
+    "ws": "^1.1.4"
   },
   "devDependencies": {
-    "@types/node": "^7.0.22",
-    "tslint": "^5.3.2",
-    "typescript": "^2.3.3"
+    "@types/node": "^7.0.38",
+    "tslint": "^5.5.0",
+    "typescript": "^2.4.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
