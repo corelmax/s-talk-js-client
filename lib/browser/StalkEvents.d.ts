@@ -7,13 +7,9 @@
 export declare namespace ChatEvents {
     const ON_ADD = "onAdd";
     const ON_LEAVE: string;
-    const ON_MESSAGE_READ: string;
-    const ON_GET_MESSAGES_READERS: string;
     const ON_CHAT: string;
     interface IChatServerEvents {
         onChat(data: any): any;
-        onMessageRead(dataEvent: any): any;
-        onGetMessagesReaders(dataEvent: any): any;
         onRoomJoin(data: any): any;
         onLeaveRoom(data: any): any;
     }

@@ -164,14 +164,6 @@ var StalkCodeExam;
                 console.log(index_1.ChatEvents.ON_LEAVE, data);
                 self.chatServerListener.onLeaveRoom(data);
             });
-            self.socket.on(index_1.ChatEvents.ON_MESSAGE_READ, function (data) {
-                console.log(index_1.ChatEvents.ON_MESSAGE_READ);
-                self.chatServerListener.onMessageRead(data);
-            });
-            self.socket.on(index_1.ChatEvents.ON_GET_MESSAGES_READERS, function (data) {
-                console.log(index_1.ChatEvents.ON_GET_MESSAGES_READERS);
-                self.chatServerListener.onGetMessagesReaders(data);
-            });
         };
         return ServerListener;
     }());
