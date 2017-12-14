@@ -204,13 +204,21 @@ export namespace API {
             this.server = _server;
         }
 
+        /**
+         * payload: {
+         *  event: string;
+         * message: string;
+         * members: string[] | string;}
+         * 
+         * @param {IDictionary} _message 
+         * @returns 
+         * @memberof PushAPI
+         */
         public async push(_message: IDictionary) {
             return await new Promise((resolve, reject) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("push.pushHandler.push", _message, (result: any) => {
-                        console.log("push result", result);
-
+                    socket.request("push.pushHandler.push", _message, (result: StalkUtils.IStalkResponse) => {
                         resolve(result);
                     });
                 }

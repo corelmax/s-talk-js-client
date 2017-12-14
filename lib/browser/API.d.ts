@@ -31,6 +31,16 @@ export declare namespace API {
     class PushAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
+        /**
+         * payload: {
+         *  event: string;
+         * message: string;
+         * members: string[] | string;}
+         *
+         * @param {IDictionary} _message
+         * @returns
+         * @memberof PushAPI
+         */
         push(_message: IDictionary): Promise<{}>;
     }
     /**
