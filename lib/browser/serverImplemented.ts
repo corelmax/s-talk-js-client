@@ -57,6 +57,10 @@ export namespace Stalk {
         public getCallingAPI() {
             return this.callingAPI;
         }
+        private pushApi: API.PushAPI;
+        public getPushApi() {
+            return this.pushApi;
+        }
 
         host: string;
         port: number | string;
@@ -64,10 +68,10 @@ export namespace Stalk {
         _isConnected = false;
         _isLogedin = false;
         connect = this.connectServer;
-        onSocketOpen: (data) => void;
-        onSocketClose: (data) => void;
-        onSocketReconnect: (data) => void;
-        onDisconnected: (data) => void;
+        onSocketOpen: (data: any) => void;
+        onSocketClose: (data: any) => void;
+        onSocketReconnect: (data: any) => void;
+        onDisconnected: (data: any) => void;
 
         constructor(host: string, port: number) {
             console.log("ServerImp", host, port);
@@ -77,6 +81,7 @@ export namespace Stalk {
             this.lobby = new API.LobbyAPI(this);
             this.chatroomAPI = new API.ChatRoomAPI(this);
             this.callingAPI = new API.CallingAPI(this);
+            this.pushApi = new API.PushAPI(this);
 
             this.connectServer = this.connectServer.bind(this);
             this.listenSocketEvents = this.listenSocketEvents.bind(this);
@@ -87,9 +92,9 @@ export namespace Stalk {
 
             this.disConnect();
 
-            this.authenData = null;
+            this.authenData = undefined;
 
-            ServerImplemented.Instance = null;
+            ServerImplemented.Instance = undefined;
         }
 
         public disConnect(callBack?: Function) {
@@ -109,7 +114,7 @@ export namespace Stalk {
             }
         }
 
-        public init(callback: (err, res: IPomelo) => void) {
+        public init(callback: (err: Error, res: IPomelo) => void) {
             let self = this;
             this._isConnected = false;
             this.socket = Pomelo;
@@ -128,7 +133,7 @@ export namespace Stalk {
             }
         }
 
-        private connectServer(params: ServerParam, callback: (err) => void) {
+        private connectServer(params: ServerParam, callback: (err: Error) => void) {
             let self = this;
             this.socket.init(params, function cb(err) {
                 console.log("socket init... ", err);
