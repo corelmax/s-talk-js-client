@@ -1,5 +1,6 @@
 import { IDictionary, Stalk, IPomelo } from "./serverImplemented";
-import { HttpStatusCode } from '../utils/httpStatusCode';
+import { HttpStatusCode, StalkUtils } from '../utils/index';
+
 
 export namespace API {
     export class LobbyAPI {
@@ -43,6 +44,30 @@ export namespace API {
             this.server = null;
         }
 
+        /**
+         * user : {_id: string, username: string, payload }
+         * @param msg 
+         */
+        async updateUser(msg: IDictionary) {
+            let self = this;
+            let socket = this.server.getSocket();
+
+            return new Promise((resolve, rejected) => {
+                // <!-- Authentication.
+                socket.request("connector.entryHandler.updateUser", msg, function (res: StalkUtils.IStalkResponse) {
+                    if (res.code === HttpStatusCode.fail) {
+                        rejected(res.message);
+                    }
+                    else if (res.code === HttpStatusCode.success) {
+                        resolve(res);
+                    }
+                    else {
+                        resolve(res);
+                    }
+                });
+            });
+        }
+
         // <!-- Join and leave chat room.
         public joinRoom(token: string, username, room_id: string, callback: (err, res) => void) {
             let self = this;
@@ -52,7 +77,7 @@ export namespace API {
             msg["username"] = username;
 
             let socket = this.server.getSocket();
-            socket.request("connector.entryHandler.enterRoom", msg, (result) => {
+            socket.request("connector.entryHandler.enterRoom", msg, (result: StalkUtils.IStalkResponse) => {
                 if (callback !== null) {
                     callback(null, result);
                 }

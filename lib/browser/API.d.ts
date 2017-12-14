@@ -5,6 +5,11 @@ export declare namespace API {
         constructor(_server: Stalk.ServerImplemented);
         checkIn(msg: IDictionary): Promise<{}>;
         logout(): void;
+        /**
+         * user : {_id: string, username: string, payload }
+         * @param msg
+         */
+        updateUser(msg: IDictionary): Promise<{}>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
     }

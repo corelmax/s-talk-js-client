@@ -17,7 +17,7 @@ export default class BackendFactory {
     pushDataListener: PushDataListener;
     dataManager: DataManager;
     dataListener: DataListener;
-    constructor(token?: any);
+    constructor(token?: null);
     getServer(): Promise<Stalk>;
     getChatApi(): any;
     getServerListener(): any;

@@ -31,7 +31,7 @@ export default class ServerImplemented {
     _isLogedin: boolean;
     connect: (params: IPomeloParam, callback: (err: any) => void) => void;
     constructor();
-    getClient(): PomeloClient;
+    getClient(): PomeloClient | undefined;
     dispose(): void;
     disConnect(callBack?: Function): void;
     logout(): void;
