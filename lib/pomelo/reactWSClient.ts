@@ -45,7 +45,7 @@ export interface IServerParam {
     };
   }
 
-  let socket = null as WebSocket;
+  let socket: WebSocket;
   let reqId = 0;
   let callbacks = {};
   let handler = {};
@@ -131,7 +131,7 @@ export interface IServerParam {
         if (socket.close) {
           socket.close();
         }
-        socket = null;
+        socket = undefined;
 
         console.log("disconnected socket is", socket);
       }

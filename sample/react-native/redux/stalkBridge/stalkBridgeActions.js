@@ -1,22 +1,24 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * This is pure function action for redux app.
  */
-import BackendFactory from "../../chats/BackendFactory";
-import NotificationManager from "../../chats/notificationManager";
-import * as DataModels from "../../chats/models/ChatDataModels";
-import HTTPStatus from "../../libs/stalk/utils/httpStatusCode";
-import Store from "../configureStore";
-import * as ChatLogsActions from "../chatlogs/chatlogsActions";
-import * as StalkPushActions from "./stalkPushActions";
-import AccountService from "../../servicesAccess/accountService";
-export const STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST = "STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST";
-export const STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE = "STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE";
-export const STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS = "STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS";
+Object.defineProperty(exports, "__esModule", { value: true });
+const BackendFactory_1 = require("../../chats/BackendFactory");
+const notificationManager_1 = require("../../chats/notificationManager");
+const DataModels = require("../../chats/models/ChatDataModels");
+const httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
+const configureStore_1 = require("../configureStore");
+const ChatLogsActions = require("../chatlogs/chatlogsActions");
+const StalkPushActions = require("./stalkPushActions");
+const accountService_1 = require("../../servicesAccess/accountService");
+exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST = "STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST";
+exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE = "STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE";
+exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS = "STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS";
 const onGetContactProfileFail = (contact_id) => {
-    let dataManager = BackendFactory.getInstance().dataManager;
-    AccountService.getInstance().getUserInfo(contact_id).then(result => result.json()).then(result => {
+    let dataManager = BackendFactory_1.default.getInstance().dataManager;
+    accountService_1.default.getInstance().getUserInfo(contact_id).then(result => result.json()).then(result => {
         if (result.success) {
             let user = result.data[0];
             let contact = {
@@ -28,12 +30,12 @@ const onGetContactProfileFail = (contact_id) => {
         console.warn("onGetContactProfileFail", err);
     });
 };
-export function getUserInfo(userId, callback) {
+function getUserInfo(userId, callback) {
     let self = this;
-    let dataManager = BackendFactory.getInstance().dataManager;
+    let dataManager = BackendFactory_1.default.getInstance().dataManager;
     let user = dataManager.getContactProfile(userId);
     if (!user) {
-        AccountService.getInstance().getUserInfo(userId).then(result => result.json()).then(result => {
+        accountService_1.default.getInstance().getUserInfo(userId).then(result => result.json()).then(result => {
             let user = result.data[0];
             let contact = {
                 _id: user._id, displayname: `${user.first_name} ${user.last_name}`, status: "", image: user.avatar
@@ -49,9 +51,10 @@ export function getUserInfo(userId, callback) {
         callback(user);
     }
 }
-export function stalkLogin(uid, token) {
+exports.getUserInfo = getUserInfo;
+function stalkLogin(uid, token) {
     console.log("stalkLogin", uid, token);
-    const backendFactory = BackendFactory.getInstance();
+    const backendFactory = BackendFactory_1.default.getInstance();
     backendFactory.stalkInit().then(value => {
         backendFactory.checkIn(uid, token).then(value => {
             console.log("Joined chat-server success", value.code);
@@ -59,7 +62,7 @@ export function stalkLogin(uid, token) {
             if (result.success) {
                 backendFactory.getServerListener();
                 backendFactory.startChatServerListener();
-                NotificationManager.getInstance().regisNotifyNewMessageEvent();
+                notificationManager_1.default.getInstance().regisNotifyNewMessageEvent();
                 let msg = {};
                 msg["token"] = token;
                 backendFactory.getServer().then(server => {
@@ -91,24 +94,26 @@ export function stalkLogin(uid, token) {
         console.warn("StalkInit Fail.");
     });
 }
-export function getPrivateChatRoomId(contactId) {
+exports.stalkLogin = stalkLogin;
+function getPrivateChatRoomId(contactId) {
     return dispatch => {
-        let profile = Store.getState().profileReducer.form.profile;
-        let token = Store.getState().authReducer.token;
-        dispatch({ type: STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST });
-        BackendFactory.getInstance().getServer().then(server => {
+        let profile = configureStore_1.default.getState().profileReducer.form.profile;
+        let token = configureStore_1.default.getState().authReducer.token;
+        dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST });
+        BackendFactory_1.default.getInstance().getServer().then(server => {
             server.getPrivateChatRoomId(token, profile._id, contactId, function result(err, res) {
-                if (res.code === HTTPStatus.success) {
+                if (res.code === httpStatusCode_1.default.success) {
                     let room = JSON.parse(JSON.stringify(res.data));
-                    dispatch({ type: STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS, payload: room });
+                    dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS, payload: room });
                 }
                 else {
                     console.warn(err, res);
-                    dispatch({ type: STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
+                    dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
                 }
             });
         }).catch(err => {
-            dispatch({ type: STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
+            dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
         });
     };
 }
+exports.getPrivateChatRoomId = getPrivateChatRoomId;

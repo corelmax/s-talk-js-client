@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by@ nattapon.r@live.com
@@ -12,22 +13,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-export { Stalk } from "./lib/browser/serverImplemented";
-export * from "./lib/browser/StalkEvents";
-export * from "./lib/browser/API";
-import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { Authen } from "./lib/utils/tokenDecode";
-import { Stalk } from "./lib/browser/serverImplemented";
-export var Utils;
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+Object.defineProperty(exports, "__esModule", { value: true });
+var serverImplemented_1 = require("./lib/browser/serverImplemented");
+exports.Stalk = serverImplemented_1.Stalk;
+__export(require("./lib/browser/StalkEvents"));
+__export(require("./lib/browser/API"));
+const httpStatusCode_1 = require("./lib/utils/httpStatusCode");
+const tokenDecode_1 = require("./lib/utils/tokenDecode");
+const serverImplemented_2 = require("./lib/browser/serverImplemented");
+var Utils;
 (function (Utils) {
-    Utils.statusCode = HttpStatusCode;
-    Utils.tokenDecode = Authen.TokenDecoded;
-})(Utils || (Utils = {}));
-export var StalkFactory;
+    Utils.statusCode = httpStatusCode_1.HttpStatusCode;
+    Utils.tokenDecode = tokenDecode_1.Authen.TokenDecoded;
+})(Utils = exports.Utils || (exports.Utils = {}));
+var StalkFactory;
 (function (StalkFactory) {
     function create(_host, _port) {
         // "ws://stalk.com"
-        let server = Stalk.ServerImplemented.createInstance(_host, _port);
+        let server = serverImplemented_2.Stalk.ServerImplemented.createInstance(_host, _port);
         return server;
     }
     StalkFactory.create = create;
@@ -94,4 +100,4 @@ export var StalkFactory;
         }
     }
     StalkFactory.checkOut = checkOut;
-})(StalkFactory || (StalkFactory = {}));
+})(StalkFactory = exports.StalkFactory || (exports.StalkFactory = {}));

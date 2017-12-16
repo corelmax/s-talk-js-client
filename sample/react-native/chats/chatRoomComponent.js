@@ -1,24 +1,26 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * ChatRoomComponent for handle some business logic of chat room.
  */
-import * as async from "async";
-import BackendFactory from "./BackendFactory";
-import ServerImplemented from "../libs/stalk/serverImplemented";
-import ServerEventListener from "../libs/stalk/serverEventListener";
-import MessageDALFactory from "../libs/chitchat/dataAccessLayer/messageDALFactory";
-import SecureServiceFactory from "../libs/chitchat/services/secureServiceFactory";
-import { ContentType } from "./models/ChatDataModels";
-import Config from "../configs/config";
+Object.defineProperty(exports, "__esModule", { value: true });
+const async = require("async");
+const BackendFactory_1 = require("./BackendFactory");
+const serverImplemented_1 = require("../libs/stalk/serverImplemented");
+const serverEventListener_1 = require("../libs/stalk/serverEventListener");
+const messageDALFactory_1 = require("../libs/chitchat/dataAccessLayer/messageDALFactory");
+const secureServiceFactory_1 = require("../libs/chitchat/services/secureServiceFactory");
+const ChatDataModels_1 = require("./models/ChatDataModels");
+const config_1 = require("../configs/config");
 let serverImp = null;
-export default class ChatRoomComponent {
+class ChatRoomComponent {
     constructor() {
         this.chatMessages = [];
-        this.secure = SecureServiceFactory.getService();
-        this.messageDAL = MessageDALFactory.getObject();
-        this.chatRoomApi = BackendFactory.getInstance().getChatApi();
-        BackendFactory.getInstance().getServer().then(server => {
+        this.secure = secureServiceFactory_1.default.getService();
+        this.messageDAL = messageDALFactory_1.default.getObject();
+        this.chatRoomApi = BackendFactory_1.default.getInstance().getChatApi();
+        BackendFactory_1.default.getInstance().getServer().then(server => {
             serverImp = server;
         }).catch(err => {
         });
@@ -38,22 +40,22 @@ export default class ChatRoomComponent {
     onChat(chatMessage) {
         let self = this;
         if (this.roomId === chatMessage.rid) {
-            if (chatMessage.type.toString() === ContentType[ContentType.Text]) {
-                if (Config.appConfig.encryption == true) {
+            if (chatMessage.type.toString() === ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Text]) {
+                if (config_1.default.appConfig.encryption == true) {
                     self.secure.decryptWithSecureRandom(chatMessage.body, (err, res) => {
                         if (!err) {
                             chatMessage.body = res;
                             self.chatMessages.push(chatMessage);
                             self.messageDAL.saveData(self.roomId, self.chatMessages);
                             if (!!this.chatroomDelegate)
-                                this.chatroomDelegate(ServerEventListener.ON_CHAT, chatMessage);
+                                this.chatroomDelegate(serverEventListener_1.default.ON_CHAT, chatMessage);
                         }
                         else {
                             console.log(err, res);
                             self.chatMessages.push(chatMessage);
                             self.messageDAL.saveData(self.roomId, self.chatMessages);
                             if (!!this.chatroomDelegate)
-                                this.chatroomDelegate(ServerEventListener.ON_CHAT, chatMessage);
+                                this.chatroomDelegate(serverEventListener_1.default.ON_CHAT, chatMessage);
                         }
                     });
                 }
@@ -61,20 +63,20 @@ export default class ChatRoomComponent {
                     self.chatMessages.push(chatMessage);
                     self.messageDAL.saveData(self.roomId, self.chatMessages);
                     if (!!this.chatroomDelegate)
-                        this.chatroomDelegate(ServerEventListener.ON_CHAT, chatMessage);
+                        this.chatroomDelegate(serverEventListener_1.default.ON_CHAT, chatMessage);
                 }
             }
             else {
                 self.chatMessages.push(chatMessage);
                 self.messageDAL.saveData(self.roomId, self.chatMessages);
                 if (!!this.chatroomDelegate)
-                    this.chatroomDelegate(ServerEventListener.ON_CHAT, chatMessage);
+                    this.chatroomDelegate(serverEventListener_1.default.ON_CHAT, chatMessage);
             }
         }
         else {
             console.warn("this msg come from other room.");
             if (!!this.outsideRoomDelegete) {
-                this.outsideRoomDelegete(ServerEventListener.ON_CHAT, chatMessage);
+                this.outsideRoomDelegete(serverEventListener_1.default.ON_CHAT, chatMessage);
             }
         }
     }
@@ -91,7 +93,7 @@ export default class ChatRoomComponent {
                 if (value._id === newMsg._id) {
                     value.readers = newMsg.readers;
                     if (!!self.chatroomDelegate)
-                        self.chatroomDelegate(ServerEventListener.ON_MESSAGE_READ, null);
+                        self.chatroomDelegate(serverEventListener_1.default.ON_MESSAGE_READ, null);
                     resolve();
                     return true;
                 }
@@ -105,7 +107,7 @@ export default class ChatRoomComponent {
         let self = this;
         let myMessagesArr = JSON.parse(JSON.stringify(dataEvent.data));
         self.chatMessages.forEach((originalMsg, id, arr) => {
-            if (BackendFactory.getInstance().dataManager.isMySelf(originalMsg.sender)) {
+            if (BackendFactory_1.default.getInstance().dataManager.isMySelf(originalMsg.sender)) {
                 myMessagesArr.some((myMsg, index, array) => {
                     if (originalMsg._id === myMsg._id) {
                         originalMsg.readers = myMsg.readers;
@@ -122,8 +124,8 @@ export default class ChatRoomComponent {
             if (messages !== null) {
                 let chats = messages.slice(0);
                 async.mapSeries(chats, function iterator(item, result) {
-                    if (item.type === ContentType.Text) {
-                        if (Config.appConfig.encryption == true) {
+                    if (item.type === ChatDataModels_1.ContentType.Text) {
+                        if (config_1.default.appConfig.encryption == true) {
                             self.secure.decryptWithSecureRandom(item.body, function (err, res) {
                                 if (!err) {
                                     item.body = res;
@@ -165,7 +167,7 @@ export default class ChatRoomComponent {
                 resolve();
             }
             else {
-                let roomAccess = BackendFactory.getInstance().dataManager.getRoomAccess();
+                let roomAccess = BackendFactory_1.default.getInstance().dataManager.getRoomAccess();
                 async.some(roomAccess, (item, cb) => {
                     if (item.roomId === self.roomId) {
                         lastMessageTime = item.accessTime;
@@ -202,8 +204,8 @@ export default class ChatRoomComponent {
                 if (histories.length > 0) {
                     var messages = JSON.parse(JSON.stringify(histories));
                     async.mapSeries(messages, function (item, cb) {
-                        if (item.type.toString() === ContentType[ContentType.Text]) {
-                            if (Config.appConfig.encryption == true) {
+                        if (item.type.toString() === ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Text]) {
+                            if (config_1.default.appConfig.encryption == true) {
                                 self.secure.decryptWithSecureRandom(item.body, function (err, res) {
                                     if (!err) {
                                         item.body = res;
@@ -333,7 +335,7 @@ export default class ChatRoomComponent {
     }
     getMessage(chatId, Chats, callback) {
         let self = this;
-        let myProfile = BackendFactory.getInstance().dataManager.getMyProfile();
+        let myProfile = BackendFactory_1.default.getInstance().dataManager.getMyProfile();
         let chatLog = localStorage.getItem(myProfile._id + '_' + chatId);
         let promise = new Promise(function (resolve, reject) {
             if (!!chatLog) {
@@ -353,8 +355,8 @@ export default class ChatRoomComponent {
                         // let count = 0;
                         arr_fromLog.map((log, i, a) => {
                             var messageImp = log;
-                            if (messageImp.type === ContentType[ContentType.Text]) {
-                                if (Config.appConfig.encryption == true) {
+                            if (messageImp.type === ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Text]) {
+                                if (config_1.default.appConfig.encryption == true) {
                                     self.secure.decryptWithSecureRandom(messageImp.body, function (err, res) {
                                         if (!err) {
                                             messageImp.body = res;
@@ -410,8 +412,8 @@ export default class ChatRoomComponent {
                             if (his_length > 0) {
                                 async.eachSeries(histories, function (item, cb) {
                                     var chatMessageImp = JSON.parse(JSON.stringify(item));
-                                    if (chatMessageImp.type === ContentType[ContentType.Text]) {
-                                        if (ServerImplemented.getInstance().appConfig.encryption == true) {
+                                    if (chatMessageImp.type === ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Text]) {
+                                        if (serverImplemented_1.default.getInstance().appConfig.encryption == true) {
                                             self.secure.decryptWithSecureRandom(chatMessageImp.body, function (err, res) {
                                                 if (!err) {
                                                     chatMessageImp.body = res;
@@ -476,9 +478,10 @@ export default class ChatRoomComponent {
         });
     }
     getMemberProfile(member, callback) {
-        ServerImplemented.getInstance().getMemberProfile(member.id, callback);
+        serverImplemented_1.default.getInstance().getMemberProfile(member.id, callback);
     }
     dispose() {
         ChatRoomComponent.instance = null;
     }
 }
+exports.default = ChatRoomComponent;

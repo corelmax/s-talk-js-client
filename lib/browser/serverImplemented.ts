@@ -6,29 +6,39 @@
  */
 import * as EventEmitter from "events";
 
-import { HttpStatusCode } from '../utils/httpStatusCode';
-import { Authen } from '../utils/tokenDecode';
-import { API } from './API';
+import { HttpStatusCode } from "../utils/httpStatusCode";
+import { Authen } from "../utils/tokenDecode";
+import { API } from "./API";
 const Pomelo = require("../pomelo/reactWSClient");
 
+export interface IPomeloResponse {
+    code: number;
+    message?: string;
+    data?: any;
+}
 export interface IPomelo extends EventEmitter {
-    init;
-    notify;
-    request;
-    disconnect;
-    setReconnect;
-    setInitCallback: (error: string) => void;
+    init: (params: any, callback: (error?: any) => void) => void;
+    notify: (route: string, message: any) => void;
+    request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
+    disconnect: () => Promise<null>;
+    setReconnect: (reconnect: boolean) => void;
+    setInitCallback: (error?: string) => void;
 };
 export interface IServer { host: string; port: number; };
 export interface IDictionary { [k: string]: string | any; }
 
 export namespace Stalk {
+    export class ServerParam implements IServer {
+        host: string;
+        port: number;
+        reconnect: boolean;
+    }
     export class ServerImplemented {
         private static Instance: ServerImplemented;
         public static getInstance(): ServerImplemented {
             return this.Instance;
         }
-        public static createInstance(host: string, port: number): ServerImplemented {
+        public static createInstance(host: string, port: number) {
             if (this.Instance === null || this.Instance === undefined) {
                 this.Instance = new ServerImplemented(host, port);
 
@@ -64,7 +74,6 @@ export namespace Stalk {
 
         host: string;
         port: number | string;
-        authenData: Stalk.IAuthenData;
         _isConnected = false;
         _isLogedin = false;
         connect = this.connectServer;
@@ -92,9 +101,7 @@ export namespace Stalk {
 
             this.disConnect();
 
-            this.authenData = undefined;
-
-            ServerImplemented.Instance = undefined;
+            delete ServerImplemented.Instance;
         }
 
         public disConnect(callBack?: Function) {
@@ -135,9 +142,9 @@ export namespace Stalk {
 
         private connectServer(params: ServerParam, callback: (err: Error) => void) {
             let self = this;
-            this.socket.init(params, function cb(err) {
+            this.socket.init(params, function cb(err: any) {
                 console.log("socket init... ", err);
-                self.socket.setInitCallback(null);
+                self.socket.setInitCallback();
                 callback(err);
             });
         }
@@ -146,116 +153,31 @@ export namespace Stalk {
             this.socket.removeAllListeners();
 
             this.socket.on("onopen", (this.onSocketOpen) ?
-                this.onSocketOpen : (data) => console.log("onopen", data));
+                this.onSocketOpen : (data: any) => console.log("onopen", data));
             this.socket.on("close", (!!this.onSocketClose) ?
-                this.onSocketClose : (data) => {
+                this.onSocketClose : (data: any) => {
                     console.warn("close", data);
-                    this.socket.setInitCallback(null);
+                    this.socket.setInitCallback();
                 });
             this.socket.on("reconnect", (this.onSocketReconnect) ?
-                this.onSocketReconnect : (data) => console.log("reconnect", data));
-            this.socket.on("disconnected", (data) => {
+                this.onSocketReconnect : (data: any) => console.log("reconnect", data));
+            this.socket.on("disconnected", (data: any) => {
                 console.warn("disconnected", data);
                 this._isConnected = false;
-                this.socket.setInitCallback(null);
+                this.socket.setInitCallback();
                 if (this.onDisconnected) {
                     this.onDisconnected(data);
                 }
             });
-            this.socket.on("io-error", (data) => {
+            this.socket.on("io-error", (data: any) => {
                 console.warn("io-error", data);
-                this.socket.setInitCallback(null);
-            });
-        }
-
-        // region <!-- Authentication...
-        /// <summary>
-        /// Connect to gate server then get query of connector server.
-        /// </summary>
-        public logIn(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
-            let self = this;
-
-            if (!!self.socket && this._isConnected === false) {
-                let msg = { uid: _username };
-                // <!-- Quering connector server.
-                self.socket.request("gate.gateHandler.queryEntry", msg, function (result) {
-
-                    console.log("QueryConnectorServ", JSON.stringify(result));
-
-                    if (result.code === HttpStatusCode.success) {
-                        self.disConnect();
-
-                        let connectorPort = result.port;
-                        // <!-- Connecting to connector server.
-                        let params: ServerParam = { host: self.host, port: connectorPort, reconnect: true };
-                        self.connectServer(params, (err) => {
-                            self._isConnected = true;
-
-                            if (!!err) {
-                                callback(err, null);
-                            }
-                            else {
-                                self.authenForFrontendServer(_username, _hash, deviceToken, callback);
-                            }
-                        });
-                    }
-                });
-            }
-            else if (!!self.socket && this._isConnected) {
-                self.authenForFrontendServer(_username, _hash, deviceToken, callback);
-            }
-            else {
-                console.warn("pomelo client is null: connecting status %s", this._isConnected);
-                console.log("Automatic init pomelo socket...");
-
-                self.init((err, res) => {
-                    if (err) {
-                        console.warn("Cannot starting pomelo socket!");
-
-                        callback(err, null);
-                    }
-                    else {
-                        console.log("Init socket success.");
-
-                        self.logIn(_username, _hash, deviceToken, callback);
-                    }
-                });
-            }
-        }
-
-        // <!-- Authentication. request for token sign.
-        private authenForFrontendServer(_username: string, _hash: string, deviceToken: string, callback: (err, res) => void) {
-            let self = this;
-
-            let msg = {} as IDictionary;
-            msg["email"] = _username;
-            msg["password"] = _hash;
-            msg["registrationId"] = deviceToken;
-            // <!-- Authentication.
-            self.socket.request("connector.entryHandler.login", msg, function (res) {
-                console.log("login response: ", JSON.stringify(res));
-
-                if (res.code === HttpStatusCode.fail) {
-                    if (callback != null) {
-                        callback(res.message, null);
-                    }
-                }
-                else if (res.code === HttpStatusCode.success) {
-                    if (callback != null) {
-                        callback(null, res);
-                    }
-                }
-                else {
-                    if (callback !== null) {
-                        callback(null, res);
-                    }
-                }
+                this.socket.setInitCallback();
             });
         }
 
         gateEnter(msg: IDictionary) {
-            let self = this;
-            let result = new Promise((resolve: (data: IServer) => void, rejected) => {
+            const self = this;
+            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
                 if (!!self.socket && this._isConnected === false) {
                     // <!-- Quering connector server.
                     self.socket.request("gate.gateHandler.queryEntry", msg, function (result) {
@@ -263,7 +185,7 @@ export namespace Stalk {
                         if (result.code === HttpStatusCode.success) {
                             self.disConnect();
 
-                            let data = { host: self.host, port: result.port };
+                            const data = { host: self.host, port: result.port };
                             resolve(data);
                         }
                         else {
@@ -272,7 +194,7 @@ export namespace Stalk {
                     });
                 }
                 else {
-                    let message = "pomelo client is null: connecting status is " + self._isConnected;
+                    const message = "pomelo client is null: connecting status is " + self._isConnected;
                     console.log("Automatic init pomelo socket...");
 
                     rejected(message);
@@ -281,49 +203,5 @@ export namespace Stalk {
 
             return result;
         }
-
-        public TokenAuthen(tokenBearer: string, checkTokenCallback: (err, res) => void) {
-            let self = this;
-            let msg = {} as IDictionary;
-            msg["token"] = tokenBearer;
-            self.socket.request("gate.gateHandler.authenGateway", msg, (result) => {
-                this.OnTokenAuthenticate(result, checkTokenCallback);
-            });
-        }
-
-        private OnTokenAuthenticate(tokenRes: any, onSuccessCheckToken: (err, res) => void) {
-            if (tokenRes.code === HttpStatusCode.success) {
-                var data = tokenRes.data;
-                var decode = data.decoded; //["decoded"];
-                var decodedModel = JSON.parse(JSON.stringify(decode)) as Authen.TokenDecoded;
-                if (onSuccessCheckToken != null) {
-                    onSuccessCheckToken(null, { success: true, username: decodedModel.email, password: decodedModel.password });
-                }
-            }
-            else {
-                if (onSuccessCheckToken != null) {
-                    onSuccessCheckToken(tokenRes, null);
-                }
-            }
-        }
-
-        public kickMeAllSession(uid: string) {
-            let self = this;
-            if (self.socket !== null) {
-                var msg = { uid: uid };
-                self.socket.request("connector.entryHandler.kickMe", msg, function (result) {
-                    console.log("kickMe", JSON.stringify(result));
-                });
-            }
-        }
-    }
-    export interface IAuthenData {
-        userId: string;
-        token: string;
-    }
-    export class ServerParam implements IServer {
-        host: string;
-        port: number;
-        reconnect: boolean;
     }
 }

@@ -1,4 +1,6 @@
-export default class ChatRoomApiProvider {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class ChatRoomApiProvider {
     constructor(socket) {
         this.pomelo = socket;
     }
@@ -111,3 +113,4 @@ export default class ChatRoomApiProvider {
         this.pomelo.notify("chat.chatHandler.updateWhoReadMessages", message);
     }
 }
+exports.default = ChatRoomApiProvider;

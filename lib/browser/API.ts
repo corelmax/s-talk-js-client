@@ -96,6 +96,17 @@ export namespace API {
                 }
             });
         }
+
+        public kickMeAllSession(uid: string) {
+            const self = this;
+            let socket = this.server.getSocket();
+            if (socket !== null) {
+                const msg = { uid };
+                socket.request("connector.entryHandler.kickMe", msg, function (result) {
+                    console.log("kickMe", JSON.stringify(result));
+                });
+            }
+        }
     }
 
     export class ChatRoomAPI {

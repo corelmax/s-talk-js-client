@@ -1,14 +1,16 @@
+"use strict";
 /**
  *  NotificationManager
  *
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import BackendFactory from "./BackendFactory";
-import { ContentType } from "./models/ChatDataModels";
-import PushNotifyHelper from '../libs/pushNotifyHelper';
-import Store from "../reducers/configureStore";
-export default class NotificationManager {
+Object.defineProperty(exports, "__esModule", { value: true });
+const BackendFactory_1 = require("./BackendFactory");
+const ChatDataModels_1 = require("./models/ChatDataModels");
+const pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
+const configureStore_1 = require("../reducers/configureStore");
+class NotificationManager {
     static getInstance() {
         if (!NotificationManager.instance) {
             NotificationManager.instance = new NotificationManager();
@@ -17,33 +19,34 @@ export default class NotificationManager {
     }
     init(onSuccess) {
         console.log("Initialize NotificationManager.");
-        PushNotifyHelper.getInstance().configure(onSuccess);
+        pushNotifyHelper_1.default.getInstance().configure(onSuccess);
     }
     regisNotifyNewMessageEvent() {
         console.log("subscribe global notify message event");
-        BackendFactory.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
+        BackendFactory_1.default.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
     }
     unsubscribeGlobalNotifyMessageEvent() {
-        BackendFactory.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
+        BackendFactory_1.default.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
     }
     notify(messageImp) {
         //@ Check app not run in background.
-        let device = Store.getState().deviceReducer; //active, background, inactive
+        let device = configureStore_1.default.getState().deviceReducer; //active, background, inactive
         console.log("Notify Message. AppState is ", device.appState);
         let message = messageImp.body;
-        if (messageImp.type == ContentType[ContentType.Location]) {
+        if (messageImp.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Location]) {
             message = "Sent you location";
         }
-        else if (messageImp.type == ContentType[ContentType.Image]) {
+        else if (messageImp.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Image]) {
             message = "Sent you image";
         }
         if (device.appState == "active") {
-            PushNotifyHelper.getInstance().localNotification(message);
+            pushNotifyHelper_1.default.getInstance().localNotification(message);
         }
         else if (device.appState != "active") {
             //@ When user joined room but appState is inActive.
             // sharedObjectService.getNotifyManager().notify(newMsg, appBackground, localNotifyService);
-            PushNotifyHelper.getInstance().localNotification(message);
+            pushNotifyHelper_1.default.getInstance().localNotification(message);
         }
     }
 }
+exports.default = NotificationManager;
