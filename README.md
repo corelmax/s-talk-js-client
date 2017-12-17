@@ -1,9 +1,10 @@
-# stalk-javascript-client
+# stalk-javascript-client 
+[![CircleCI](https://circleci.com/gh/mzget/s-talk-js-client.svg?style=svg)](https://circleci.com/gh/mzget/s-talk-js-client)
+
 Universal javascript client-api for Stalk long polling realtime platform. https://github.com/mzget/stalk-realtime-platform/wiki
 - [x] node.js server
 - [x] browser
 - [x] react-native
-
 
 ```javascript
 $ npm install stalk-js --save
