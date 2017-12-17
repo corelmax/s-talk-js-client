@@ -18,7 +18,7 @@
     "jest": "^21.2.1",
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
-    "ws": "^1.1.4"
+    "ws": "^1.1.5"
   },
   "devDependencies": {
     "@types/jest": "^21.1.8",
