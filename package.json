@@ -15,17 +15,17 @@
   "homepage": "https://github.com/mzget/stalk-javascript-client#readme",
   "dependencies": {
     "events": "^1.1.1",
+    "jest": "^21.2.1",
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
     "ws": "^1.1.4"
   },
   "devDependencies": {
-    "@types/node": "^7.0.38",
-    "tslint": "^5.5.0",
-    "typescript": "^2.4.2"
+    "@types/jest": "^21.1.8",
+    "@types/node": "^8.5.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "stalk",
