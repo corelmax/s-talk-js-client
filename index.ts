@@ -82,9 +82,7 @@ export namespace StalkFactory {
     export function checkOut(server: ServerImplemented) {
         if (server) {
             let socket = server.getSocket();
-            if (!!socket) {
-                socket.setReconnect(false);
-            }
+            if (!!socket) { socket.setReconnect(false); }
 
             server.getLobby().logout();
             server.dispose();
