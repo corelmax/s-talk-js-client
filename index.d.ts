@@ -1,8 +1,6 @@
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
- * Support by@ nattapon.r@live.com
- *
- * Ahoo Studio.co.th
+ * Support by @ Ahoo Studio.co.th
  */
 export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 export * from "./lib/browser/StalkEvents";

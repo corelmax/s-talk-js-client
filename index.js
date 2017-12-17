@@ -1,9 +1,7 @@
 "use strict";
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
- * Support by@ nattapon.r@live.com
- *
- * Ahoo Studio.co.th
+ * Support by @ Ahoo Studio.co.th
  */
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
