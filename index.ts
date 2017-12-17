@@ -14,16 +14,19 @@ import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 import { API } from "./lib/browser/API";
 
-export type ServerImplemented = Stalk.ServerImplemented;
-export type LobbyAPI = API.LobbyAPI;
-export type ChatRoomAPI = API.ChatRoomAPI;
-
 export namespace Utils {
     export var statusCode = HttpStatusCode;
     export var tokenDecode = Authen.TokenDecoded;
 }
 
 export namespace StalkFactory {
+    export type ServerImplemented = Stalk.ServerImplemented;
+    export type LobbyAPI = API.LobbyAPI;
+    export type GateAPI = API.GateAPI;
+    export type PushAPI = API.PushAPI;
+    export type ChatRoomAPI = API.ChatRoomAPI;
+    export type CallAPI = API.CallingAPI;
+
     export function create(_host: string, _port: number) {
         // "ws://stalk.com"
         let server = Stalk.ServerImplemented.createInstance(_host, _port);
@@ -48,7 +51,7 @@ export namespace StalkFactory {
     }
 
     export async function geteEnter(server: ServerImplemented, message: IDictionary) {
-        let connector = await server.gateEnter(message);
+        let connector = await server.getGateAPI().gateEnter(message);
         return connector;
     }
 

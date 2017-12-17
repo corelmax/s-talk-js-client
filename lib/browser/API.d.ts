@@ -1,5 +1,10 @@
-import { IDictionary, Stalk } from "./serverImplemented";
+import { IDictionary, Stalk, IServer } from "./serverImplemented";
 export declare namespace API {
+    class GateAPI {
+        private server;
+        constructor(_server: Stalk.ServerImplemented);
+        gateEnter(msg: IDictionary): Promise<IServer>;
+    }
     class LobbyAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
@@ -12,6 +17,7 @@ export declare namespace API {
         updateUser(msg: IDictionary): Promise<{}>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
+        kickMeAllSession(uid: string): void;
     }
     class ChatRoomAPI {
         private server;

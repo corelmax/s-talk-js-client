@@ -55,22 +55,16 @@ export namespace Stalk {
                 throw new Error("No socket instance!");
             }
         }
+        private gateAPI: API.GateAPI;
         private lobby: API.LobbyAPI;
-        public getLobby() {
-            return this.lobby;
-        }
         private chatroomAPI: API.ChatRoomAPI;
-        public getChatRoomAPI() {
-            return this.chatroomAPI;
-        }
         private callingAPI: API.CallingAPI;
-        public getCallingAPI() {
-            return this.callingAPI;
-        }
         private pushApi: API.PushAPI;
-        public getPushApi() {
-            return this.pushApi;
-        }
+        public getGateAPI() { return this.gateAPI; }
+        public getLobby() { return this.lobby; }
+        public getChatRoomAPI() { return this.chatroomAPI; }
+        public getCallingAPI() { return this.callingAPI; }
+        public getPushApi() { return this.pushApi; }
 
         host: string;
         port: number | string;
@@ -87,6 +81,7 @@ export namespace Stalk {
 
             this.host = host;
             this.port = port;
+            this.gateAPI = new API.GateAPI(this);
             this.lobby = new API.LobbyAPI(this);
             this.chatroomAPI = new API.ChatRoomAPI(this);
             this.callingAPI = new API.CallingAPI(this);
@@ -173,35 +168,6 @@ export namespace Stalk {
                 console.warn("io-error", data);
                 this.socket.setInitCallback();
             });
-        }
-
-        gateEnter(msg: IDictionary) {
-            const self = this;
-            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
-                if (!!self.socket && this._isConnected === false) {
-                    // <!-- Quering connector server.
-                    self.socket.request("gate.gateHandler.queryEntry", msg, function (result) {
-                        console.log("gateEnter", result);
-                        if (result.code === HttpStatusCode.success) {
-                            self.disConnect();
-
-                            const data = { host: self.host, port: result.port };
-                            resolve(data);
-                        }
-                        else {
-                            rejected(result);
-                        }
-                    });
-                }
-                else {
-                    const message = "pomelo client is null: connecting status is " + self._isConnected;
-                    console.log("Automatic init pomelo socket...");
-
-                    rejected(message);
-                }
-            });
-
-            return result;
         }
     }
 }

@@ -1,8 +1,46 @@
-import { IDictionary, Stalk, IPomelo } from "./serverImplemented";
+import { IDictionary, Stalk, IPomelo, IServer } from "./serverImplemented";
 import { HttpStatusCode, StalkUtils } from '../utils/index';
 
-
 export namespace API {
+    export class GateAPI {
+        private server: Stalk.ServerImplemented;
+        constructor(_server: Stalk.ServerImplemented) {
+            this.server = _server;
+        }
+
+        gateEnter(msg: IDictionary) {
+            const self = this;
+            const socket = this.server.getSocket();
+
+            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
+                if (!!socket && self.server._isConnected === false) {
+                    // <!-- Quering connector server.
+                    socket.request("gate.gateHandler.queryEntry", msg, function (result) {
+                        console.log("gateEnter", result);
+
+                        if (result.code === HttpStatusCode.success) {
+                            self.server.disConnect();
+
+                            const data = { host: self.server.host, port: result.port };
+                            resolve(data);
+                        }
+                        else {
+                            rejected(result);
+                        }
+                    });
+                }
+                else {
+                    const message = "pomelo socket client is null: connecting status is " + self.server._isConnected;
+                    console.log("Automatic init pomelo socket...");
+
+                    rejected(message);
+                }
+            });
+
+            return result;
+        }
+    }
+
     export class LobbyAPI {
         private server: Stalk.ServerImplemented;
         constructor(_server: Stalk.ServerImplemented) {

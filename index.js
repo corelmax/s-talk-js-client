@@ -57,7 +57,7 @@ var StalkFactory;
     StalkFactory.init = init;
     function geteEnter(server, message) {
         return __awaiter(this, void 0, void 0, function* () {
-            let connector = yield server.gateEnter(message);
+            let connector = yield server.getGateAPI().gateEnter(message);
             return connector;
         });
     }

@@ -10,21 +10,21 @@ export namespace ChatEvents {
 
     export const ON_CHAT: string = "ON_CHAT";
     export interface IChatServerEvents {
-        onChat(data);
-        onRoomJoin(data);
-        onLeaveRoom(data);
+        onChat: (data: any) => void;
+        onRoomJoin: (data: any) => void;
+        onLeaveRoom: (data: any) => void;
     }
 }
 export namespace PushEvents {
     export const ON_PUSH = "ON_PUSH";
     export interface IPushServerListener {
-        onPush(dataEvent);
+        onPush: (data: any) => void;
     }
 }
 export namespace CallingEvents {
     export const ON_CALL = "ON_CALL";
     export interface ICallingListener {
-        onCall(dataEvent);
+        onCall: (data: any) => void;
     }
 
     export const VideoCall = "VideoCall";
@@ -34,15 +34,15 @@ export namespace CallingEvents {
 }
 export namespace StalkEvents {
     export interface IServerListener {
-        onAccessRoom(dataEvent);
-        onUpdatedLastAccessTime(dataEvent);
-        onAddRoomAccess(dataEvent);
+        onAccessRoom: (data: any) => void;
+        onUpdatedLastAccessTime: (data: any) => void;
+        onAddRoomAccess: (data: any) => void;
     }
 
     export const ON_USER_LOGIN = "onUserLogin";
     export const ON_USER_LOGOUT = "onUserLogout";
     export interface BaseEvents {
-        onUserLogin(dataEvent);
-        onUserLogout(dataEvent);
+        onUserLogin: (data: any) => void;
+        onUserLogout: (data: any) => void;
     }
 }

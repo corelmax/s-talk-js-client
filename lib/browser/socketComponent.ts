@@ -1,7 +1,7 @@
 ﻿export namespace SocketComponent {
     export class SocketComponent {
         onDisconnect: (reason: any) => void;
-        disconnected(reason) {
+        disconnected(reason: any) {
             if (!!this.onDisconnect) {
                 this.onDisconnect(reason);
             }
