@@ -106,6 +106,26 @@ export namespace API {
             });
         }
 
+        getUsersPayload(msg: IDictionary) {
+            let self = this;
+            let socket = this.server.getSocket();
+
+            return new Promise((resolve, rejected) => {
+                // <!-- Authentication.
+                socket.request("connector.entryHandler.getUsersPayload", msg, function (res: StalkUtils.IStalkResponse) {
+                    if (res.code === HttpStatusCode.fail) {
+                        rejected(res.message);
+                    }
+                    else if (res.code === HttpStatusCode.success) {
+                        resolve(res);
+                    }
+                    else {
+                        resolve(res);
+                    }
+                });
+            });
+        }
+
         // <!-- Join and leave chat room.
         public joinRoom(token: string, username, room_id: string, callback: (err, res) => void) {
             let self = this;
@@ -121,6 +141,7 @@ export namespace API {
                 }
             });
         }
+
         public leaveRoom(token: string, roomId: string, callback: (err, res) => void) {
             let self = this;
             let msg = {} as IDictionary;

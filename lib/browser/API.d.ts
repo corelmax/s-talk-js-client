@@ -15,6 +15,7 @@ export declare namespace API {
          * @param msg
          */
         updateUser(msg: IDictionary): Promise<{}>;
+        getUsersPayload(msg: IDictionary): Promise<{}>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
         kickMeAllSession(uid: string): void;
