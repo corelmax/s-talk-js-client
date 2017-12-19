@@ -35,5 +35,5 @@ export declare function leaveRoom(): (dispatch: any) => void;
 export declare function loadEarlyMessageChunk(): (dispatch: any) => void;
 export declare function selectRoom(roomInfo?: Room): {
     type: string;
-    payload: Room;
+    payload: Room | undefined;
 };

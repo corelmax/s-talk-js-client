@@ -5,50 +5,47 @@
  * This is pure function action for redux app.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var chatRoomComponent_1 = require("../../chats/chatRoomComponent");
-var BackendFactory_1 = require("../../chats/BackendFactory");
-var secureServiceFactory_1 = require("../../libs/chitchat/services/secureServiceFactory");
-var serverEventListener_1 = require("../../libs/stalk/serverEventListener");
-var httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
-var ChatDataModels_1 = require("../../chats/models/ChatDataModels");
-var notificationManager_1 = require("../../chats/notificationManager");
-var configureStore_1 = require("../configureStore");
-var config_1 = require("../../configs/config");
+const chatRoomComponent_1 = require("../../chats/chatRoomComponent");
+const BackendFactory_1 = require("../../chats/BackendFactory");
+const secureServiceFactory_1 = require("../../libs/chitchat/services/secureServiceFactory");
+const serverEventListener_1 = require("../../libs/stalk/serverEventListener");
+const httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
+const ChatDataModels_1 = require("../../chats/models/ChatDataModels");
+const notificationManager_1 = require("../../chats/notificationManager");
+const configureStore_1 = require("../configureStore");
+const config_1 = require("../../configs/config");
 /**
  * ChatRoomActionsType
  */
-var ChatRoomActionsType = (function () {
-    function ChatRoomActionsType() {
-    }
-    ChatRoomActionsType.STOP = "STOP_CHATROOM_REDUCER";
-    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_REQUEST = "GET_PERSISTEND_MESSAGE_REQUEST";
-    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS = "GET_PERSISTEND_MESSAGE_SUCCESS";
-    ChatRoomActionsType.GET_PERSISTEND_MESSAGE_FAILURE = "GET_PERSISTEND_MESSAGE_FAILURE";
-    ChatRoomActionsType.GET_NEWER_MESSAGE_FAILURE = "GET_NEWER_MESSAGE_FAILURE";
-    ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS = "GET_NEWER_MESSAGE_SUCCESS";
-    ChatRoomActionsType.SEND_MESSAGE_REQUEST = "SEND_MESSAGE_REQUEST";
-    ChatRoomActionsType.SEND_MESSAGE_SUCCESS = "SEND_MESSAGE_SUCCESS";
-    ChatRoomActionsType.SEND_MESSAGE_FAILURE = "SEND_MESSAGE_FAILURE";
-    ChatRoomActionsType.JOIN_ROOM_REQUEST = "JOIN_ROOM_REQUEST";
-    ChatRoomActionsType.JOIN_ROOM_SUCCESS = "JOIN_ROOM_SUCCESS";
-    ChatRoomActionsType.JOIN_ROOM_FAILURE = "JOIN_ROOM_FAILURE";
-    ChatRoomActionsType.REPLACE_MESSAGE = "REPLACE_MESSAGE";
-    ChatRoomActionsType.ON_NEW_MESSAGE = "ON_NEW_MESSAGE";
-    ChatRoomActionsType.ON_EARLY_MESSAGE_READY = "ON_EARLY_MESSAGE_READY";
-    ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS = "LOAD_EARLY_MESSAGE_SUCCESS";
-    ChatRoomActionsType.SELECT_CHAT_ROOM = "SELECT_CHAT_ROOM";
-    return ChatRoomActionsType;
-}());
+class ChatRoomActionsType {
+}
+ChatRoomActionsType.STOP = "STOP_CHATROOM_REDUCER";
+ChatRoomActionsType.GET_PERSISTEND_MESSAGE_REQUEST = "GET_PERSISTEND_MESSAGE_REQUEST";
+ChatRoomActionsType.GET_PERSISTEND_MESSAGE_SUCCESS = "GET_PERSISTEND_MESSAGE_SUCCESS";
+ChatRoomActionsType.GET_PERSISTEND_MESSAGE_FAILURE = "GET_PERSISTEND_MESSAGE_FAILURE";
+ChatRoomActionsType.GET_NEWER_MESSAGE_FAILURE = "GET_NEWER_MESSAGE_FAILURE";
+ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS = "GET_NEWER_MESSAGE_SUCCESS";
+ChatRoomActionsType.SEND_MESSAGE_REQUEST = "SEND_MESSAGE_REQUEST";
+ChatRoomActionsType.SEND_MESSAGE_SUCCESS = "SEND_MESSAGE_SUCCESS";
+ChatRoomActionsType.SEND_MESSAGE_FAILURE = "SEND_MESSAGE_FAILURE";
+ChatRoomActionsType.JOIN_ROOM_REQUEST = "JOIN_ROOM_REQUEST";
+ChatRoomActionsType.JOIN_ROOM_SUCCESS = "JOIN_ROOM_SUCCESS";
+ChatRoomActionsType.JOIN_ROOM_FAILURE = "JOIN_ROOM_FAILURE";
+ChatRoomActionsType.REPLACE_MESSAGE = "REPLACE_MESSAGE";
+ChatRoomActionsType.ON_NEW_MESSAGE = "ON_NEW_MESSAGE";
+ChatRoomActionsType.ON_EARLY_MESSAGE_READY = "ON_EARLY_MESSAGE_READY";
+ChatRoomActionsType.LOAD_EARLY_MESSAGE_SUCCESS = "LOAD_EARLY_MESSAGE_SUCCESS";
+ChatRoomActionsType.SELECT_CHAT_ROOM = "SELECT_CHAT_ROOM";
 exports.ChatRoomActionsType = ChatRoomActionsType;
 function stop() {
-    return function (dispatch) { return { type: ChatRoomActionsType.STOP }; };
+    return dispatch => { return { type: ChatRoomActionsType.STOP }; };
 }
 exports.stop = stop;
 function initChatRoom(currentRoom) {
-    return function (dispatch) {
+    return dispatch => {
         if (!currentRoom)
             throw new Error("Empty roomInfo");
-        var chatroomComp = chatRoomComponent_1.default.getInstance();
+        let chatroomComp = chatRoomComponent_1.default.getInstance();
         chatroomComp.setRoomId(currentRoom._id);
         BackendFactory_1.default.getInstance().dataListener.addChatListenerImp(chatroomComp);
         notificationManager_1.default.getInstance().unsubscribeGlobalNotifyMessageEvent();
@@ -71,7 +68,7 @@ function onChatRoomDelegate(event, newMsg) {
         else {
             console.log("is contact message");
             //@ Check app not run in background.
-            var device = configureStore_1.default.getState().deviceReducer;
+            let device = configureStore_1.default.getState().deviceReducer;
             console.warn("AppState: ", device.appState); //active, background, inactive
             if (device.appState == "active") {
                 BackendFactory_1.default.getInstance().getChatApi().updateMessageReader(newMsg._id, newMsg.rid);
@@ -124,7 +121,7 @@ function getPersistendMessage_failure() {
     };
 }
 function getPersistendMessage(currentRid) {
-    return function (dispatch) {
+    return (dispatch) => {
         dispatch(getPersistendMessage_request());
         chatRoomComponent_1.default.getInstance().getPersistentMessage(currentRid, function (err, messages) {
             console.log("getPersistendMessage of room %s: completed.", currentRid, chatRoomComponent_1.default.getInstance().chatMessages.length);
@@ -148,7 +145,7 @@ function onEarlyMessageReady(data) {
     };
 }
 function checkOlderMessages() {
-    return function (dispatch) {
+    return dispatch => {
         chatRoomComponent_1.default.getInstance().checkOlderMessages(function done(err, res) {
             if (!err && res.data > 0) {
                 console.log('has olderMessage => %s', res.data);
@@ -170,7 +167,7 @@ function getNewerMessage_success() {
     return { type: ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS };
 }
 function getNewerMessageFromNet() {
-    return function (dispatch) {
+    return dispatch => {
         chatRoomComponent_1.default.getInstance().getNewerMessageRecord(function done(err, result) {
             if (err) {
                 dispatch(getNewerMessage_failure());
@@ -199,9 +196,9 @@ function send_message_failure(data) {
     };
 }
 function sendMessage(message) {
-    return function (dispatch) {
-        var secure = secureServiceFactory_1.default.getService();
-        var msg = {};
+    return (dispatch) => {
+        let secure = secureServiceFactory_1.default.getService();
+        let msg = {};
         msg.rid = message.rid;
         msg.content = message.text;
         msg.sender = message.sender;
@@ -211,7 +208,7 @@ function sendMessage(message) {
         dispatch(send_message_request());
         if (msg.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Location]) {
             msg.content = message.location;
-            BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, function (err, res) {
+            BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, (err, res) => {
                 dispatch(sendMessageResponse(err, res));
             });
             return;
@@ -223,14 +220,14 @@ function sendMessage(message) {
                 }
                 else {
                     msg.content = result;
-                    BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, function (err, res) {
+                    BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, (err, res) => {
                         dispatch(sendMessageResponse(err, res));
                     });
                 }
             });
         }
         else {
-            BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, function (err, res) {
+            BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, (err, res) => {
                 dispatch(sendMessageResponse(err, res));
             });
         }
@@ -238,23 +235,23 @@ function sendMessage(message) {
 }
 exports.sendMessage = sendMessage;
 function sendFile(message) {
-    return function (dispatch) {
+    return (dispatch) => {
         dispatch(send_message_request());
-        var msg = {};
+        let msg = {};
         msg.rid = message.rid;
         msg.sender = message.sender;
         msg.target = message.target;
         msg.type = message.type;
         msg.uuid = message.uniqueId;
         msg.content = message.image;
-        BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, function (err, res) {
+        BackendFactory_1.default.getInstance().getChatApi().chat("*", msg, (err, res) => {
             dispatch(sendMessageResponse(err, res));
         });
     };
 }
 exports.sendFile = sendFile;
 function sendMessageResponse(err, res) {
-    return function (dispatch) {
+    return dispatch => {
         if (!!err || res.code !== httpStatusCode_1.default.success) {
             console.warn("send message fail.", err, res);
             dispatch(send_message_failure(res.body));
@@ -275,10 +272,10 @@ function joinRoom_failure() {
     return { type: ChatRoomActionsType.JOIN_ROOM_FAILURE };
 }
 function joinRoom(roomId, token, username) {
-    return function (dispatch) {
+    return (dispatch) => {
         dispatch(joinRoom_request());
-        BackendFactory_1.default.getInstance().getServer().then(function (server) {
-            server.JoinChatRoomRequest(token, username, roomId, function (err, res) {
+        BackendFactory_1.default.getInstance().getServer().then(server => {
+            server.JoinChatRoomRequest(token, username, roomId, (err, res) => {
                 if (err || res.code != httpStatusCode_1.default.success) {
                     dispatch(joinRoom_failure());
                 }
@@ -286,26 +283,26 @@ function joinRoom(roomId, token, username) {
                     dispatch(joinRoom_success());
                 }
             });
-        }).catch(function (err) {
+        }).catch(err => {
             dispatch(joinRoom_failure());
         });
     };
 }
 exports.joinRoom = joinRoom;
 function leaveRoom() {
-    return function (dispatch) {
-        var token = configureStore_1.default.getState().authReducer.token;
-        var myProfile = configureStore_1.default.getState().profileReducer.form.profile;
-        var username = myProfile.email;
-        var room = chatRoomComponent_1.default.getInstance();
-        BackendFactory_1.default.getInstance().getServer().then(function (server) {
-            server.LeaveChatRoomRequest(token, room.getRoomId(), username, function (err, res) {
+    return (dispatch) => {
+        let token = configureStore_1.default.getState().authReducer.token;
+        let myProfile = configureStore_1.default.getState().profileReducer.form.profile;
+        let username = myProfile.email;
+        let room = chatRoomComponent_1.default.getInstance();
+        BackendFactory_1.default.getInstance().getServer().then(server => {
+            server.LeaveChatRoomRequest(token, room.getRoomId(), username, (err, res) => {
                 console.log("leaveRoom result", res);
                 BackendFactory_1.default.getInstance().dataListener.removeChatListenerImp(room);
                 chatRoomComponent_1.default.getInstance().dispose();
                 notificationManager_1.default.getInstance().regisNotifyNewMessageEvent();
             });
-        }).catch(function (err) {
+        }).catch(err => {
         });
     };
 }
@@ -316,7 +313,7 @@ function loadEarlyMessage_success() {
     };
 }
 function loadEarlyMessageChunk() {
-    return function (dispatch) {
+    return dispatch => {
         chatRoomComponent_1.default.getInstance().getOlderMessageChunk(function done(err, res) {
             console.log('olderMessages %s => %s', res.length, chatRoomComponent_1.default.getInstance().chatMessages.length);
             dispatch(loadEarlyMessage_success());

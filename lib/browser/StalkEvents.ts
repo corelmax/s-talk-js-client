@@ -7,40 +7,42 @@
 export namespace ChatEvents {
     export const ON_ADD = "onAdd";
     export const ON_LEAVE: string = "onLeave";
-    export const ON_CHAT: string = "onChat";
-    export const ON_MESSAGE_READ: string = "onMessageRead";
-    export const ON_GET_MESSAGES_READERS: string = "onGetMessagesReaders";
+
+    export const ON_CHAT: string = "ON_CHAT";
     export interface IChatServerEvents {
-        onChat(data);
-        onMessageRead(dataEvent);
-        onGetMessagesReaders(dataEvent);
-        onRoomJoin(data);
-        onLeaveRoom(data);
+        onChat: (data: any) => void;
+        onRoomJoin: (data: any) => void;
+        onLeaveRoom: (data: any) => void;
     }
 }
 export namespace PushEvents {
     export const ON_PUSH = "ON_PUSH";
     export interface IPushServerListener {
-        onPush(dataEvent);
+        onPush: (data: any) => void;
     }
 }
-export namespace StalkEvents {
-    export interface IRTCListener {
-        onVideoCall(dataEvent);
-        onVoiceCall(dataEvent);
-        onHangupCall(dataEvent);
-        onTheLineIsBusy(dataEvent);
+export namespace CallingEvents {
+    export const ON_CALL = "ON_CALL";
+    export interface ICallingListener {
+        onCall: (data: any) => void;
     }
+
+    export const VideoCall = "VideoCall";
+    export const VoiceCall = "VoiceCall";
+    export const HangupCall = "HangupCall";
+    export const TheLineIsBusy = "TheLineIsBusy";
+}
+export namespace StalkEvents {
     export interface IServerListener {
-        onAccessRoom(dataEvent);
-        onUpdatedLastAccessTime(dataEvent);
-        onAddRoomAccess(dataEvent);
+        onAccessRoom: (data: any) => void;
+        onUpdatedLastAccessTime: (data: any) => void;
+        onAddRoomAccess: (data: any) => void;
     }
 
     export const ON_USER_LOGIN = "onUserLogin";
     export const ON_USER_LOGOUT = "onUserLogout";
     export interface BaseEvents {
-        onUserLogin(dataEvent);
-        onUserLogout(dataEvent);
+        onUserLogin: (data: any) => void;
+        onUserLogout: (data: any) => void;
     }
 }

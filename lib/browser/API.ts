@@ -1,7 +1,46 @@
-import { IDictionary, Stalk, IPomelo } from "./serverImplemented";
-import { HttpStatusCode } from '../utils/httpStatusCode';
+import { IDictionary, Stalk, IPomelo, IServer } from "./serverImplemented";
+import { HttpStatusCode, StalkUtils } from '../utils/index';
 
 export namespace API {
+    export class GateAPI {
+        private server: Stalk.ServerImplemented;
+        constructor(_server: Stalk.ServerImplemented) {
+            this.server = _server;
+        }
+
+        gateEnter(msg: IDictionary) {
+            const self = this;
+            const socket = this.server.getSocket();
+
+            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
+                if (!!socket && self.server._isConnected === false) {
+                    // <!-- Quering connector server.
+                    socket.request("gate.gateHandler.queryEntry", msg, function (result) {
+                        console.log("gateEnter", result);
+
+                        if (result.code === HttpStatusCode.success) {
+                            self.server.disConnect();
+
+                            const data = { host: self.server.host, port: result.port };
+                            resolve(data);
+                        }
+                        else {
+                            rejected(result);
+                        }
+                    });
+                }
+                else {
+                    const message = "pomelo socket client is null: connecting status is " + self.server._isConnected;
+                    console.log("Automatic init pomelo socket...");
+
+                    rejected(message);
+                }
+            });
+
+            return result;
+        }
+    }
+
     export class LobbyAPI {
         private server: Stalk.ServerImplemented;
         constructor(_server: Stalk.ServerImplemented) {
@@ -43,6 +82,47 @@ export namespace API {
             this.server = null;
         }
 
+        /**
+         * user : {_id: string, username: string, payload }
+         * @param msg 
+         */
+        async updateUser(msg: IDictionary) {
+            let self = this;
+            let socket = this.server.getSocket();
+
+            return new Promise((resolve, rejected) => {
+                // <!-- Authentication.
+                socket.request("connector.entryHandler.updateUser", msg, function (res: StalkUtils.IStalkResponse) {
+                    if (res.code === HttpStatusCode.fail) {
+                        rejected(res.message);
+                    }
+                    else if (res.code === HttpStatusCode.success) {
+                        resolve(res);
+                    }
+                    else {
+                        resolve(res);
+                    }
+                });
+            });
+        }
+
+        getUsersPayload(msg: IDictionary) {
+            let self = this;
+            let socket = this.server.getSocket();
+
+            return new Promise((resolve, rejected) => {
+                // <!-- Authentication.
+                try {
+                    socket.request("connector.entryHandler.getUsersPayload", msg, function (res: StalkUtils.IStalkResponse) {
+                        resolve(res);
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
+            });
+        }
+
         // <!-- Join and leave chat room.
         public joinRoom(token: string, username, room_id: string, callback: (err, res) => void) {
             let self = this;
@@ -52,12 +132,13 @@ export namespace API {
             msg["username"] = username;
 
             let socket = this.server.getSocket();
-            socket.request("connector.entryHandler.enterRoom", msg, (result) => {
+            socket.request("connector.entryHandler.enterRoom", msg, (result: StalkUtils.IStalkResponse) => {
                 if (callback !== null) {
                     callback(null, result);
                 }
             });
         }
+
         public leaveRoom(token: string, roomId: string, callback: (err, res) => void) {
             let self = this;
             let msg = {} as IDictionary;
@@ -66,9 +147,21 @@ export namespace API {
 
             let socket = this.server.getSocket();
             socket.request("connector.entryHandler.leaveRoom", msg, (result) => {
-                if (callback != null)
+                if (callback != null) {
                     callback(null, result);
+                }
             });
+        }
+
+        public kickMeAllSession(uid: string) {
+            const self = this;
+            let socket = this.server.getSocket();
+            if (socket !== null) {
+                const msg = { uid };
+                socket.request("connector.entryHandler.kickMe", msg, function (result) {
+                    console.log("kickMe", JSON.stringify(result));
+                });
+            }
         }
     }
 
@@ -83,10 +176,12 @@ export namespace API {
             let socket = this.server.getSocket();
             socket.request("chat.chatHandler.send", _message, (result) => {
                 if (callback !== null) {
-                    if (result instanceof Error)
+                    if (result instanceof Error) {
                         callback(result, null);
-                    else
+                    }
+                    else {
                         callback(null, result);
+                    }
                 }
             });
         }
@@ -126,8 +221,9 @@ export namespace API {
 
             socket.request("chat.chatHandler.getOlderMessageChunk", message, (result) => {
                 console.log("getOlderMessageChunk", result);
-                if (callback !== null)
+                if (callback !== null) {
                     callback(null, result);
+                }
             });
         }
 
@@ -175,13 +271,21 @@ export namespace API {
             this.server = _server;
         }
 
+        /**
+         * payload: {
+         *  event: string;
+         * message: string;
+         * members: string[] | string;}
+         * 
+         * @param {IDictionary} _message 
+         * @returns 
+         * @memberof PushAPI
+         */
         public async push(_message: IDictionary) {
             return await new Promise((resolve, reject) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("push.pushHandler.push", _message, (result: any) => {
-                        console.log("push result", result);
-
+                    socket.request("push.pushHandler.push", _message, (result: StalkUtils.IStalkResponse) => {
                         resolve(result);
                     });
                 }
@@ -202,52 +306,23 @@ export namespace API {
             this.server = _server;
         }
 
-        public async videoCallRequest(targetUid: string, myRtcUid: string) {
+        public async calling(api_key: string, event: string, members: string[], payload: any) {
             let _message = {} as IDictionary;
-            _message["targetId"] = targetUid;
-            _message["myRtcId"] = myRtcUid;
+            _message["members"] = members;
+            _message["event"] = event;
+            _message["x-api-key"] = api_key;
+            _message["payload"] = payload;
 
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.videoCallRequest", _message, (result) => {
-                        resolve(result);
-                    });
-                }
-                catch (ex) {
-                    rejected(ex);
-                }
-            });
-        }
-
-        public async avoiceCallRequest(targetUid: string, myRtcUid: string) {
-            let msg = {} as IDictionary;
-            msg["targetId"] = targetUid;
-            msg["myRtcId"] = myRtcUid;
-
-            return new Promise((resolve, rejected) => {
-                try {
-                    let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.voiceCallRequest", msg, (result) => {
-                        resolve(result);
-                    });
-                }
-                catch (ex) {
-                    rejected(ex);
-                }
-            });
-        }
-
-        public async hangupCall(myId: string, contactId: string) {
-            let msg = {} as IDictionary;
-            msg["userId"] = myId;
-            msg["contactId"] = contactId;
-
-            return new Promise((resolve, rejected) => {
-                try {
-                    let socket = this.server.getSocket();
-                    socket.request("connector.entryHandler.hangupCall", msg, (result) => {
-                        resolve(result);
+                    socket.request("connector.entryHandler.calling", _message, (result) => {
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {
@@ -264,7 +339,12 @@ export namespace API {
                 try {
                     let socket = this.server.getSocket();
                     socket.request("connector.entryHandler.theLineIsBusy", msg, (result) => {
-                        resolve(result);
+                        if (result.code == 200) {
+                            resolve(result);
+                        }
+                        else {
+                            rejected(result.message);
+                        }
                     });
                 }
                 catch (ex) {

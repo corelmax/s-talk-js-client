@@ -5,22 +5,22 @@
  * This is pure function action for redux app.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var BackendFactory_1 = require("../../chats/BackendFactory");
-var configureStore_1 = require("../configureStore");
-var ProfileActions = require("../profile/profileActions");
-var notificationsActions = require("../../reducers/notifications/notificationsActions");
-var LINK_REQUEST = "LINK_REQUEST";
-var LINK_ACCEPTED = "LINK_ACCEPTED";
-var NEW_NOTICE = 'NEW_NOTICE';
+const BackendFactory_1 = require("../../chats/BackendFactory");
+const configureStore_1 = require("../configureStore");
+const ProfileActions = require("../profile/profileActions");
+const notificationsActions = require("../../reducers/notifications/notificationsActions");
+const LINK_REQUEST = "LINK_REQUEST";
+const LINK_ACCEPTED = "LINK_ACCEPTED";
+const NEW_NOTICE = 'NEW_NOTICE';
 function stalkPushInit() {
-    var pushDataListener = BackendFactory_1.default.getInstance().pushDataListener;
+    const pushDataListener = BackendFactory_1.default.getInstance().pushDataListener;
     pushDataListener.addPushEvents(onPush_handler);
 }
 exports.stalkPushInit = stalkPushInit;
 function onPush_handler(dataEvent) {
     //  console.log(`Event : ${dataEvent}`);
     if (dataEvent) {
-        var profile = configureStore_1.default.getState().profileReducer.form.profile;
+        let profile = configureStore_1.default.getState().profileReducer.form.profile;
         switch (dataEvent.event) {
             case LINK_REQUEST: {
                 configureStore_1.default.dispatch(ProfileActions.getLinkRequestFromNet(profile.email));
@@ -37,7 +37,7 @@ function onPush_handler(dataEvent) {
                 break;
             default:
                 {
-                    console.log("Other : " + dataEvent);
+                    console.log(`Other : ${dataEvent}`);
                 }
                 break;
         }

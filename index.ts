@@ -1,8 +1,6 @@
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
- * Support by@ nattapon.r@live.com
- * 
- * Ahoo Studio.co.th 
+ * Support by @ Ahoo Studio.co.th 
  */
 
 export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
@@ -14,16 +12,19 @@ import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 import { API } from "./lib/browser/API";
 
-export type ServerImplemented = Stalk.ServerImplemented;
-export type LobbyAPI = API.LobbyAPI;
-export type ChatRoomAPI = API.ChatRoomAPI;
-
 export namespace Utils {
     export var statusCode = HttpStatusCode;
     export var tokenDecode = Authen.TokenDecoded;
 }
 
 export namespace StalkFactory {
+    export type ServerImplemented = Stalk.ServerImplemented;
+    export type LobbyAPI = API.LobbyAPI;
+    export type GateAPI = API.GateAPI;
+    export type PushAPI = API.PushAPI;
+    export type ChatRoomAPI = API.ChatRoomAPI;
+    export type CallAPI = API.CallingAPI;
+
     export function create(_host: string, _port: number) {
         // "ws://stalk.com"
         let server = Stalk.ServerImplemented.createInstance(_host, _port);
@@ -48,25 +49,24 @@ export namespace StalkFactory {
     }
 
     export async function geteEnter(server: ServerImplemented, message: IDictionary) {
-        let connector = await server.gateEnter(message);
+        let connector = await server.getGateAPI().gateEnter(message);
         return connector;
     }
 
     export async function handshake(server: ServerImplemented, params: Stalk.ServerParam) {
-        return await new Promise<any>((resolve, reject) => {
+        return await new Promise<IPomelo>((resolve, reject) => {
             server.connect(params, (err) => {
                 server._isConnected = true;
                 let socket = server.getSocket();
                 if (!!socket) {
                     server.listenSocketEvents();
-                    socket.setReconnect(true);
                 }
 
                 if (!!err) {
                     reject(err);
                 }
                 else {
-                    resolve();
+                    resolve(socket);
                 }
             });
         });
@@ -80,9 +80,7 @@ export namespace StalkFactory {
     export function checkOut(server: ServerImplemented) {
         if (server) {
             let socket = server.getSocket();
-            if (!!socket) {
-                socket.setReconnect(false);
-            }
+            if (!!socket) { socket.setReconnect(false); }
 
             server.getLobby().logout();
             server.dispose();

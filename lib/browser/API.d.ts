@@ -1,12 +1,24 @@
-import { IDictionary, Stalk } from "./serverImplemented";
+import { IDictionary, Stalk, IServer } from "./serverImplemented";
 export declare namespace API {
+    class GateAPI {
+        private server;
+        constructor(_server: Stalk.ServerImplemented);
+        gateEnter(msg: IDictionary): Promise<IServer>;
+    }
     class LobbyAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
         checkIn(msg: IDictionary): Promise<{}>;
         logout(): void;
+        /**
+         * user : {_id: string, username: string, payload }
+         * @param msg
+         */
+        updateUser(msg: IDictionary): Promise<{}>;
+        getUsersPayload(msg: IDictionary): Promise<{}>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
+        kickMeAllSession(uid: string): void;
     }
     class ChatRoomAPI {
         private server;
@@ -26,6 +38,16 @@ export declare namespace API {
     class PushAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
+        /**
+         * payload: {
+         *  event: string;
+         * message: string;
+         * members: string[] | string;}
+         *
+         * @param {IDictionary} _message
+         * @returns
+         * @memberof PushAPI
+         */
         push(_message: IDictionary): Promise<{}>;
     }
     /**
@@ -34,9 +56,7 @@ export declare namespace API {
     class CallingAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        videoCallRequest(targetUid: string, myRtcUid: string): Promise<{}>;
-        avoiceCallRequest(targetUid: string, myRtcUid: string): Promise<{}>;
-        hangupCall(myId: string, contactId: string): Promise<{}>;
+        calling(api_key: string, event: string, members: string[], payload: any): Promise<{}>;
         theLineIsBusy(contactId: string): Promise<{}>;
     }
 }

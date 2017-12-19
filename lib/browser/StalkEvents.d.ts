@@ -8,38 +8,38 @@ export declare namespace ChatEvents {
     const ON_ADD = "onAdd";
     const ON_LEAVE: string;
     const ON_CHAT: string;
-    const ON_MESSAGE_READ: string;
-    const ON_GET_MESSAGES_READERS: string;
     interface IChatServerEvents {
-        onChat(data: any): any;
-        onMessageRead(dataEvent: any): any;
-        onGetMessagesReaders(dataEvent: any): any;
-        onRoomJoin(data: any): any;
-        onLeaveRoom(data: any): any;
+        onChat: (data: any) => void;
+        onRoomJoin: (data: any) => void;
+        onLeaveRoom: (data: any) => void;
     }
 }
 export declare namespace PushEvents {
     const ON_PUSH = "ON_PUSH";
     interface IPushServerListener {
-        onPush(dataEvent: any): any;
+        onPush: (data: any) => void;
     }
 }
-export declare namespace StalkEvents {
-    interface IRTCListener {
-        onVideoCall(dataEvent: any): any;
-        onVoiceCall(dataEvent: any): any;
-        onHangupCall(dataEvent: any): any;
-        onTheLineIsBusy(dataEvent: any): any;
+export declare namespace CallingEvents {
+    const ON_CALL = "ON_CALL";
+    interface ICallingListener {
+        onCall: (data: any) => void;
     }
+    const VideoCall = "VideoCall";
+    const VoiceCall = "VoiceCall";
+    const HangupCall = "HangupCall";
+    const TheLineIsBusy = "TheLineIsBusy";
+}
+export declare namespace StalkEvents {
     interface IServerListener {
-        onAccessRoom(dataEvent: any): any;
-        onUpdatedLastAccessTime(dataEvent: any): any;
-        onAddRoomAccess(dataEvent: any): any;
+        onAccessRoom: (data: any) => void;
+        onUpdatedLastAccessTime: (data: any) => void;
+        onAddRoomAccess: (data: any) => void;
     }
     const ON_USER_LOGIN = "onUserLogin";
     const ON_USER_LOGOUT = "onUserLogout";
     interface BaseEvents {
-        onUserLogin(dataEvent: any): any;
-        onUserLogout(dataEvent: any): any;
+        onUserLogin: (data: any) => void;
+        onUserLogout: (data: any) => void;
     }
 }

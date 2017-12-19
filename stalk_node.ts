@@ -1,3 +1,8 @@
+/**
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
+ * Support by @ Ahoo Studio.co.th 
+ */
+
 import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
 
 const stalk = ServerImp.getInstance();
@@ -17,7 +22,7 @@ function initStalk(): Promise<ServerImp> {
             console.log("Stalk init success.");
             stalk._isConnected = true;
 
-            stalk.pomelo.on("disconnect", function data(reason) {
+            stalk.pomelo.on("disconnect", function data(reason: any) {
                 stalk._isConnected = false;
             });
 

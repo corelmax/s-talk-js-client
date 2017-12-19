@@ -6,35 +6,33 @@
  *
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-var BackendFactory_1 = require("./BackendFactory");
-var ChatDataModels_1 = require("./models/ChatDataModels");
-var pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
-var configureStore_1 = require("../reducers/configureStore");
-var NotificationManager = (function () {
-    function NotificationManager() {
-    }
-    NotificationManager.getInstance = function () {
+const BackendFactory_1 = require("./BackendFactory");
+const ChatDataModels_1 = require("./models/ChatDataModels");
+const pushNotifyHelper_1 = require("../libs/pushNotifyHelper");
+const configureStore_1 = require("../reducers/configureStore");
+class NotificationManager {
+    static getInstance() {
         if (!NotificationManager.instance) {
             NotificationManager.instance = new NotificationManager();
         }
         return NotificationManager.instance;
-    };
-    NotificationManager.prototype.init = function (onSuccess) {
+    }
+    init(onSuccess) {
         console.log("Initialize NotificationManager.");
         pushNotifyHelper_1.default.getInstance().configure(onSuccess);
-    };
-    NotificationManager.prototype.regisNotifyNewMessageEvent = function () {
+    }
+    regisNotifyNewMessageEvent() {
         console.log("subscribe global notify message event");
         BackendFactory_1.default.getInstance().dataListener.addNoticeNewMessageEvent(this.notify);
-    };
-    NotificationManager.prototype.unsubscribeGlobalNotifyMessageEvent = function () {
+    }
+    unsubscribeGlobalNotifyMessageEvent() {
         BackendFactory_1.default.getInstance().dataListener.removeNoticeNewMessageEvent(this.notify);
-    };
-    NotificationManager.prototype.notify = function (messageImp) {
+    }
+    notify(messageImp) {
         //@ Check app not run in background.
-        var device = configureStore_1.default.getState().deviceReducer; //active, background, inactive
+        let device = configureStore_1.default.getState().deviceReducer; //active, background, inactive
         console.log("Notify Message. AppState is ", device.appState);
-        var message = messageImp.body;
+        let message = messageImp.body;
         if (messageImp.type == ChatDataModels_1.ContentType[ChatDataModels_1.ContentType.Location]) {
             message = "Sent you location";
         }
@@ -49,7 +47,6 @@ var NotificationManager = (function () {
             // sharedObjectService.getNotifyManager().notify(newMsg, appBackground, localNotifyService);
             pushNotifyHelper_1.default.getInstance().localNotification(message);
         }
-    };
-    return NotificationManager;
-}());
+    }
+}
 exports.default = NotificationManager;

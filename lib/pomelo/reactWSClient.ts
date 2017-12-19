@@ -1,36 +1,17 @@
-﻿/**
- * Facebook.Inc react-native websocket sample.
- */
-/*
-export default class WebSocketClient {
-   init2() {
-       let ws = new WebSocket('ws://git.animation-genius.com:3010');
+﻿// @ts-check
 
-       ws.onopen = () => {
-           // connection opened
-           console.log('onOpen: ');
-           ws.send('something');
-       };
-
-       ws.onmessage = (e) => {
-           // a message was received
-           console.log('message: ', e.data);
-       };
-
-       ws.onerror = (e) => {
-           // an error occurred
-           console.log('connection error: ', e);
-       };
-
-       ws.onclose = (e) => {
-           // connection closed
-           console.log('connection closed: ', e.code, e.reason);
-       };
-   };
+export interface IServerParam {
+  host: string;
+  port: number;
+  reconnect: boolean;
+  maxReconnectAttempts?: number;
+  handshakeCallback?: any;
+  encode?: any;
+  decode?: any;
+  user?: any;
+  encrypt?: any;
 }
-*/
 
-// @ts-check
 
 (function () {
   let JS_WS_CLIENT_TYPE = "js-websocket";
@@ -64,7 +45,7 @@ export default class WebSocketClient {
     };
   }
 
-  let socket = null as WebSocket;
+  let socket: WebSocket;
   let reqId = 0;
   let callbacks = {};
   let handler = {};
@@ -85,11 +66,10 @@ export default class WebSocketClient {
   let heartbeatTimeoutId = null;
   let handshakeCallback = null;
 
-
-  let connectParams = null;
+  let connectParams: IServerParam = null;
   let decode = null;
   let encode = null;
-  let reconnect = false;
+  let reconnect: boolean = false;
   let reconncetTimer = null;
   let reconnectUrl = null;
   let reconnectAttempts = 0;
@@ -115,7 +95,7 @@ export default class WebSocketClient {
     initCallback = cb;
   }
 
-  pomelo.init = function (params, cb) {
+  pomelo.init = function (params: IServerParam, cb) {
     initCallback = cb;
 
     connectParams = params;
@@ -151,7 +131,7 @@ export default class WebSocketClient {
         if (socket.close) {
           socket.close();
         }
-        socket = null;
+        socket = undefined;
 
         console.log("disconnected socket is", socket);
       }
@@ -170,8 +150,9 @@ export default class WebSocketClient {
   };
 
   pomelo.request = function (route, msg, cb) {
-    if (socket.readyState == socket.CLOSED)
+    if (socket.readyState == socket.CLOSED) {
       return cb(new Error("Socket is closed"));
+    }
 
     if (arguments.length === 2 && typeof msg === "function") {
       cb = msg;
@@ -239,7 +220,7 @@ export default class WebSocketClient {
     return Message.encode(reqId, type, compressRoute, route, msg);
   };
 
-  let connect = function (params, url) {
+  let connect = function (params: IServerParam, url) {
     console.log("connect to " + url, params);
 
     maxReconnectAttempts = params.maxReconnectAttempts || DEFAULT_MAX_RECONNECT_ATTEMPTS;
@@ -276,10 +257,10 @@ export default class WebSocketClient {
   };
 
   let onopen = function (event) {
-    console.log("onSocketOpen:", event.type);
+    console.log("onSocketOpen:", event.type, "reconnect", reconnect);
 
     pomelo.emit("onopen", event);
-    if (!!reconnect) {
+    if (reconnect == true) {
       pomelo.emit("reconnect", event);
     }
 
@@ -309,8 +290,9 @@ export default class WebSocketClient {
   let onclose = function (event) {
     pomelo.emit("close", event);
 
-    if (!!reconnect && reconnectAttempts < maxReconnectAttempts) {
-      console.log("reconnection", reconnect, reconnectAttempts, reconnectionDelay, connectParams);
+    console.log("reconnect", reconnect);
+    if (reconnect == true && reconnectAttempts < maxReconnectAttempts) {
+      console.log("reconnectAttempts", reconnectAttempts);
       reconnect = true;
       reconnectAttempts++;
       reconncetTimer = setTimeout(function () {
@@ -405,8 +387,9 @@ export default class WebSocketClient {
     let obj = Package.encode(Package.TYPE_HANDSHAKE_ACK);
     send(obj);
 
-    if (initCallback)
+    if (initCallback) {
       initCallback(null);
+    }
   };
 
   let onData = function (data) {

@@ -36,7 +36,7 @@ export declare class ServerImplemented {
     onSocketReconnect: (data) => void;
     onDisconnected: (data) => void;
     constructor(host: string, port: number);
-    getClient(): IPomelo;
+    getClient(): IPomelo | undefined;
     dispose(): void;
     disConnect(callBack?: Function): void;
     logout(): void;
