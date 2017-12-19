@@ -112,17 +112,14 @@ export namespace API {
 
             return new Promise((resolve, rejected) => {
                 // <!-- Authentication.
-                socket.request("connector.entryHandler.getUsersPayload", msg, function (res: StalkUtils.IStalkResponse) {
-                    if (res.code === HttpStatusCode.fail) {
-                        rejected(res.message);
-                    }
-                    else if (res.code === HttpStatusCode.success) {
+                try {
+                    socket.request("connector.entryHandler.getUsersPayload", msg, function (res: StalkUtils.IStalkResponse) {
                         resolve(res);
-                    }
-                    else {
-                        resolve(res);
-                    }
-                });
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
             });
         }
 
