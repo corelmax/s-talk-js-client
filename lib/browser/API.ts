@@ -274,8 +274,9 @@ export namespace API {
         /**
          * payload: {
          *  event: string;
-         * message: string;
-         * members: string[] | string;}
+         *  message: string;
+         *  members: string[] | string;
+         * }
          * 
          * @param {IDictionary} _message 
          * @returns 

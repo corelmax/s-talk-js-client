@@ -36,7 +36,7 @@ export declare namespace Stalk {
     class ServerImplemented {
         private static Instance;
         static getInstance(): ServerImplemented;
-        static createInstance(host: string, port: number): ServerImplemented | undefined;
+        static createInstance(host: string, port: number): ServerImplemented;
         private socket;
         getSocket(): IPomelo;
         private gateAPI;

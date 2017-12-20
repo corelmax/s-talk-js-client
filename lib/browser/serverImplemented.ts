@@ -44,6 +44,9 @@ export namespace Stalk {
 
                 return this.Instance;
             }
+            else {
+                return this.Instance;
+            }
         }
 
         private socket: IPomelo;
