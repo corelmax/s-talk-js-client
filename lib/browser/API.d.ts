@@ -1,4 +1,5 @@
 import { IDictionary, Stalk, IServer } from "./serverImplemented";
+import { StalkUtils } from '../utils/index';
 export declare namespace API {
     class GateAPI {
         private server;
@@ -14,8 +15,8 @@ export declare namespace API {
          * user : {_id: string, username: string, payload }
          * @param msg
          */
-        updateUser(msg: IDictionary): Promise<{}>;
-        getUsersPayload(msg: IDictionary): Promise<{}>;
+        updateUser(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
+        getUsersPayload(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
         kickMeAllSession(uid: string): void;
