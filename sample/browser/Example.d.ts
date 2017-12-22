@@ -2,13 +2,13 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { IDictionary, IServer, API, ServerImplemented, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
+import { Stalk, IDictionary, IServer, API, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
      */
     class Factory {
-        stalk: ServerImplemented;
+        stalk: Stalk.ServerImplemented;
         constructor(host: string, port: number);
         stalkInit(): Promise<IPomelo>;
         handshake(uid: string): Promise<IServer>;

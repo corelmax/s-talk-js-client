@@ -31,5 +31,6 @@
     "stalk",
     "node.js",
     "chat-server"
-  ]
+  ],
+  "typings": "./index.d.ts"
 }

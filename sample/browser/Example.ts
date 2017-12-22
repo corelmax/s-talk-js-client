@@ -4,7 +4,7 @@
  */
 
 import {
-    Stalk, IDictionary, IServer, API, ServerImplemented,
+    Stalk, IDictionary, IServer, API,
     IPomelo, StalkEvents, PushEvents, ChatEvents, StalkFactory
 }
     // from "stalk-js";
@@ -16,7 +16,7 @@ export namespace StalkCodeExam {
      * Preparing connection... 
      */
     export class Factory {
-        stalk: ServerImplemented;
+        stalk: Stalk.ServerImplemented;
 
         constructor(host: string, port: number) {
             this.stalk = StalkFactory.create(host, port);

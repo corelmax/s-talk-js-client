@@ -24,6 +24,12 @@ const tokenDecode_1 = require("./lib/utils/tokenDecode");
 const serverImplemented_2 = require("./lib/browser/serverImplemented");
 var StalkFactory;
 (function (StalkFactory) {
+    // export type ServerImplemented = Stalk.ServerImplemented;
+    // export type LobbyAPI = API.LobbyAPI;
+    // export type GateAPI = API.GateAPI;
+    // export type PushAPI = API.PushAPI;
+    // export type ChatRoomAPI = API.ChatRoomAPI;
+    // export type CallAPI = API.CallingAPI;
     let Utils;
     (function (Utils) {
         Utils.statusCode = httpStatusCode_1.HttpStatusCode;
@@ -99,3 +105,6 @@ var StalkFactory;
     }
     StalkFactory.checkOut = checkOut;
 })(StalkFactory = exports.StalkFactory || (exports.StalkFactory = {}));
+// declare module "stalk-js" {
+//     export = StalkFactory;
+// } 

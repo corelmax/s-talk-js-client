@@ -12,14 +12,14 @@ import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 import { API } from "./lib/browser/API";
 
-export type ServerImplemented = Stalk.ServerImplemented;
-export type LobbyAPI = API.LobbyAPI;
-export type GateAPI = API.GateAPI;
-export type PushAPI = API.PushAPI;
-export type ChatRoomAPI = API.ChatRoomAPI;
-export type CallAPI = API.CallingAPI;
-
 export module StalkFactory {
+    // export type ServerImplemented = Stalk.ServerImplemented;
+    // export type LobbyAPI = API.LobbyAPI;
+    // export type GateAPI = API.GateAPI;
+    // export type PushAPI = API.PushAPI;
+    // export type ChatRoomAPI = API.ChatRoomAPI;
+    // export type CallAPI = API.CallingAPI;
+
     export module Utils {
         export var statusCode = HttpStatusCode;
         export var tokenDecode = Authen.TokenDecoded;
@@ -31,7 +31,7 @@ export module StalkFactory {
         return server;
     }
 
-    export async function init(server: ServerImplemented) {
+    export async function init(server: Stalk.ServerImplemented) {
         let promise = new Promise<IPomelo>((resolve, reject) => {
             server.disConnect(() => {
                 server.init((err: Error, res: IPomelo) => {
@@ -48,12 +48,12 @@ export module StalkFactory {
         return await promise;
     }
 
-    export async function geteEnter(server: ServerImplemented, message: IDictionary) {
+    export async function geteEnter(server: Stalk.ServerImplemented, message: IDictionary) {
         let connector = await server.getGateAPI().gateEnter(message);
         return connector;
     }
 
-    export async function handshake(server: ServerImplemented, params: Stalk.ServerParam) {
+    export async function handshake(server: Stalk.ServerImplemented, params: Stalk.ServerParam) {
         return await new Promise<IPomelo>((resolve, reject) => {
             server.connect(params, (err) => {
                 server._isConnected = true;
@@ -72,12 +72,12 @@ export module StalkFactory {
         });
     }
 
-    export async function checkIn(server: ServerImplemented, message: IDictionary) {
+    export async function checkIn(server: Stalk.ServerImplemented, message: IDictionary) {
         let result = await server.getLobby().checkIn(message);
         return result;
     }
 
-    export function checkOut(server: ServerImplemented) {
+    export function checkOut(server: Stalk.ServerImplemented) {
         if (server) {
             let socket = server.getSocket();
             if (!!socket) { socket.setReconnect(false); }
@@ -87,7 +87,6 @@ export module StalkFactory {
         }
     }
 }
-
-declare module "stalk-js" {
-    export = StalkFactory;
-}
+// declare module "stalk-js" {
+//     export = StalkFactory;
+// }
