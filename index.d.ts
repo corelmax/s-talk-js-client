@@ -15,15 +15,18 @@ export declare type GateAPI = API.GateAPI;
 export declare type PushAPI = API.PushAPI;
 export declare type ChatRoomAPI = API.ChatRoomAPI;
 export declare type CallAPI = API.CallingAPI;
-export declare namespace Utils {
-    var statusCode: typeof HttpStatusCode;
-    var tokenDecode: typeof Authen.TokenDecoded;
-}
-export declare namespace StalkFactory {
+export declare module StalkFactory {
+    module Utils {
+        var statusCode: typeof HttpStatusCode;
+        var tokenDecode: typeof Authen.TokenDecoded;
+    }
     function create(_host: string, _port: number): Stalk.ServerImplemented;
     function init(server: ServerImplemented): Promise<IPomelo>;
     function geteEnter(server: ServerImplemented, message: IDictionary): Promise<IServer>;
     function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<IPomelo>;
     function checkIn(server: ServerImplemented, message: IDictionary): Promise<{}>;
     function checkOut(server: ServerImplemented): void;
+}
+declare module "stalk-js" {
+    export = StalkFactory;
 }

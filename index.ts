@@ -19,12 +19,12 @@ export type PushAPI = API.PushAPI;
 export type ChatRoomAPI = API.ChatRoomAPI;
 export type CallAPI = API.CallingAPI;
 
-export namespace Utils {
-    export var statusCode = HttpStatusCode;
-    export var tokenDecode = Authen.TokenDecoded;
-}
+export module StalkFactory {
+    export module Utils {
+        export var statusCode = HttpStatusCode;
+        export var tokenDecode = Authen.TokenDecoded;
+    }
 
-export namespace StalkFactory {
     export function create(_host: string, _port: number) {
         // "ws://stalk.com"
         let server = Stalk.ServerImplemented.createInstance(_host, _port);
@@ -86,4 +86,8 @@ export namespace StalkFactory {
             server.dispose();
         }
     }
+}
+
+declare module "stalk-js" {
+    export = StalkFactory;
 }

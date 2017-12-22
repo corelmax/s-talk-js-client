@@ -9,7 +9,7 @@ export declare namespace StalkCodeExam {
      */
     class Factory {
         stalk: ServerImplemented;
-        constructor(host: any, port: any);
+        constructor(host: string, port: number);
         stalkInit(): Promise<IPomelo>;
         handshake(uid: string): Promise<IServer>;
         checkIn(user: any): Promise<{}>;

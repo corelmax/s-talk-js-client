@@ -1,7 +1,7 @@
 {
   "name": "stalk-js",
-  "version": "0.0.31",
-  "description": "stalk javascript client.",
+  "version": "0.0.32",
+  "description": "s-talk javascript client.",
   "main": "index.js",
   "repository": {
     "url": "git+https://github.com/mzget/stalk-javascript-client.git",
@@ -21,8 +21,8 @@
     "ws": "^1.1.5"
   },
   "devDependencies": {
-    "@types/jest": "^21.1.8",
-    "@types/node": "^8.5.1"
+    "@types/jest": "^21.1.9",
+    "@types/node": "^8.5.2"
   },
   "scripts": {
     "test": "jest"

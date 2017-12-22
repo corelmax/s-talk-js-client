@@ -34,7 +34,8 @@ var StalkCodeExam;
                     // @ get connector server.
                     let msg = {};
                     msg["uid"] = uid;
-                    msg["x-api-key"] =  /* your api key*/;
+                    msg["x-api-key"] = ""; /* your api key*/
+                    ;
                     let connector = yield index_1.StalkFactory.geteEnter(this.stalk, msg);
                     let params = { host: connector.host, port: connector.port, reconnect: false };
                     yield index_1.StalkFactory.handshake(this.stalk, params);
@@ -49,7 +50,8 @@ var StalkCodeExam;
             return __awaiter(this, void 0, void 0, function* () {
                 let msg = {};
                 msg["user"] = user;
-                msg["x-api-key"] =  /* your api key*/;
+                msg["x-api-key"] = ""; /* your api key*/
+                ;
                 let result = yield index_1.StalkFactory.checkIn(this.stalk, msg);
                 return result;
             });

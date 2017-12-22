@@ -4,8 +4,8 @@
  */
 
 import {
-    Stalk, IDictionary, IServer, API, Utils, StalkFactory, ServerImplemented,
-    IPomelo, StalkEvents, PushEvents, ChatEvents
+    Stalk, IDictionary, IServer, API, ServerImplemented,
+    IPomelo, StalkEvents, PushEvents, ChatEvents, StalkFactory
 }
     // from "stalk-js";
     from "../../index";
@@ -18,7 +18,7 @@ export namespace StalkCodeExam {
     export class Factory {
         stalk: ServerImplemented;
 
-        constructor(host, port) {
+        constructor(host: string, port: number) {
             this.stalk = StalkFactory.create(host, port);
         }
 
@@ -32,7 +32,7 @@ export namespace StalkCodeExam {
                 // @ get connector server.
                 let msg = {} as IDictionary;
                 msg["uid"] = uid;
-                msg["x-api-key"] = /* your api key*/;
+                msg["x-api-key"] = ""; /* your api key*/;
                 let connector = await StalkFactory.geteEnter(this.stalk, msg);
 
                 let params = { host: connector.host, port: connector.port, reconnect: false } as Stalk.ServerParam;
@@ -47,7 +47,7 @@ export namespace StalkCodeExam {
         async checkIn(user: any) {
             let msg = {} as IDictionary;
             msg["user"] = user;
-            msg["x-api-key"] = /* your api key*/;
+            msg["x-api-key"] = ""; /* your api key*/;
             let result = await StalkFactory.checkIn(this.stalk, msg);
             return result;
         }
@@ -144,7 +144,7 @@ export class YourApp {
     stalkLogin(user: any) {
         this.exam.stalkInit().then(socket => {
             this.exam.handshake(user._id).then((connector) => {
-                this.exam.checkIn(user).then((value) => {
+                this.exam.checkIn(user).then((value: any) => {
                     console.log("Joined stalk-service success", value);
                     let result: { success: boolean, token: any } = JSON.parse(JSON.stringify(value.data));
                     if (result.success) {

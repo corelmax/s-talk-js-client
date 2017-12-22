@@ -22,13 +22,13 @@ __export(require("./lib/browser/API"));
 const httpStatusCode_1 = require("./lib/utils/httpStatusCode");
 const tokenDecode_1 = require("./lib/utils/tokenDecode");
 const serverImplemented_2 = require("./lib/browser/serverImplemented");
-var Utils;
-(function (Utils) {
-    Utils.statusCode = httpStatusCode_1.HttpStatusCode;
-    Utils.tokenDecode = tokenDecode_1.Authen.TokenDecoded;
-})(Utils = exports.Utils || (exports.Utils = {}));
 var StalkFactory;
 (function (StalkFactory) {
+    let Utils;
+    (function (Utils) {
+        Utils.statusCode = httpStatusCode_1.HttpStatusCode;
+        Utils.tokenDecode = tokenDecode_1.Authen.TokenDecoded;
+    })(Utils = StalkFactory.Utils || (StalkFactory.Utils = {}));
     function create(_host, _port) {
         // "ws://stalk.com"
         let server = serverImplemented_2.Stalk.ServerImplemented.createInstance(_host, _port);
