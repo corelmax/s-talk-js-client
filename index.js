@@ -105,6 +105,3 @@ var StalkFactory;
     }
     StalkFactory.checkOut = checkOut;
 })(StalkFactory = exports.StalkFactory || (exports.StalkFactory = {}));
-// declare module "stalk-js" {
-//     export = StalkFactory;
-// } 

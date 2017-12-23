@@ -20,3 +20,6 @@ export declare module StalkFactory {
     function checkIn(server: Stalk.ServerImplemented, message: IDictionary): Promise<{}>;
     function checkOut(server: Stalk.ServerImplemented): void;
 }
+declare module "stalk-js" {
+    export = StalkFactory;
+}

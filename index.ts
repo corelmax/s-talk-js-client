@@ -87,6 +87,6 @@ export module StalkFactory {
         }
     }
 }
-// declare module "stalk-js" {
-//     export = StalkFactory;
-// }
+declare module "stalk-js" {
+    export = StalkFactory;
+}
