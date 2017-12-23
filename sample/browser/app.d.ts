@@ -2,17 +2,17 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { IDictionary, IServer, API, ServerImplemented, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
+import { ServerImp, IDictionary, IPomelo, PushEvents, StalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
      */
     class Factory {
-        stalk: ServerImplemented;
-        constructor(host: any, port: any);
-        stalkInit(): Promise<IPomelo>;
-        handshake(uid: string): Promise<IServer>;
-        checkIn(user: any): Promise<{}>;
+        stalk: ServerImp;
+        constructor(host: string, port: number);
+        stalkInit(): Promise<any>;
+        handshake(uid: string): Promise<any>;
+        checkIn(user: any): Promise<any>;
         checkOut(): Promise<void>;
     }
     /**
@@ -20,20 +20,20 @@ export declare namespace StalkCodeExam {
      */
     class ServerListener {
         socket: IPomelo;
-        constructor(socket: IPomelo);
         private pushServerListener;
-        addPushListener(obj: PushEvents.IPushServerListener): void;
         private serverListener;
-        addServerListener(obj: StalkEvents.BaseEvents): void;
         private chatServerListener;
+        constructor(socket: IPomelo);
+        addPushListener(obj: PushEvents.IPushServerListener): void;
+        addServerListener(obj: StalkEvents.BaseEvents): void;
         addChatListener(obj: ChatEvents.IChatServerEvents): void;
     }
 }
 export declare class YourApp {
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
-    chatApi: API.ChatRoomAPI;
-    pushApi: API.PushAPI;
+    chatApi: ChatRoomAPI;
+    pushApi: PushAPI;
     constructor();
     /**
      *

@@ -4,30 +4,29 @@
  * 
  * Ahoo Studio.co.th 
  */
-import * as EventEmitter from "events";
 
+import * as EventEmitter from "events";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
 import { API } from "./API";
 const Pomelo = require("../pomelo/reactWSClient");
 
-export interface IPomeloResponse {
-    code: number;
-    message?: string;
-    data?: any;
-}
-export interface IPomelo extends EventEmitter {
-    init: (params: any, callback: (error?: any) => void) => void;
-    notify: (route: string, message: any) => void;
-    request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
-    disconnect: () => Promise<null>;
-    setReconnect: (reconnect: boolean) => void;
-    setInitCallback: (error?: string) => void;
-};
-export interface IServer { host: string; port: number; };
-export interface IDictionary { [k: string]: string | any; }
-
 export namespace Stalk {
+    export interface IPomeloResponse {
+        code: number;
+        message?: string;
+        data?: any;
+    }
+    export interface IPomelo extends EventEmitter {
+        init: (params: any, callback: (error?: any) => void) => void;
+        notify: (route: string, message: any) => void;
+        request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
+        disconnect: () => Promise<null>;
+        setReconnect: (reconnect: boolean) => void;
+        setInitCallback: (error?: string) => void;
+    };
+    export interface IServer { host: string; port: number; };
+    export interface IDictionary { [k: string]: string | any; }
     export class ServerParam implements IServer {
         host: string;
         port: number;
@@ -42,6 +41,9 @@ export namespace Stalk {
             if (this.Instance === null || this.Instance === undefined) {
                 this.Instance = new ServerImplemented(host, port);
 
+                return this.Instance;
+            }
+            else {
                 return this.Instance;
             }
         }

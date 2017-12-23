@@ -7,27 +7,27 @@
  */
 import * as EventEmitter from "events";
 import { API } from "./API";
-export interface IPomeloResponse {
-    code: number;
-    message?: string;
-    data?: any;
-}
-export interface IPomelo extends EventEmitter {
-    init: (params: any, callback: (error?: any) => void) => void;
-    notify: (route: string, message: any) => void;
-    request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
-    disconnect: () => Promise<null>;
-    setReconnect: (reconnect: boolean) => void;
-    setInitCallback: (error?: string) => void;
-}
-export interface IServer {
-    host: string;
-    port: number;
-}
-export interface IDictionary {
-    [k: string]: string | any;
-}
 export declare namespace Stalk {
+    interface IPomeloResponse {
+        code: number;
+        message?: string;
+        data?: any;
+    }
+    interface IPomelo extends EventEmitter {
+        init: (params: any, callback: (error?: any) => void) => void;
+        notify: (route: string, message: any) => void;
+        request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
+        disconnect: () => Promise<null>;
+        setReconnect: (reconnect: boolean) => void;
+        setInitCallback: (error?: string) => void;
+    }
+    interface IServer {
+        host: string;
+        port: number;
+    }
+    interface IDictionary {
+        [k: string]: string | any;
+    }
     class ServerParam implements IServer {
         host: string;
         port: number;
@@ -36,7 +36,7 @@ export declare namespace Stalk {
     class ServerImplemented {
         private static Instance;
         static getInstance(): ServerImplemented;
-        static createInstance(host: string, port: number): ServerImplemented | undefined;
+        static createInstance(host: string, port: number): ServerImplemented;
         private socket;
         getSocket(): IPomelo;
         private gateAPI;

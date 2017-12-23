@@ -90,19 +90,16 @@ export namespace API {
             let self = this;
             let socket = this.server.getSocket();
 
-            return new Promise((resolve, rejected) => {
-                // <!-- Authentication.
-                socket.request("connector.entryHandler.updateUser", msg, function (res: StalkUtils.IStalkResponse) {
-                    if (res.code === HttpStatusCode.fail) {
-                        rejected(res.message);
-                    }
-                    else if (res.code === HttpStatusCode.success) {
+            return new Promise((resolve: (value: StalkUtils.IStalkResponse) => void, rejected) => {
+                try {
+                    // <!-- Authentication.
+                    socket.request("connector.entryHandler.updateUser", msg, (res: StalkUtils.IStalkResponse) => {
                         resolve(res);
-                    }
-                    else {
-                        resolve(res);
-                    }
-                });
+                    });
+                }
+                catch (ex) {
+                    rejected(ex);
+                }
             });
         }
 
@@ -110,10 +107,10 @@ export namespace API {
             let self = this;
             let socket = this.server.getSocket();
 
-            return new Promise((resolve, rejected) => {
+            return new Promise((resolve: (value: StalkUtils.IStalkResponse) => void, rejected) => {
                 // <!-- Authentication.
                 try {
-                    socket.request("connector.entryHandler.getUsersPayload", msg, function (res: StalkUtils.IStalkResponse) {
+                    socket.request("connector.entryHandler.getUsersPayload", msg, (res: StalkUtils.IStalkResponse) => {
                         resolve(res);
                     });
                 }
@@ -274,8 +271,9 @@ export namespace API {
         /**
          * payload: {
          *  event: string;
-         * message: string;
-         * members: string[] | string;}
+         *  message: string;
+         *  members: string[] | string;
+         * }
          * 
          * @param {IDictionary} _message 
          * @returns 

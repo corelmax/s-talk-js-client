@@ -4,11 +4,10 @@
  */
 
 import {
-    Stalk, IDictionary, IServer, API, Utils, StalkFactory, ServerImplemented,
-    IPomelo, StalkEvents, PushEvents, ChatEvents
-}
-    // from "stalk-js";
-    from "../../index";
+    stalkjs, ServerImp, ServerParam, IDictionary, IPomelo,
+    PushEvents, StalkEvents, ChatEvents,
+    PushAPI, ChatRoomAPI
+} from "stalk-js";
 
 export namespace StalkCodeExam {
 
@@ -16,14 +15,14 @@ export namespace StalkCodeExam {
      * Preparing connection... 
      */
     export class Factory {
-        stalk: ServerImplemented;
+        stalk: ServerImp;
 
-        constructor(host, port) {
-            this.stalk = StalkFactory.create(host, port);
+        constructor(host: string, port: number) {
+            this.stalk = stalkjs.create(host, port);
         }
 
         async stalkInit() {
-            let socket = await StalkFactory.init(this.stalk);
+            let socket = await stalkjs.init(this.stalk);
             return socket;
         }
 
@@ -32,11 +31,11 @@ export namespace StalkCodeExam {
                 // @ get connector server.
                 let msg = {} as IDictionary;
                 msg["uid"] = uid;
-                msg["x-api-key"] = /* your api key*/;
-                let connector = await StalkFactory.geteEnter(this.stalk, msg);
+                msg["x-api-key"] = ""; /* your api key*/;
+                let connector = await stalkjs.geteEnter(this.stalk, msg);
 
-                let params = { host: connector.host, port: connector.port, reconnect: false } as Stalk.ServerParam;
-                await StalkFactory.handshake(this.stalk, params);
+                let params = { host: connector.host, port: connector.port, reconnect: false } as ServerParam;
+                await stalkjs.handshake(this.stalk, params);
 
                 return await connector;
             } catch (ex) {
@@ -47,13 +46,13 @@ export namespace StalkCodeExam {
         async checkIn(user: any) {
             let msg = {} as IDictionary;
             msg["user"] = user;
-            msg["x-api-key"] = /* your api key*/;
-            let result = await StalkFactory.checkIn(this.stalk, msg);
+            msg["x-api-key"] = ""; /* your api key*/;
+            let result = await stalkjs.checkIn(this.stalk, msg);
             return result;
         }
 
         async checkOut() {
-            await StalkFactory.checkOut(this.stalk);
+            await stalkjs.checkOut(this.stalk);
         }
     }
 
@@ -62,12 +61,18 @@ export namespace StalkCodeExam {
      */
     export class ServerListener {
         socket: IPomelo;
+        private pushServerListener: PushEvents.IPushServerListener;
+        private serverListener: StalkEvents.BaseEvents;
+        private chatServerListener: ChatEvents.IChatServerEvents;
 
         constructor(socket: IPomelo) {
             this.socket = socket;
+
+            this.pushServerListener = undefined;
+            this.serverListener = undefined;
+            this.chatServerListener = undefined;
         }
 
-        private pushServerListener: PushEvents.IPushServerListener;
         public addPushListener(obj: PushEvents.IPushServerListener) {
             this.pushServerListener = obj;
 
@@ -80,8 +85,6 @@ export namespace StalkCodeExam {
             });
         }
 
-
-        private serverListener: StalkEvents.BaseEvents;
         public addServerListener(obj: StalkEvents.BaseEvents): void {
             this.serverListener = obj;
 
@@ -100,7 +103,6 @@ export namespace StalkCodeExam {
             });
         }
 
-        private chatServerListener: ChatEvents.IChatServerEvents;
         public addChatListener(obj: ChatEvents.IChatServerEvents): void {
             this.chatServerListener = obj;
 
@@ -129,13 +131,15 @@ export class YourApp {
 
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
-    chatApi: API.ChatRoomAPI;
-    pushApi: API.PushAPI;
+    chatApi: ChatRoomAPI;
+    pushApi: PushAPI;
 
     constructor() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
-        this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
-        this.pushApi = new API.PushAPI(this.exam.stalk);
+        this.chatApi = new ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new PushAPI(this.exam.stalk);
+
+        this.listeners = undefined;
     }
     /**
      * 
@@ -144,7 +148,7 @@ export class YourApp {
     stalkLogin(user: any) {
         this.exam.stalkInit().then(socket => {
             this.exam.handshake(user._id).then((connector) => {
-                this.exam.checkIn(user).then((value) => {
+                this.exam.checkIn(user).then((value: any) => {
                     console.log("Joined stalk-service success", value);
                     let result: { success: boolean, token: any } = JSON.parse(JSON.stringify(value.data));
                     if (result.success) {

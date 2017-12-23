@@ -2,28 +2,32 @@
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
  */
-export { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
-export * from "./lib/browser/StalkEvents";
-export * from "./lib/browser/API";
-import { HttpStatusCode } from "./lib/utils/httpStatusCode";
-import { Authen } from "./lib/utils/tokenDecode";
-import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
+import { Stalk } from "./lib/browser/ServerImplemented";
+import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
-export declare namespace Utils {
-    var statusCode: typeof HttpStatusCode;
-    var tokenDecode: typeof Authen.TokenDecoded;
-}
-export declare namespace StalkFactory {
-    type ServerImplemented = Stalk.ServerImplemented;
-    type LobbyAPI = API.LobbyAPI;
-    type GateAPI = API.GateAPI;
-    type PushAPI = API.PushAPI;
-    type ChatRoomAPI = API.ChatRoomAPI;
-    type CallAPI = API.CallingAPI;
-    function create(_host: string, _port: number): Stalk.ServerImplemented | undefined;
-    function init(server: ServerImplemented): Promise<IPomelo>;
-    function geteEnter(server: ServerImplemented, message: IDictionary): Promise<IServer>;
-    function handshake(server: ServerImplemented, params: Stalk.ServerParam): Promise<IPomelo>;
-    function checkIn(server: ServerImplemented, message: IDictionary): Promise<{}>;
-    function checkOut(server: ServerImplemented): void;
-}
+import * as StalkEvents from "./lib/browser/StalkEvents";
+export import stalkjs = StalkJS;
+/**
+ * Core server implementation.
+ */
+export import ServerImp = Stalk.ServerImplemented;
+export import ServerParam = Stalk.ServerParam;
+export import IPomelo = Stalk.IPomelo;
+export import IPomeloResponse = Stalk.IPomeloResponse;
+export import IServer = Stalk.IServer;
+export import IDictionary = Stalk.IDictionary;
+/**
+ * All events.
+ */
+export import stalkEvents = StalkEvents.StalkEvents;
+export import PushEvents = StalkEvents.PushEvents;
+export import ChatEvents = StalkEvents.ChatEvents;
+export import CallingEvents = StalkEvents.CallingEvents;
+/**
+ * APIs interface implementation.
+ */
+export import CallingAPI = API.CallingAPI;
+export import ChatRoomAPI = API.ChatRoomAPI;
+export import GateAPI = API.GateAPI;
+export import LobbyAPI = API.LobbyAPI;
+export import PushAPI = API.PushAPI;

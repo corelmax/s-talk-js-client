@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class ServerEventListener {
+export default class ServerEventListener {
     constructor(socket) {
         this.pomelo = socket;
     }
@@ -180,4 +178,3 @@ ServerEventListener.ON_GET_COMPANY_MEMBERS = "onGetCompanyMembers";
 ServerEventListener.ON_GET_PRIVATE_GROUPS = "onGetPrivateGroups";
 ServerEventListener.ON_GET_ORGANIZE_GROUPS = "onGetOrganizeGroups";
 ServerEventListener.ON_GET_PROJECT_BASE_GROUPS = "onGetProjectBaseGroups";
-exports.default = ServerEventListener;
