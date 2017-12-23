@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
@@ -10,8 +11,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import ServerImp from "./lib/node/serverImplemented";
-const stalk = ServerImp.getInstance();
+Object.defineProperty(exports, "__esModule", { value: true });
+const serverImplemented_1 = require("./lib/node/serverImplemented");
+const stalk = serverImplemented_1.default.getInstance();
 function initStalk() {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
@@ -43,7 +45,7 @@ function pushMessage(msg) {
         }
     });
 }
-export function init() {
+function init() {
     return __awaiter(this, void 0, void 0, function* () {
         initStalk().then(stalk => {
             if (!stalk._isConnected) {
@@ -55,10 +57,11 @@ export function init() {
         });
     });
 }
+exports.init = init;
 /**
  * For test call api omly...
  */
-export function testCall() {
+function testCall() {
     let msg = {};
     msg["event"] = "Test api.";
     msg["message"] = "test api from express.js client.";
@@ -72,7 +75,8 @@ export function testCall() {
         });
     });
 }
-export function push(msg) {
+exports.testCall = testCall;
+function push(msg) {
     pushMessage(msg).catch((stalk) => {
         init().then(boo => {
             if (boo) {
@@ -81,3 +85,4 @@ export function push(msg) {
         });
     });
 }
+exports.push = push;

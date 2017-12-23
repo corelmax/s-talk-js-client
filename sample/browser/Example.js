@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
@@ -10,19 +11,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { API, StalkEvents, PushEvents, ChatEvents, StalkJS } from "../../index";
-export var StalkCodeExam;
+Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = require("../../index");
+var StalkCodeExam;
 (function (StalkCodeExam) {
     /**
      * Preparing connection...
      */
     class Factory {
         constructor(host, port) {
-            this.stalk = StalkJS.create(host, port);
+            this.stalk = index_1.StalkJS.create(host, port);
         }
         stalkInit() {
             return __awaiter(this, void 0, void 0, function* () {
-                let socket = yield StalkJS.init(this.stalk);
+                let socket = yield index_1.StalkJS.init(this.stalk);
                 return socket;
             });
         }
@@ -34,9 +36,9 @@ export var StalkCodeExam;
                     msg["uid"] = uid;
                     msg["x-api-key"] = ""; /* your api key*/
                     ;
-                    let connector = yield StalkJS.geteEnter(this.stalk, msg);
+                    let connector = yield index_1.StalkJS.geteEnter(this.stalk, msg);
                     let params = { host: connector.host, port: connector.port, reconnect: false };
-                    yield StalkJS.handshake(this.stalk, params);
+                    yield index_1.StalkJS.handshake(this.stalk, params);
                     return yield connector;
                 }
                 catch (ex) {
@@ -50,13 +52,13 @@ export var StalkCodeExam;
                 msg["user"] = user;
                 msg["x-api-key"] = ""; /* your api key*/
                 ;
-                let result = yield StalkJS.checkIn(this.stalk, msg);
+                let result = yield index_1.StalkJS.checkIn(this.stalk, msg);
                 return result;
             });
         }
         checkOut() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield StalkJS.checkOut(this.stalk);
+                yield index_1.StalkJS.checkOut(this.stalk);
             });
         }
     }
@@ -74,8 +76,8 @@ export var StalkCodeExam;
         addPushListener(obj) {
             this.pushServerListener = obj;
             let self = this;
-            self.socket.on(PushEvents.ON_PUSH, function (data) {
-                console.log(PushEvents.ON_PUSH, JSON.stringify(data));
+            self.socket.on(index_1.PushEvents.ON_PUSH, function (data) {
+                console.log(index_1.PushEvents.ON_PUSH, JSON.stringify(data));
                 self.pushServerListener.onPush(data);
             });
         }
@@ -83,39 +85,39 @@ export var StalkCodeExam;
             this.serverListener = obj;
             let self = this;
             // <!-- User -->
-            self.socket.on(StalkEvents.ON_USER_LOGIN, data => {
-                console.log(StalkEvents.ON_USER_LOGIN);
+            self.socket.on(index_1.StalkEvents.ON_USER_LOGIN, data => {
+                console.log(index_1.StalkEvents.ON_USER_LOGIN);
                 self.serverListener.onUserLogin(data);
             });
-            self.socket.on(StalkEvents.ON_USER_LOGOUT, data => {
-                console.log(StalkEvents.ON_USER_LOGOUT);
+            self.socket.on(index_1.StalkEvents.ON_USER_LOGOUT, data => {
+                console.log(index_1.StalkEvents.ON_USER_LOGOUT);
                 self.serverListener.onUserLogout(data);
             });
         }
         addChatListener(obj) {
             this.chatServerListener = obj;
             let self = this;
-            self.socket.on(ChatEvents.ON_CHAT, function (data) {
-                console.log(ChatEvents.ON_CHAT, JSON.stringify(data));
+            self.socket.on(index_1.ChatEvents.ON_CHAT, function (data) {
+                console.log(index_1.ChatEvents.ON_CHAT, JSON.stringify(data));
                 self.chatServerListener.onChat(data);
             });
-            self.socket.on(ChatEvents.ON_ADD, (data) => {
-                console.log(ChatEvents.ON_ADD, data);
+            self.socket.on(index_1.ChatEvents.ON_ADD, (data) => {
+                console.log(index_1.ChatEvents.ON_ADD, data);
                 self.chatServerListener.onRoomJoin(data);
             });
-            self.socket.on(ChatEvents.ON_LEAVE, (data) => {
-                console.log(ChatEvents.ON_LEAVE, data);
+            self.socket.on(index_1.ChatEvents.ON_LEAVE, (data) => {
+                console.log(index_1.ChatEvents.ON_LEAVE, data);
                 self.chatServerListener.onLeaveRoom(data);
             });
         }
     }
     StalkCodeExam.ServerListener = ServerListener;
-})(StalkCodeExam || (StalkCodeExam = {}));
-export class YourApp {
+})(StalkCodeExam = exports.StalkCodeExam || (exports.StalkCodeExam = {}));
+class YourApp {
     constructor() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
-        this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
-        this.pushApi = new API.PushAPI(this.exam.stalk);
+        this.chatApi = new index_1.API.ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new index_1.API.PushAPI(this.exam.stalk);
         this.listeners = null;
     }
     /**
@@ -167,3 +169,4 @@ export class YourApp {
         });
     }
 }
+exports.YourApp = YourApp;

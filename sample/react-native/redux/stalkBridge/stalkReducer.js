@@ -1,11 +1,13 @@
+"use strict";
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
  * This is pure function for redux app.
  */
-import * as ChatlogsActions from "../chatlogs/chatlogsActions";
-import { AuthenActionsType } from "../auth/authActions";
-import { Record } from 'immutable';
+Object.defineProperty(exports, "__esModule", { value: true });
+const ChatlogsActions = require("../chatlogs/chatlogsActions");
+const authActions_1 = require("../auth/authActions");
+const immutable_1 = require("immutable");
 /**
  * ## Initial State
  */
@@ -14,16 +16,16 @@ import { Record } from 'immutable';
  * This Record contains the state of the form and the
  * fields it contains.
  */
-export const StalkInitState = Record({
+exports.StalkInitState = immutable_1.Record({
     isInit: false,
     chatslogComponent: null,
     chatsLog: null,
     isFetching: false,
     state: null
 });
-const initialState = new StalkInitState;
-export function stalkReducer(state = initialState, action) {
-    if (!(state instanceof StalkInitState))
+const initialState = new exports.StalkInitState;
+function stalkReducer(state = initialState, action) {
+    if (!(state instanceof exports.StalkInitState))
         return initialState.mergeDeep(state);
     switch (action.type) {
         case ChatlogsActions.STALK_INIT_CHATSLOG: {
@@ -43,10 +45,11 @@ export function stalkReducer(state = initialState, action) {
                 .set("state", ChatlogsActions.STALK_UNREAD_MAP_CHANGED);
             return nextState;
         }
-        case AuthenActionsType.LOGOUT_SUCCESS: {
+        case authActions_1.AuthenActionsType.LOGOUT_SUCCESS: {
             return initialState;
         }
         default:
             return state;
     }
 }
+exports.stalkReducer = stalkReducer;
