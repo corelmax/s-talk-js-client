@@ -116,7 +116,7 @@ export class YourApp {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
         this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
         this.pushApi = new API.PushAPI(this.exam.stalk);
-        this.listeners = null;
+        delete this.listeners;
     }
     /**
      *

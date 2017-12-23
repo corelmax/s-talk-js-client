@@ -1,10 +1,10 @@
-import { IDictionary, Stalk, IServer } from "./serverImplemented";
+import { IDictionary, Stalk } from "./serverImplemented";
 import { StalkUtils } from '../utils/index';
 export declare namespace API {
     class GateAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: IDictionary): Promise<IServer>;
+        gateEnter(msg: IDictionary): Promise<any>;
     }
     class LobbyAPI {
         private server;

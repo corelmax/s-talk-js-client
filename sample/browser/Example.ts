@@ -4,8 +4,7 @@
  */
 
 import {
-    Stalk, IDictionary, IServer, API,
-    IPomelo, StalkEvents, PushEvents, ChatEvents, StalkJS
+    Stalk, API, StalkEvents, PushEvents, ChatEvents, StalkJS
 }
     // from "stalk-js";
     from "../../index";
@@ -30,7 +29,7 @@ export namespace StalkCodeExam {
         async handshake(uid: string) {
             try {
                 // @ get connector server.
-                let msg = {} as IDictionary;
+                let msg = {} as Stalk.IDictionary;
                 msg["uid"] = uid;
                 msg["x-api-key"] = ""; /* your api key*/;
                 let connector = await StalkJS.geteEnter(this.stalk, msg);
@@ -45,7 +44,7 @@ export namespace StalkCodeExam {
         }
 
         async checkIn(user: any) {
-            let msg = {} as IDictionary;
+            let msg = {} as Stalk.IDictionary;
             msg["user"] = user;
             msg["x-api-key"] = ""; /* your api key*/;
             let result = await StalkJS.checkIn(this.stalk, msg);
@@ -61,12 +60,12 @@ export namespace StalkCodeExam {
      * Listenning for messages...
      */
     export class ServerListener {
-        socket: IPomelo;
+        socket: Stalk.IPomelo;
         private pushServerListener: PushEvents.IPushServerListener;
         private serverListener: StalkEvents.BaseEvents;
         private chatServerListener: ChatEvents.IChatServerEvents;
 
-        constructor(socket: IPomelo) {
+        constructor(socket: Stalk.IPomelo) {
             this.socket = socket;
 
             this.pushServerListener = undefined;
@@ -140,7 +139,7 @@ export class YourApp {
         this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
         this.pushApi = new API.PushAPI(this.exam.stalk);
 
-        this.listeners = null;
+        delete this.listeners;
     }
     /**
      * 
@@ -185,7 +184,7 @@ export class YourApp {
         });
     }
 
-    push(message: IDictionary) {
+    push(message: Stalk.IDictionary) {
         // let msg: IDictionary = {};
         // msg["event"] = "Test api.";
         // msg["message"] = "test api from express.js client.";

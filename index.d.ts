@@ -2,12 +2,22 @@
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
  */
+export * from "./lib/browser/ServerImplemented";
+export * from "./lib/browser/StalkEvents";
+export * from "./lib/browser/API";
+export * from "./lib/browser/StalkJS";
+import { Stalk } from "./lib/browser/ServerImplemented";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as stalkEvents from "./lib/browser/StalkEvents";
-import { Stalk } from "./lib/browser/serverImplemented";
 declare module "stalk-js" {
-    export import stalkjs = StalkJS;
+    export = StalkJS;
+    export import ServerImp = Stalk.ServerImplemented;
+    export import ServerParam = Stalk.ServerParam;
+    export import IPomelo = Stalk.IPomelo;
+    export import IPomeloResponse = Stalk.IPomeloResponse;
+    export import IServer = Stalk.IServer;
+    export import IDictionary = Stalk.IDictionary;
     export import CallingAPI = API.CallingAPI;
     export import ChatRoomAPI = API.ChatRoomAPI;
     export import GateAPI = API.GateAPI;
@@ -18,4 +28,3 @@ declare module "stalk-js" {
     export import CallingEvents = stalkEvents.CallingEvents;
     export import ChatEvents = stalkEvents.ChatEvents;
 }
-export declare type ServerImp = Stalk.ServerImplemented;
