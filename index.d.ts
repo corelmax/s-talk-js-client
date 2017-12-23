@@ -6,6 +6,12 @@ export * from "./lib/browser/serverImplemented";
 export * from "./lib/browser/StalkEvents";
 export * from "./lib/browser/API";
 import { StalkJS } from "./lib/browser/StalkJS";
+import { API } from "./lib/browser/API";
 declare module "stalk-js" {
-    export = StalkJS;
+    export import stalkjs = StalkJS;
+    export import CallingAPI = API.CallingAPI;
+    export import ChatRoomAPI = API.ChatRoomAPI;
+    export import GateAPI = API.GateAPI;
+    export import LobbyAPI = API.LobbyAPI;
+    export import PushAPI = API.PushAPI;
 }
