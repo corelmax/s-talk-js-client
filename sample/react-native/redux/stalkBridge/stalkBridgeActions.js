@@ -5,44 +5,44 @@
  * This is pure function action for redux app.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const BackendFactory_1 = require("../../chats/BackendFactory");
-const notificationManager_1 = require("../../chats/notificationManager");
-const DataModels = require("../../chats/models/ChatDataModels");
-const httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
-const configureStore_1 = require("../configureStore");
-const ChatLogsActions = require("../chatlogs/chatlogsActions");
-const StalkPushActions = require("./stalkPushActions");
-const accountService_1 = require("../../servicesAccess/accountService");
+var BackendFactory_1 = require("../../chats/BackendFactory");
+var notificationManager_1 = require("../../chats/notificationManager");
+var DataModels = require("../../chats/models/ChatDataModels");
+var httpStatusCode_1 = require("../../libs/stalk/utils/httpStatusCode");
+var configureStore_1 = require("../configureStore");
+var ChatLogsActions = require("../chatlogs/chatlogsActions");
+var StalkPushActions = require("./stalkPushActions");
+var accountService_1 = require("../../servicesAccess/accountService");
 exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST = "STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST";
 exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE = "STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE";
 exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS = "STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS";
-const onGetContactProfileFail = (contact_id) => {
-    let dataManager = BackendFactory_1.default.getInstance().dataManager;
-    accountService_1.default.getInstance().getUserInfo(contact_id).then(result => result.json()).then(result => {
+var onGetContactProfileFail = function (contact_id) {
+    var dataManager = BackendFactory_1.default.getInstance().dataManager;
+    accountService_1.default.getInstance().getUserInfo(contact_id).then(function (result) { return result.json(); }).then(function (result) {
         if (result.success) {
-            let user = result.data[0];
-            let contact = {
-                _id: user._id, displayname: `${user.first_name} ${user.last_name}`, status: "", image: user.avatar
+            var user = result.data[0];
+            var contact = {
+                _id: user._id, displayname: user.first_name + " " + user.last_name, status: "", image: user.avatar
             };
             dataManager.setContactProfile(user._id, contact);
         }
-    }).catch(err => {
+    }).catch(function (err) {
         console.warn("onGetContactProfileFail", err);
     });
 };
 function getUserInfo(userId, callback) {
-    let self = this;
-    let dataManager = BackendFactory_1.default.getInstance().dataManager;
-    let user = dataManager.getContactProfile(userId);
+    var self = this;
+    var dataManager = BackendFactory_1.default.getInstance().dataManager;
+    var user = dataManager.getContactProfile(userId);
     if (!user) {
-        accountService_1.default.getInstance().getUserInfo(userId).then(result => result.json()).then(result => {
-            let user = result.data[0];
-            let contact = {
-                _id: user._id, displayname: `${user.first_name} ${user.last_name}`, status: "", image: user.avatar
+        accountService_1.default.getInstance().getUserInfo(userId).then(function (result) { return result.json(); }).then(function (result) {
+            var user = result.data[0];
+            var contact = {
+                _id: user._id, displayname: user.first_name + " " + user.last_name, status: "", image: user.avatar
             };
             dataManager.setContactProfile(user._id, contact);
             callback(contact);
-        }).catch(err => {
+        }).catch(function (err) {
             console.warn("getUserInfo fail", err);
             callback(null);
         });
@@ -54,25 +54,25 @@ function getUserInfo(userId, callback) {
 exports.getUserInfo = getUserInfo;
 function stalkLogin(uid, token) {
     console.log("stalkLogin", uid, token);
-    const backendFactory = BackendFactory_1.default.getInstance();
-    backendFactory.stalkInit().then(value => {
-        backendFactory.checkIn(uid, token).then(value => {
+    var backendFactory = BackendFactory_1.default.getInstance();
+    backendFactory.stalkInit().then(function (value) {
+        backendFactory.checkIn(uid, token).then(function (value) {
             console.log("Joined chat-server success", value.code);
-            let result = JSON.parse(value.data);
+            var result = JSON.parse(value.data);
             if (result.success) {
                 backendFactory.getServerListener();
                 backendFactory.startChatServerListener();
                 notificationManager_1.default.getInstance().regisNotifyNewMessageEvent();
-                let msg = {};
-                msg["token"] = token;
-                backendFactory.getServer().then(server => {
-                    server.getMe(msg, (err, res) => {
+                var msg_1 = {};
+                msg_1["token"] = token;
+                backendFactory.getServer().then(function (server) {
+                    server.getMe(msg_1, function (err, res) {
                         console.log("MyChat-Profile", res);
-                        let account = new DataModels.StalkAccount();
+                        var account = new DataModels.StalkAccount();
                         account._id = result.decoded._id;
                         account.displayname = result.decoded.email;
-                        let data = (!!res.data) ? res.data : account;
-                        backendFactory.dataManager.setProfile(data).then(profile => {
+                        var data = (!!res.data) ? res.data : account;
+                        backendFactory.dataManager.setProfile(data).then(function (profile) {
                             console.log("set chat profile success", profile);
                             ChatLogsActions.initChatsLog();
                         });
@@ -80,30 +80,30 @@ function stalkLogin(uid, token) {
                         backendFactory.dataManager.addContactInfoFailEvents(onGetContactProfileFail);
                         StalkPushActions.stalkPushInit();
                     });
-                }).catch(err => {
+                }).catch(function (err) {
                     console.warn("Chat-server not yet ready");
                 });
             }
             else {
                 console.warn("Cannot joined chat server.");
             }
-        }).catch(err => {
+        }).catch(function (err) {
             console.warn("Cannot checkIn", err);
         });
-    }).catch(err => {
+    }).catch(function (err) {
         console.warn("StalkInit Fail.");
     });
 }
 exports.stalkLogin = stalkLogin;
 function getPrivateChatRoomId(contactId) {
-    return dispatch => {
-        let profile = configureStore_1.default.getState().profileReducer.form.profile;
-        let token = configureStore_1.default.getState().authReducer.token;
+    return function (dispatch) {
+        var profile = configureStore_1.default.getState().profileReducer.form.profile;
+        var token = configureStore_1.default.getState().authReducer.token;
         dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_REQUEST });
-        BackendFactory_1.default.getInstance().getServer().then(server => {
+        BackendFactory_1.default.getInstance().getServer().then(function (server) {
             server.getPrivateChatRoomId(token, profile._id, contactId, function result(err, res) {
                 if (res.code === httpStatusCode_1.default.success) {
-                    let room = JSON.parse(JSON.stringify(res.data));
+                    var room = JSON.parse(JSON.stringify(res.data));
                     dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS, payload: room });
                 }
                 else {
@@ -111,7 +111,7 @@ function getPrivateChatRoomId(contactId) {
                     dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
                 }
             });
-        }).catch(err => {
+        }).catch(function (err) {
             dispatch({ type: exports.STALK_GET_PRIVATE_CHAT_ROOM_ID_FAILURE, payload: err });
         });
     };

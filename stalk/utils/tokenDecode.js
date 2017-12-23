@@ -1,5 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class TokenDecode {
-}
+var TokenDecode = /** @class */ (function () {
+    function TokenDecode() {
+    }
+    return TokenDecode;
+}());
 exports.default = TokenDecode;

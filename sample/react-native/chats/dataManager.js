@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const async = require("async");
-const ChatDataModels_1 = require("./models/ChatDataModels");
-const SimpleStoreClient_1 = require("../dataAccess/SimpleStoreClient");
-class DataManager {
-    constructor() {
+var async = require("async");
+var ChatDataModels_1 = require("./models/ChatDataModels");
+var SimpleStoreClient_1 = require("../dataAccess/SimpleStoreClient");
+var DataManager = /** @class */ (function () {
+    function DataManager() {
         this.orgGroups = {};
         this.projectBaseGroups = {};
         this.privateGroups = {};
@@ -14,36 +14,37 @@ class DataManager {
         this.getContactInfoFailEvents = new Array();
         this.roomDAL = new SimpleStoreClient_1.default("rooms");
     }
-    addContactInfoFailEvents(func) {
+    DataManager.prototype.addContactInfoFailEvents = function (func) {
         this.getContactInfoFailEvents.push(func);
-    }
-    removeContactInfoFailEvents(func) {
-        let id = this.getContactInfoFailEvents.indexOf(func);
+    };
+    DataManager.prototype.removeContactInfoFailEvents = function (func) {
+        var id = this.getContactInfoFailEvents.indexOf(func);
         this.getContactInfoFailEvents.splice(id, 1);
-    }
-    getSessionToken() {
+    };
+    DataManager.prototype.getSessionToken = function () {
         return this.sessionToken;
-    }
-    setSessionToken(token) {
+    };
+    DataManager.prototype.setSessionToken = function (token) {
         this.sessionToken = token;
-    }
+    };
     //@ Profile...
-    getMyProfile() {
+    DataManager.prototype.getMyProfile = function () {
         return this.myProfile;
-    }
-    setProfile(data) {
-        return new Promise((resolve, reject) => {
-            this.myProfile = data;
-            resolve(this.myProfile);
+    };
+    DataManager.prototype.setProfile = function (data) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            _this.myProfile = data;
+            resolve(_this.myProfile);
         });
-    }
-    setRoomAccessForUser(data) {
+    };
+    DataManager.prototype.setRoomAccessForUser = function (data) {
         if (!!data.roomAccess) {
             this.myProfile.roomAccess = data.roomAccess;
         }
-    }
-    updateRoomAccessForUser(data) {
-        let arr = JSON.parse(JSON.stringify(data.roomAccess));
+    };
+    DataManager.prototype.updateRoomAccessForUser = function (data) {
+        var arr = JSON.parse(JSON.stringify(data.roomAccess));
         if (!this.myProfile) {
             this.myProfile = new ChatDataModels_1.StalkAccount();
             this.myProfile.roomAccess = arr;
@@ -53,7 +54,7 @@ class DataManager {
                 this.myProfile.roomAccess = arr;
             }
             else {
-                this.myProfile.roomAccess.forEach(value => {
+                this.myProfile.roomAccess.forEach(function (value) {
                     if (value.roomId === arr[0].roomId) {
                         value.accessTime = arr[0].accessTime;
                         return;
@@ -61,12 +62,12 @@ class DataManager {
                 });
             }
         }
-    }
-    getRoomAccess() {
+    };
+    DataManager.prototype.getRoomAccess = function () {
         return this.myProfile.roomAccess;
-    }
+    };
     //<!---------- Group ------------------------------------
-    getGroup(id) {
+    DataManager.prototype.getGroup = function (id) {
         if (!!this.orgGroups[id]) {
             return this.orgGroups[id];
         }
@@ -79,8 +80,8 @@ class DataManager {
         else if (!!this.privateChats && !!this.privateChats[id]) {
             return this.privateChats[id];
         }
-    }
-    addGroup(data) {
+    };
+    DataManager.prototype.addGroup = function (data) {
         switch (data.type) {
             case ChatDataModels_1.RoomType.organizationGroup:
                 this.orgGroups[data._id] = data;
@@ -101,8 +102,8 @@ class DataManager {
                 console.info("new room is not a group type.");
                 break;
         }
-    }
-    updateGroupImage(data) {
+    };
+    DataManager.prototype.updateGroupImage = function (data) {
         if (!!this.orgGroups[data._id]) {
             this.orgGroups[data._id].image = data.image;
         }
@@ -112,8 +113,8 @@ class DataManager {
         else if (!!this.privateGroups[data._id]) {
             this.privateGroups[data._id].image = data.image;
         }
-    }
-    updateGroupName(data) {
+    };
+    DataManager.prototype.updateGroupName = function (data) {
         if (!!this.orgGroups[data._id]) {
             this.orgGroups[data._id].name = data.name;
         }
@@ -123,8 +124,8 @@ class DataManager {
         else if (!!this.privateGroups[data._id]) {
             this.privateGroups[data._id].name = data.name;
         }
-    }
-    updateGroupMembers(data) {
+    };
+    DataManager.prototype.updateGroupMembers = function (data) {
         //<!-- Beware please checking myself before update group members.
         //<!-- May be your id is removed from group.
         var hasMe = this.checkMySelfInNewMembersReceived(data);
@@ -172,40 +173,41 @@ class DataManager {
             }
         }
         console.log('dataManager.updateGroupMembers:');
-    }
-    updateGroupMemberDetail(jsonObj) {
-        let editMember = jsonObj.editMember;
-        let roomId = jsonObj.roomId;
-        let groupMember = null;
+    };
+    DataManager.prototype.updateGroupMemberDetail = function (jsonObj) {
+        var _this = this;
+        var editMember = jsonObj.editMember;
+        var roomId = jsonObj.roomId;
+        var groupMember = null;
         groupMember.id = editMember.id;
-        let role = editMember.role;
+        var role = editMember.role;
         groupMember.role = ChatDataModels_1.MemberRole[role];
         groupMember.jobPosition = editMember.jobPosition;
-        this.getGroup(roomId).members.forEach((value, index, arr) => {
+        this.getGroup(roomId).members.forEach(function (value, index, arr) {
             if (value.id === groupMember.id) {
-                this.getGroup(roomId).members[index].role = groupMember.role;
-                this.getGroup(roomId).members[index].textRole = ChatDataModels_1.MemberRole[groupMember.role];
-                this.getGroup(roomId).members[index].jobPosition = groupMember.jobPosition;
+                _this.getGroup(roomId).members[index].role = groupMember.role;
+                _this.getGroup(roomId).members[index].textRole = ChatDataModels_1.MemberRole[groupMember.role];
+                _this.getGroup(roomId).members[index].jobPosition = groupMember.jobPosition;
             }
         });
-    }
-    checkMySelfInNewMembersReceived(data) {
-        let self = this;
-        let hasMe = data.members.some(function isMySelfId(element, index, array) {
+    };
+    DataManager.prototype.checkMySelfInNewMembersReceived = function (data) {
+        var self = this;
+        var hasMe = data.members.some(function isMySelfId(element, index, array) {
             return element.id === self.myProfile._id;
         });
         console.debug("New data has me", hasMe);
         return hasMe;
-    }
+    };
     //<!------------------------------------------------------
     /**
      * Contacts ....
      */
-    onUserLogin(dataEvent) {
+    DataManager.prototype.onUserLogin = function (dataEvent) {
         console.log("user logedIn", JSON.stringify(dataEvent));
-        let jsonObject = JSON.parse(JSON.stringify(dataEvent));
-        let _id = jsonObject._id;
-        let self = this;
+        var jsonObject = JSON.parse(JSON.stringify(dataEvent));
+        var _id = jsonObject._id;
+        var self = this;
         if (!this.contactsMember)
             this.contactsMember = {};
         if (!this.contactsMember[_id]) {
@@ -232,15 +234,15 @@ class DataManager {
             });
             */
         }
-    }
-    updateContactImage(contactId, url) {
+    };
+    DataManager.prototype.updateContactImage = function (contactId, url) {
         if (!!this.contactsMember[contactId]) {
             this.contactsMember[contactId].image = url;
         }
-    }
-    updateContactProfile(contactId, params) {
+    };
+    DataManager.prototype.updateContactProfile = function (contactId, params) {
         if (!!this.contactsMember[contactId]) {
-            let jsonObj = JSON.parse(JSON.stringify(params));
+            var jsonObj = JSON.parse(JSON.stringify(params));
             if (!!jsonObj.displayname) {
                 this.contactsMember[contactId].displayname = jsonObj.displayname;
             }
@@ -248,19 +250,19 @@ class DataManager {
                 this.contactsMember[contactId].status = jsonObj.status;
             }
         }
-    }
-    getContactProfile(contactId) {
+    };
+    DataManager.prototype.getContactProfile = function (contactId) {
         if (!!this.contactsMember[contactId]) {
             return this.contactsMember[contactId];
         }
         else {
             console.warn('this contactId is invalid. Maybe it not contain in list of contacts.');
-            this.getContactInfoFailEvents.forEach(value => {
+            this.getContactInfoFailEvents.forEach(function (value) {
                 value(contactId);
             });
         }
-    }
-    setContactProfile(contactId, contact) {
+    };
+    DataManager.prototype.setContactProfile = function (contactId, contact) {
         if (!this.contactsMember)
             this.contactsMember = {};
         if (!this.contactsMember[contactId]) {
@@ -269,10 +271,10 @@ class DataManager {
                 this.contactsProfileChanged(contact);
             console.log("Need to save contacts list to persistence data layer.");
         }
-    }
-    onGetCompanyMemberComplete(dataEvent) {
-        let self = this;
-        let members = JSON.parse(JSON.stringify(dataEvent));
+    };
+    DataManager.prototype.onGetCompanyMemberComplete = function (dataEvent) {
+        var self = this;
+        var members = JSON.parse(JSON.stringify(dataEvent));
         if (!this.contactsMember)
             this.contactsMember = {};
         async.eachSeries(members, function iterator(item, cb) {
@@ -285,61 +287,65 @@ class DataManager {
         });
         if (this.onContactsDataReady != null)
             this.onContactsDataReady();
-    }
+    };
     ;
     /**
      * Company...
      */
-    onGetCompanyInfo(dataEvent) {
-    }
-    onGetOrganizeGroupsComplete(dataEvent) {
+    DataManager.prototype.onGetCompanyInfo = function (dataEvent) {
+    };
+    DataManager.prototype.onGetOrganizeGroupsComplete = function (dataEvent) {
+        var _this = this;
         var rooms = JSON.parse(JSON.stringify(dataEvent));
         if (!this.orgGroups)
             this.orgGroups = {};
-        rooms.forEach(value => {
-            if (!this.orgGroups[value._id]) {
-                this.orgGroups[value._id] = value;
+        rooms.forEach(function (value) {
+            if (!_this.orgGroups[value._id]) {
+                _this.orgGroups[value._id] = value;
             }
         });
         if (this.onOrgGroupDataReady != null) {
             this.onOrgGroupDataReady();
         }
-    }
+    };
     ;
-    onGetProjectBaseGroupsComplete(dataEvent) {
+    DataManager.prototype.onGetProjectBaseGroupsComplete = function (dataEvent) {
+        var _this = this;
         var groups = JSON.parse(JSON.stringify(dataEvent));
         if (!this.projectBaseGroups)
             this.projectBaseGroups = {};
-        groups.forEach(value => {
-            if (!this.projectBaseGroups[value._id]) {
-                this.projectBaseGroups[value._id] = value;
+        groups.forEach(function (value) {
+            if (!_this.projectBaseGroups[value._id]) {
+                _this.projectBaseGroups[value._id] = value;
             }
         });
         if (this.onProjectBaseGroupsDataReady != null) {
             this.onProjectBaseGroupsDataReady();
         }
-    }
+    };
     ;
-    onGetPrivateGroupsComplete(dataEvent) {
+    DataManager.prototype.onGetPrivateGroupsComplete = function (dataEvent) {
+        var _this = this;
         var groups = JSON.parse(JSON.stringify(dataEvent));
         if (!this.privateGroups)
             this.privateGroups = {};
-        groups.forEach(value => {
-            if (!this.privateGroups[value._id]) {
-                this.privateGroups[value._id] = value;
+        groups.forEach(function (value) {
+            if (!_this.privateGroups[value._id]) {
+                _this.privateGroups[value._id] = value;
             }
         });
         if (this.onPrivateGroupsDataReady != null) {
             this.onPrivateGroupsDataReady();
         }
-    }
+    };
     ;
-    onGetMe() { }
-    isMySelf(uid) {
+    DataManager.prototype.onGetMe = function () { };
+    DataManager.prototype.isMySelf = function (uid) {
         if (uid === this.myProfile._id)
             return true;
         else
             return false;
-    }
-}
+    };
+    return DataManager;
+}());
 exports.default = DataManager;

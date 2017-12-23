@@ -5,9 +5,9 @@
  * This is pure function for redux app.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const chatroomActions_1 = require("./chatroomActions");
-const StalkBridgeActions = require("../stalkBridge/stalkBridgeActions");
-const immutable_1 = require("immutable");
+var chatroomActions_1 = require("./chatroomActions");
+var StalkBridgeActions = require("../stalkBridge/stalkBridgeActions");
+var immutable_1 = require("immutable");
 /**
  * ## Initial State
  */
@@ -26,8 +26,9 @@ exports.ChatRoomInitState = immutable_1.Record({
     state: null,
     error: null,
 });
-const initialState = new exports.ChatRoomInitState;
-function chatRoomReducer(state = initialState, action) {
+var initialState = new exports.ChatRoomInitState;
+function chatRoomReducer(state, action) {
+    if (state === void 0) { state = initialState; }
     if (!(state instanceof exports.ChatRoomInitState))
         return initialState.mergeDeep(state);
     switch (action.type) {
@@ -35,36 +36,36 @@ function chatRoomReducer(state = initialState, action) {
             return state.set("state", chatroomActions_1.ChatRoomActionsType.STOP);
         }
         case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_REQUEST: {
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_REQUEST)
+            var nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_REQUEST)
                 .set("isFetching", true);
             return nextState;
         }
         case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_SUCCESS: {
-            let payload = action.payload;
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_SUCCESS)
+            var payload = action.payload;
+            var nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_SUCCESS)
                 .set("isFetching", false)
                 .set("responseMessage", payload);
             return nextState;
         }
         case chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_FAILURE: {
-            let payload = action.payload;
-            let nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_FAILURE)
+            var payload = action.payload;
+            var nextState = state.set("state", chatroomActions_1.ChatRoomActionsType.SEND_MESSAGE_FAILURE)
                 .set("isFetching", false)
                 .set("responseMessage", payload);
             return nextState;
         }
         case chatroomActions_1.ChatRoomActionsType.REPLACE_MESSAGE: {
-            let payload = action.payload;
+            var payload = action.payload;
             return state.set("state", chatroomActions_1.ChatRoomActionsType.REPLACE_MESSAGE)
                 .set("newMessage", payload);
         }
         case chatroomActions_1.ChatRoomActionsType.ON_NEW_MESSAGE: {
-            let payload = action.payload;
+            var payload = action.payload;
             return state.set("state", chatroomActions_1.ChatRoomActionsType.ON_NEW_MESSAGE)
                 .set("newMessage", payload);
         }
         case chatroomActions_1.ChatRoomActionsType.ON_EARLY_MESSAGE_READY: {
-            let payload = action.payload;
+            var payload = action.payload;
             return state.set("state", chatroomActions_1.ChatRoomActionsType.ON_EARLY_MESSAGE_READY)
                 .set("earlyMessageReady", payload);
         }
@@ -78,7 +79,7 @@ function chatRoomReducer(state = initialState, action) {
             return state.set("state", chatroomActions_1.ChatRoomActionsType.GET_NEWER_MESSAGE_SUCCESS);
         }
         case chatroomActions_1.ChatRoomActionsType.SELECT_CHAT_ROOM: {
-            let roomInfo = (!!action.payload) ? action.payload : state.get("selectRoom");
+            var roomInfo = (!!action.payload) ? action.payload : state.get("selectRoom");
             return state
                 .set("state", chatroomActions_1.ChatRoomActionsType.SELECT_CHAT_ROOM)
                 .set("selectRoom", roomInfo);
@@ -91,7 +92,7 @@ function chatRoomReducer(state = initialState, action) {
                 .set("error", action.payload);
         }
         case StalkBridgeActions.STALK_GET_PRIVATE_CHAT_ROOM_ID_SUCCESS: {
-            let payload = action.payload;
+            var payload = action.payload;
             return state
                 .set("isFetching", false)
                 .set("selectRoom", payload)

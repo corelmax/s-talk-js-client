@@ -11,5 +11,5 @@ __export(require("./lib/browser/serverImplemented"));
 __export(require("./lib/browser/StalkEvents"));
 __export(require("./lib/browser/API"));
 // export * from "./lib/browser/StalkJS";
-const StalkJS_1 = require("./lib/browser/StalkJS");
-const API_1 = require("./lib/browser/API");
+var StalkJS_1 = require("./lib/browser/StalkJS");
+var API_1 = require("./lib/browser/API");

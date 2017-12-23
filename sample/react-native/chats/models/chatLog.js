@@ -1,20 +1,21 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class ChatLog {
-    constructor(room) {
+var ChatLog = /** @class */ (function () {
+    function ChatLog(room) {
         this.id = room._id;
         this.roomName = room.name;
         this.roomType = room.type;
         this.room = room;
     }
-    setNotiCount(count) {
+    ChatLog.prototype.setNotiCount = function (count) {
         this.count = count;
-    }
-    setLastMessage(lastMessage) {
+    };
+    ChatLog.prototype.setLastMessage = function (lastMessage) {
         this.lastMessage = lastMessage;
-    }
-    setLastMessageTime(lastMessageTime) {
+    };
+    ChatLog.prototype.setLastMessageTime = function (lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
-    }
-}
+    };
+    return ChatLog;
+}());
 exports.default = ChatLog;
