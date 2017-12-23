@@ -24,7 +24,7 @@ export default class BackendFactory {
     stalkInit(): Promise<any>;
     login(username: string, hexPassword: string, deviceToken: string): Promise<any>;
     loginByToken(tokenBearer: string): Promise<any>;
-    logout(): any;
+    logout(): Promise<{}>;
     startChatServerListener(resolve?: any): void;
-    checkIn(uid: string, token: string): any;
+    checkIn(uid: string, token: string): Promise<any>;
 }

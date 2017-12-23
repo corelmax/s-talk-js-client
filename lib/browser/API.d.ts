@@ -1,21 +1,22 @@
-import { IDictionary, Stalk } from "./serverImplemented";
+import { IDictionary, Stalk, IServer } from "./serverImplemented";
+import { StalkUtils } from '../utils/index';
 export declare namespace API {
     class GateAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: IDictionary): any;
+        gateEnter(msg: IDictionary): Promise<IServer>;
     }
     class LobbyAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        checkIn(msg: IDictionary): any;
+        checkIn(msg: IDictionary): Promise<{}>;
         logout(): void;
         /**
          * user : {_id: string, username: string, payload }
          * @param msg
          */
-        updateUser(msg: IDictionary): Promise<any>;
-        getUsersPayload(msg: IDictionary): any;
+        updateUser(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
+        getUsersPayload(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
         kickMeAllSession(uid: string): void;
@@ -24,7 +25,7 @@ export declare namespace API {
         private server;
         constructor(_server: Stalk.ServerImplemented);
         chat(target: string, _message: any, callback: (err, res) => void): void;
-        pushByUids(_message: IDictionary): Promise<any>;
+        pushByUids(_message: IDictionary): Promise<{}>;
         getSyncDateTime(callback: (err, res) => void): void;
         /**
          * get older message histories.
@@ -49,7 +50,7 @@ export declare namespace API {
          * @returns
          * @memberof PushAPI
          */
-        push(_message: IDictionary): Promise<any>;
+        push(_message: IDictionary): Promise<{}>;
     }
     /**
      * calling experiences between phones, apps and VoIP systems
@@ -57,7 +58,7 @@ export declare namespace API {
     class CallingAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        calling(api_key: string, event: string, members: string[], payload: any): Promise<any>;
-        theLineIsBusy(contactId: string): Promise<any>;
+        calling(api_key: string, event: string, members: string[], payload: any): Promise<{}>;
+        theLineIsBusy(contactId: string): Promise<{}>;
     }
 }
