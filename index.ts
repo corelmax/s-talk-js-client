@@ -3,13 +3,15 @@
  * Support by @ Ahoo Studio.co.th 
  */
 
-export * from "./lib/browser/serverImplemented";
-export * from "./lib/browser/StalkEvents";
-export * from "./lib/browser/API";
+// export * from "./lib/browser/serverImplemented";
+// export * from "./lib/browser/StalkEvents";
+// export * from "./lib/browser/API";
 // export * from "./lib/browser/StalkJS";
 
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
+import * stalkEvents from "./lib/browser/StalkEvents";
+
 
 declare module "stalk-js" {
     export import stalkjs = StalkJS;
@@ -18,4 +20,8 @@ declare module "stalk-js" {
     export import GateAPI = API.GateAPI;
     export import LobbyAPI = API.LobbyAPI;
     export import PushAPI = API.PushAPI;
+    export import StalkEvents = stalkEvents.StalkEvents;
+    export import PushEvents = stalkEvents.PushEvents;
+    export import CallingEvents = stalkEvents.CallingEvents;
+    export import ChatEvents = stalkEvents.ChatEvents;
 }
