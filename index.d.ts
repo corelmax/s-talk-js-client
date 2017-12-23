@@ -8,17 +8,23 @@ import { API } from "./lib/browser/API";
 import * as stalkEvents from "./lib/browser/StalkEvents";
 export declare namespace stalkjs {
     export import stalkjs = StalkJS;
+}
+export declare namespace stalk_core {
     export import ServerImp = Stalk.ServerImplemented;
     export import ServerParam = Stalk.ServerParam;
     export import IPomelo = Stalk.IPomelo;
     export import IPomeloResponse = Stalk.IPomeloResponse;
     export import IServer = Stalk.IServer;
     export import IDictionary = Stalk.IDictionary;
+}
+export declare namespace stalk_api {
     export import CallingAPI = API.CallingAPI;
     export import ChatRoomAPI = API.ChatRoomAPI;
     export import GateAPI = API.GateAPI;
     export import LobbyAPI = API.LobbyAPI;
     export import PushAPI = API.PushAPI;
+}
+export declare namespace stalk_events {
     export import StalkEvents = stalkEvents.StalkEvents;
     export import PushEvents = stalkEvents.PushEvents;
     export import CallingEvents = stalkEvents.CallingEvents;
