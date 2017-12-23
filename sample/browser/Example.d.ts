@@ -2,7 +2,7 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { Stalk, IDictionary, IServer, API, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
+import { Stalk, IDictionary, API, IPomelo, StalkEvents, PushEvents, ChatEvents } from "../../index";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
@@ -10,9 +10,9 @@ export declare namespace StalkCodeExam {
     class Factory {
         stalk: Stalk.ServerImplemented;
         constructor(host: string, port: number);
-        stalkInit(): Promise<IPomelo>;
-        handshake(uid: string): Promise<IServer>;
-        checkIn(user: any): Promise<{}>;
+        stalkInit(): Promise<any>;
+        handshake(uid: string): Promise<any>;
+        checkIn(user: any): Promise<any>;
         checkOut(): Promise<void>;
     }
     /**
