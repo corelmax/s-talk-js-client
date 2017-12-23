@@ -11,6 +11,7 @@
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as stalkEvents from "./lib/browser/StalkEvents";
+import { Stalk, IServer } from "./lib/browser/serverImplemented";
 
 declare module "stalk-js" {
     export import stalkjs = StalkJS;
@@ -24,3 +25,5 @@ declare module "stalk-js" {
     export import CallingEvents = stalkEvents.CallingEvents;
     export import ChatEvents = stalkEvents.ChatEvents;
 }
+
+export type ServerImp = Stalk.ServerImplemented;
