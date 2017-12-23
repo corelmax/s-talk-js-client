@@ -20,11 +20,11 @@ var StalkCodeExam;
      */
     class Factory {
         constructor(host, port) {
-            this.stalk = index_1.stalkjs.create(host, port);
+            this.stalk = index_1.StalkJS.create(host, port);
         }
         stalkInit() {
             return __awaiter(this, void 0, void 0, function* () {
-                let socket = yield index_1.stalkjs.init(this.stalk);
+                let socket = yield index_1.StalkJS.init(this.stalk);
                 return socket;
             });
         }
@@ -36,9 +36,9 @@ var StalkCodeExam;
                     msg["uid"] = uid;
                     msg["x-api-key"] = ""; /* your api key*/
                     ;
-                    let connector = yield index_1.stalkjs.geteEnter(this.stalk, msg);
+                    let connector = yield index_1.StalkJS.geteEnter(this.stalk, msg);
                     let params = { host: connector.host, port: connector.port, reconnect: false };
-                    yield index_1.stalkjs.handshake(this.stalk, params);
+                    yield index_1.StalkJS.handshake(this.stalk, params);
                     return yield connector;
                 }
                 catch (ex) {
@@ -52,13 +52,13 @@ var StalkCodeExam;
                 msg["user"] = user;
                 msg["x-api-key"] = ""; /* your api key*/
                 ;
-                let result = yield index_1.stalkjs.checkIn(this.stalk, msg);
+                let result = yield index_1.StalkJS.checkIn(this.stalk, msg);
                 return result;
             });
         }
         checkOut() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield index_1.stalkjs.checkOut(this.stalk);
+                yield index_1.StalkJS.checkOut(this.stalk);
             });
         }
     }
@@ -69,6 +69,9 @@ var StalkCodeExam;
     class ServerListener {
         constructor(socket) {
             this.socket = socket;
+            this.pushServerListener = undefined;
+            this.serverListener = undefined;
+            this.chatServerListener = undefined;
         }
         addPushListener(obj) {
             this.pushServerListener = obj;
@@ -115,6 +118,7 @@ class YourApp {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
         this.chatApi = new index_1.API.ChatRoomAPI(this.exam.stalk);
         this.pushApi = new index_1.API.PushAPI(this.exam.stalk);
+        this.listeners = null;
     }
     /**
      *

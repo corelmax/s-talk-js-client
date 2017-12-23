@@ -20,12 +20,12 @@ export declare namespace StalkCodeExam {
      */
     class ServerListener {
         socket: IPomelo;
-        constructor(socket: IPomelo);
         private pushServerListener;
-        addPushListener(obj: PushEvents.IPushServerListener): void;
         private serverListener;
-        addServerListener(obj: StalkEvents.BaseEvents): void;
         private chatServerListener;
+        constructor(socket: IPomelo);
+        addPushListener(obj: PushEvents.IPushServerListener): void;
+        addServerListener(obj: StalkEvents.BaseEvents): void;
         addChatListener(obj: ChatEvents.IChatServerEvents): void;
     }
 }
