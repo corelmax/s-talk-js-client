@@ -8,7 +8,7 @@ export * from "./lib/browser/API";
 import { HttpStatusCode } from "./lib/utils/httpStatusCode";
 import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
-export declare module StalkFactory {
+export declare namespace stalkjs {
     module Utils {
         var statusCode: typeof HttpStatusCode;
         var tokenDecode: typeof Authen.TokenDecoded;
@@ -20,6 +20,6 @@ export declare module StalkFactory {
     function checkIn(server: Stalk.ServerImplemented, message: IDictionary): Promise<{}>;
     function checkOut(server: Stalk.ServerImplemented): void;
 }
-declare module "stalk-js" {
-    export = StalkFactory;
+declare module "stalkjs" {
+    export default stalkjs;
 }

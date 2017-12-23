@@ -22,8 +22,8 @@ __export(require("./lib/browser/API"));
 const httpStatusCode_1 = require("./lib/utils/httpStatusCode");
 const tokenDecode_1 = require("./lib/utils/tokenDecode");
 const serverImplemented_2 = require("./lib/browser/serverImplemented");
-var StalkFactory;
-(function (StalkFactory) {
+var stalkjs;
+(function (stalkjs) {
     // export type ServerImplemented = Stalk.ServerImplemented;
     // export type LobbyAPI = API.LobbyAPI;
     // export type GateAPI = API.GateAPI;
@@ -34,13 +34,13 @@ var StalkFactory;
     (function (Utils) {
         Utils.statusCode = httpStatusCode_1.HttpStatusCode;
         Utils.tokenDecode = tokenDecode_1.Authen.TokenDecoded;
-    })(Utils = StalkFactory.Utils || (StalkFactory.Utils = {}));
+    })(Utils = stalkjs.Utils || (stalkjs.Utils = {}));
     function create(_host, _port) {
         // "ws://stalk.com"
         let server = serverImplemented_2.Stalk.ServerImplemented.createInstance(_host, _port);
         return server;
     }
-    StalkFactory.create = create;
+    stalkjs.create = create;
     function init(server) {
         return __awaiter(this, void 0, void 0, function* () {
             let promise = new Promise((resolve, reject) => {
@@ -58,14 +58,14 @@ var StalkFactory;
             return yield promise;
         });
     }
-    StalkFactory.init = init;
+    stalkjs.init = init;
     function geteEnter(server, message) {
         return __awaiter(this, void 0, void 0, function* () {
             let connector = yield server.getGateAPI().gateEnter(message);
             return connector;
         });
     }
-    StalkFactory.geteEnter = geteEnter;
+    stalkjs.geteEnter = geteEnter;
     function handshake(server, params) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield new Promise((resolve, reject) => {
@@ -85,14 +85,14 @@ var StalkFactory;
             });
         });
     }
-    StalkFactory.handshake = handshake;
+    stalkjs.handshake = handshake;
     function checkIn(server, message) {
         return __awaiter(this, void 0, void 0, function* () {
             let result = yield server.getLobby().checkIn(message);
             return result;
         });
     }
-    StalkFactory.checkIn = checkIn;
+    stalkjs.checkIn = checkIn;
     function checkOut(server) {
         if (server) {
             let socket = server.getSocket();
@@ -103,5 +103,5 @@ var StalkFactory;
             server.dispose();
         }
     }
-    StalkFactory.checkOut = checkOut;
-})(StalkFactory = exports.StalkFactory || (exports.StalkFactory = {}));
+    stalkjs.checkOut = checkOut;
+})(stalkjs = exports.stalkjs || (exports.stalkjs = {}));

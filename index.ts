@@ -12,7 +12,7 @@ import { Authen } from "./lib/utils/tokenDecode";
 import { Stalk, IPomelo, IServer, IDictionary } from "./lib/browser/serverImplemented";
 import { API } from "./lib/browser/API";
 
-export module StalkFactory {
+export namespace stalkjs {
     // export type ServerImplemented = Stalk.ServerImplemented;
     // export type LobbyAPI = API.LobbyAPI;
     // export type GateAPI = API.GateAPI;
@@ -87,6 +87,7 @@ export module StalkFactory {
         }
     }
 }
-declare module "stalk-js" {
-    export = StalkFactory;
+
+declare module "stalkjs" {
+    export default stalkjs;
 }
