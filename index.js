@@ -6,15 +6,9 @@ import { Stalk } from "./lib/browser/ServerImplemented";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import { StalkEvents } from "./lib/browser/StalkEvents";
-// export namespace stalkjs {
-//     export import stalkjs = StalkJS;
-// }
 export default StalkJS;
-export var stalk_core;
-(function (stalk_core) {
-    stalk_core.ServerImp = Stalk.ServerImplemented;
-    stalk_core.ServerParam = Stalk.ServerParam;
-})(stalk_core || (stalk_core = {}));
+export var ServerImp = Stalk.ServerImplemented;
+export var ServerParam = Stalk.ServerParam;
 export var stalk_api;
 (function (stalk_api) {
     stalk_api.CallingAPI = API.CallingAPI;

@@ -7,13 +7,13 @@ import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import { StalkEvents } from "./lib/browser/StalkEvents";
 export default StalkJS;
+export import ServerImp = Stalk.ServerImplemented;
+export import ServerParam = Stalk.ServerParam;
+export import IPomelo = Stalk.IPomelo;
+export import IPomeloResponse = Stalk.IPomeloResponse;
+export import IServer = Stalk.IServer;
+export import IDictionary = Stalk.IDictionary;
 export declare namespace stalk_core {
-    export import ServerImp = Stalk.ServerImplemented;
-    export import ServerParam = Stalk.ServerParam;
-    export import IPomelo = Stalk.IPomelo;
-    export import IPomeloResponse = Stalk.IPomeloResponse;
-    export import IServer = Stalk.IServer;
-    export import IDictionary = Stalk.IDictionary;
 }
 export declare namespace stalk_api {
     export import CallingAPI = API.CallingAPI;
