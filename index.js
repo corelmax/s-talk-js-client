@@ -5,11 +5,11 @@
 import { Stalk } from "./lib/browser/ServerImplemented";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
-import * as stalkEvents from "./lib/browser/StalkEvents";
-export var stalkjs;
-(function (stalkjs) {
-    stalkjs.stalkjs = StalkJS;
-})(stalkjs || (stalkjs = {}));
+import { StalkEvents } from "./lib/browser/StalkEvents";
+// export namespace stalkjs {
+//     export import stalkjs = StalkJS;
+// }
+export default StalkJS;
 export var stalk_core;
 (function (stalk_core) {
     stalk_core.ServerImp = Stalk.ServerImplemented;
@@ -25,8 +25,8 @@ export var stalk_api;
 })(stalk_api || (stalk_api = {}));
 export var stalk_events;
 (function (stalk_events) {
-    stalk_events.StalkEvents = stalkEvents.StalkEvents;
-    stalk_events.PushEvents = stalkEvents.PushEvents;
-    stalk_events.CallingEvents = stalkEvents.CallingEvents;
-    stalk_events.ChatEvents = stalkEvents.ChatEvents;
+    stalk_events.stalkEvents = StalkEvents;
+    stalk_events.PushEvents = StalkEvents.PushEvents;
+    stalk_events.CallingEvents = StalkEvents.CallingEvents;
+    stalk_events.ChatEvents = StalkEvents.ChatEvents;
 })(stalk_events || (stalk_events = {}));

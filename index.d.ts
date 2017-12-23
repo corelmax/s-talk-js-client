@@ -5,10 +5,8 @@
 import { Stalk } from "./lib/browser/ServerImplemented";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
-import * as stalkEvents from "./lib/browser/StalkEvents";
-export declare namespace stalkjs {
-    export import stalkjs = StalkJS;
-}
+import { StalkEvents } from "./lib/browser/StalkEvents";
+export default StalkJS;
 export declare namespace stalk_core {
     export import ServerImp = Stalk.ServerImplemented;
     export import ServerParam = Stalk.ServerParam;
@@ -25,8 +23,8 @@ export declare namespace stalk_api {
     export import PushAPI = API.PushAPI;
 }
 export declare namespace stalk_events {
-    export import StalkEvents = stalkEvents.StalkEvents;
-    export import PushEvents = stalkEvents.PushEvents;
-    export import CallingEvents = stalkEvents.CallingEvents;
-    export import ChatEvents = stalkEvents.ChatEvents;
+    export import stalkEvents = StalkEvents;
+    export import PushEvents = StalkEvents.PushEvents;
+    export import CallingEvents = StalkEvents.CallingEvents;
+    export import ChatEvents = StalkEvents.ChatEvents;
 }
