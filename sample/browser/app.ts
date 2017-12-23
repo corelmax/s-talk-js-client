@@ -4,10 +4,10 @@
  */
 
 import {
-    Stalk, API, StalkEvents, PushEvents, ChatEvents, StalkJS
-}
-    // from "stalk-js";
-    from "../../lib/browser/index";
+    stalkjs, ServerImp, ServerParam, IDictionary, IPomelo,
+    PushEvents, StalkEvents, ChatEvents,
+    PushAPI, ChatRoomAPI
+} from "stalk-js";
 
 export namespace StalkCodeExam {
 
@@ -15,27 +15,27 @@ export namespace StalkCodeExam {
      * Preparing connection... 
      */
     export class Factory {
-        stalk: Stalk.ServerImplemented;
+        stalk: ServerImp;
 
         constructor(host: string, port: number) {
-            this.stalk = StalkJS.create(host, port);
+            this.stalk = stalkjs.create(host, port);
         }
 
         async stalkInit() {
-            let socket = await StalkJS.init(this.stalk);
+            let socket = await stalkjs.init(this.stalk);
             return socket;
         }
 
         async handshake(uid: string) {
             try {
                 // @ get connector server.
-                let msg = {} as Stalk.IDictionary;
+                let msg = {} as IDictionary;
                 msg["uid"] = uid;
                 msg["x-api-key"] = ""; /* your api key*/;
-                let connector = await StalkJS.geteEnter(this.stalk, msg);
+                let connector = await stalkjs.geteEnter(this.stalk, msg);
 
-                let params = { host: connector.host, port: connector.port, reconnect: false } as Stalk.ServerParam;
-                await StalkJS.handshake(this.stalk, params);
+                let params = { host: connector.host, port: connector.port, reconnect: false } as ServerParam;
+                await stalkjs.handshake(this.stalk, params);
 
                 return await connector;
             } catch (ex) {
@@ -44,15 +44,15 @@ export namespace StalkCodeExam {
         }
 
         async checkIn(user: any) {
-            let msg = {} as Stalk.IDictionary;
+            let msg = {} as IDictionary;
             msg["user"] = user;
             msg["x-api-key"] = ""; /* your api key*/;
-            let result = await StalkJS.checkIn(this.stalk, msg);
+            let result = await stalkjs.checkIn(this.stalk, msg);
             return result;
         }
 
         async checkOut() {
-            await StalkJS.checkOut(this.stalk);
+            await stalkjs.checkOut(this.stalk);
         }
     }
 
@@ -60,12 +60,12 @@ export namespace StalkCodeExam {
      * Listenning for messages...
      */
     export class ServerListener {
-        socket: Stalk.IPomelo;
+        socket: IPomelo;
         private pushServerListener: PushEvents.IPushServerListener;
         private serverListener: StalkEvents.BaseEvents;
         private chatServerListener: ChatEvents.IChatServerEvents;
 
-        constructor(socket: Stalk.IPomelo) {
+        constructor(socket: IPomelo) {
             this.socket = socket;
 
             this.pushServerListener = undefined;
@@ -131,15 +131,15 @@ export class YourApp {
 
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
-    chatApi: API.ChatRoomAPI;
-    pushApi: API.PushAPI;
+    chatApi: ChatRoomAPI;
+    pushApi: PushAPI;
 
     constructor() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
-        this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
-        this.pushApi = new API.PushAPI(this.exam.stalk);
+        this.chatApi = new ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new PushAPI(this.exam.stalk);
 
-        delete this.listeners;
+        this.listeners = undefined;
     }
     /**
      * 
@@ -184,7 +184,7 @@ export class YourApp {
         });
     }
 
-    push(message: Stalk.IDictionary) {
+    push(message: IDictionary) {
         // let msg: IDictionary = {};
         // msg["event"] = "Test api.";
         // msg["message"] = "test api from express.js client.";

@@ -2,28 +2,28 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { Stalk, API, StalkEvents, PushEvents, ChatEvents } from "../../lib/browser/index";
+import { ServerImp, IDictionary, IPomelo, PushEvents, StalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
      */
     class Factory {
-        stalk: Stalk.ServerImplemented;
+        stalk: ServerImp;
         constructor(host: string, port: number);
         stalkInit(): Promise<any>;
         handshake(uid: string): Promise<any>;
-        checkIn(user: any): Promise<{}>;
+        checkIn(user: any): Promise<any>;
         checkOut(): Promise<void>;
     }
     /**
      * Listenning for messages...
      */
     class ServerListener {
-        socket: Stalk.IPomelo;
+        socket: IPomelo;
         private pushServerListener;
         private serverListener;
         private chatServerListener;
-        constructor(socket: Stalk.IPomelo);
+        constructor(socket: IPomelo);
         addPushListener(obj: PushEvents.IPushServerListener): void;
         addServerListener(obj: StalkEvents.BaseEvents): void;
         addChatListener(obj: ChatEvents.IChatServerEvents): void;
@@ -32,8 +32,8 @@ export declare namespace StalkCodeExam {
 export declare class YourApp {
     exam: StalkCodeExam.Factory;
     listeners: StalkCodeExam.ServerListener;
-    chatApi: API.ChatRoomAPI;
-    pushApi: API.PushAPI;
+    chatApi: ChatRoomAPI;
+    pushApi: PushAPI;
     constructor();
     /**
      *
@@ -45,5 +45,5 @@ export declare class YourApp {
      */
     stalkLogout(): void;
     chat(message: any): void;
-    push(message: Stalk.IDictionary): void;
+    push(message: IDictionary): void;
 }

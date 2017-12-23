@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { API, StalkEvents, PushEvents, ChatEvents, StalkJS } from "../../lib/browser/index";
+import { stalkjs, PushEvents, StalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
 export var StalkCodeExam;
 (function (StalkCodeExam) {
     /**
@@ -18,11 +18,11 @@ export var StalkCodeExam;
      */
     class Factory {
         constructor(host, port) {
-            this.stalk = StalkJS.create(host, port);
+            this.stalk = stalkjs.create(host, port);
         }
         stalkInit() {
             return __awaiter(this, void 0, void 0, function* () {
-                let socket = yield StalkJS.init(this.stalk);
+                let socket = yield stalkjs.init(this.stalk);
                 return socket;
             });
         }
@@ -34,9 +34,9 @@ export var StalkCodeExam;
                     msg["uid"] = uid;
                     msg["x-api-key"] = ""; /* your api key*/
                     ;
-                    let connector = yield StalkJS.geteEnter(this.stalk, msg);
+                    let connector = yield stalkjs.geteEnter(this.stalk, msg);
                     let params = { host: connector.host, port: connector.port, reconnect: false };
-                    yield StalkJS.handshake(this.stalk, params);
+                    yield stalkjs.handshake(this.stalk, params);
                     return yield connector;
                 }
                 catch (ex) {
@@ -50,13 +50,13 @@ export var StalkCodeExam;
                 msg["user"] = user;
                 msg["x-api-key"] = ""; /* your api key*/
                 ;
-                let result = yield StalkJS.checkIn(this.stalk, msg);
+                let result = yield stalkjs.checkIn(this.stalk, msg);
                 return result;
             });
         }
         checkOut() {
             return __awaiter(this, void 0, void 0, function* () {
-                yield StalkJS.checkOut(this.stalk);
+                yield stalkjs.checkOut(this.stalk);
             });
         }
     }
@@ -114,9 +114,9 @@ export var StalkCodeExam;
 export class YourApp {
     constructor() {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
-        this.chatApi = new API.ChatRoomAPI(this.exam.stalk);
-        this.pushApi = new API.PushAPI(this.exam.stalk);
-        delete this.listeners;
+        this.chatApi = new ChatRoomAPI(this.exam.stalk);
+        this.pushApi = new PushAPI(this.exam.stalk);
+        this.listeners = undefined;
     }
     /**
      *
