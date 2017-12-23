@@ -1,8 +1,7 @@
-
+import { Stalk } from "./ServerImplemented";
+import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
-import { Stalk, IPomelo, IServer, IDictionary } from "./serverImplemented";
-import { API } from "./API";
 
 export namespace StalkJS {
     // export type ServerImplemented = Stalk.ServerImplemented;
@@ -24,9 +23,9 @@ export namespace StalkJS {
     }
 
     export async function init(server: Stalk.ServerImplemented) {
-        let promise = new Promise<IPomelo>((resolve, reject) => {
+        let promise = new Promise<Stalk.IPomelo>((resolve, reject) => {
             server.disConnect(() => {
-                server.init((err: Error, res: IPomelo) => {
+                server.init((err: Error, res: Stalk.IPomelo) => {
                     if (err) {
                         reject(err);
                     }
@@ -40,13 +39,13 @@ export namespace StalkJS {
         return await promise;
     }
 
-    export async function geteEnter(server: Stalk.ServerImplemented, message: IDictionary) {
+    export async function geteEnter(server: Stalk.ServerImplemented, message: Stalk.IDictionary) {
         let connector = await server.getGateAPI().gateEnter(message);
         return connector;
     }
 
     export async function handshake(server: Stalk.ServerImplemented, params: Stalk.ServerParam) {
-        return await new Promise<IPomelo>((resolve, reject) => {
+        return await new Promise<Stalk.IPomelo>((resolve, reject) => {
             server.connect(params, (err: Error) => {
                 server._isConnected = true;
                 let socket = server.getSocket();
@@ -64,7 +63,7 @@ export namespace StalkJS {
         });
     }
 
-    export async function checkIn(server: Stalk.ServerImplemented, message: IDictionary) {
+    export async function checkIn(server: Stalk.ServerImplemented, message: Stalk.IDictionary) {
         let result = await server.getLobby().checkIn(message);
         return result;
     }

@@ -7,7 +7,7 @@ import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as stalkEvents from "./lib/browser/StalkEvents";
 declare module "stalk-js" {
-    export default StalkJS;
+    export import stalkjs = StalkJS;
     export import ServerImp = Stalk.ServerImplemented;
     export import ServerParam = Stalk.ServerParam;
     export import IPomelo = Stalk.IPomelo;
