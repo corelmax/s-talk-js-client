@@ -8,7 +8,7 @@ import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as StalkEvents from "./lib/browser/StalkEvents";
 
-export default StalkJS;
+export import stalkjs = StalkJS;
 /**
  * Core server implementation.
  */
