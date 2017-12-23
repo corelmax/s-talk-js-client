@@ -7,7 +7,7 @@ import {
     Stalk, API, StalkEvents, PushEvents, ChatEvents, StalkJS
 }
     // from "stalk-js";
-    from "../../index";
+    from "../../lib/browser/index";
 
 export namespace StalkCodeExam {
 

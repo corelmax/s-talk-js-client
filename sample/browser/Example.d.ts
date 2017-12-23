@@ -2,7 +2,7 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { Stalk, API, StalkEvents, PushEvents, ChatEvents } from "../../index";
+import { Stalk, API, StalkEvents, PushEvents, ChatEvents } from "../../lib/browser/index";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
