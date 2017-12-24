@@ -1,4 +1,4 @@
-import { Stalk } from "./ServerImplemented";
+import { Stalk } from "./ServerImplement";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
 export declare namespace StalkJS {
@@ -8,7 +8,7 @@ export declare namespace StalkJS {
     }
     function create(_host: string, _port: number): Stalk.ServerImplemented;
     function init(server: Stalk.ServerImplemented): Promise<Stalk.IPomelo>;
-    function geteEnter(server: Stalk.ServerImplemented, message: Stalk.IDictionary): Promise<any>;
+    function geteEnter(server: Stalk.ServerImplemented, message: Stalk.IDictionary): Promise<Stalk.IServer>;
     function handshake(server: Stalk.ServerImplemented, params: Stalk.ServerParam): Promise<Stalk.IPomelo>;
     function checkIn(server: Stalk.ServerImplemented, message: Stalk.IDictionary): Promise<{}>;
     function checkOut(server: Stalk.ServerImplemented): void;

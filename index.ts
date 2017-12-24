@@ -3,7 +3,7 @@
  * Support by @ Ahoo Studio.co.th 
  */
 
-import { Stalk } from "./lib/browser/ServerImplemented";
+import { Stalk } from "./lib/browser/ServerImplement";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as StalkEvents from "./lib/browser/StalkEvents";

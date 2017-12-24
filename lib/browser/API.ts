@@ -1,4 +1,4 @@
-import { IDictionary, Stalk, IPomelo, IServer } from "./serverImplemented";
+import { Stalk } from "./ServerImplement";
 import { HttpStatusCode, StalkUtils } from '../utils/index';
 
 export namespace API {
@@ -8,14 +8,14 @@ export namespace API {
             this.server = _server;
         }
 
-        gateEnter(msg: IDictionary) {
+        gateEnter(msg: Stalk.IDictionary) {
             const self = this;
             const socket = this.server.getSocket();
 
-            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
+            const result = new Promise((resolve: (data: Stalk.IServer) => void, rejected) => {
                 if (!!socket && self.server._isConnected === false) {
                     // <!-- Quering connector server.
-                    socket.request("gate.gateHandler.queryEntry", msg, function (result) {
+                    socket.request("gate.gateHandler.queryEntry", msg, (result: any) => {
                         console.log("gateEnter", result);
 
                         if (result.code === HttpStatusCode.success) {
@@ -47,7 +47,7 @@ export namespace API {
             this.server = _server;
         }
 
-        public checkIn(msg: IDictionary) {
+        public checkIn(msg: Stalk.IDictionary) {
             let self = this;
             let socket = this.server.getSocket();
 
@@ -69,7 +69,7 @@ export namespace API {
 
         public logout() {
             let registrationId = "";
-            let msg = {} as IDictionary;
+            let msg = {} as Stalk.IDictionary;
             msg["username"] = null;
             msg["registrationId"] = registrationId;
 
@@ -79,14 +79,14 @@ export namespace API {
             }
 
             this.server.disConnect();
-            this.server = null;
+            delete this.server;
         }
 
         /**
          * user : {_id: string, username: string, payload }
          * @param msg 
          */
-        async updateUser(msg: IDictionary) {
+        async updateUser(msg: Stalk.IDictionary) {
             let self = this;
             let socket = this.server.getSocket();
 
@@ -103,7 +103,7 @@ export namespace API {
             });
         }
 
-        getUsersPayload(msg: IDictionary) {
+        getUsersPayload(msg: Stalk.IDictionary) {
             let self = this;
             let socket = this.server.getSocket();
 
@@ -183,7 +183,7 @@ export namespace API {
             });
         }
 
-        public async pushByUids(_message: IDictionary) {
+        public async pushByUids(_message: Stalk.IDictionary) {
             return new Promise((resolve, rejected) => {
                 try {
                     let socket = this.server.getSocket();
@@ -199,7 +199,7 @@ export namespace API {
 
         public getSyncDateTime(callback: (err, res) => void) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             socket.request("chat.chatHandler.getSyncDateTime", message, (result) => {
                 if (callback != null) {
                     callback(null, result);
@@ -212,7 +212,7 @@ export namespace API {
          */
         public getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err, res) => void) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             message["rid"] = roomId;
             message["topEdgeMessageTime"] = topEdgeMessageTime.toString();
 
@@ -226,7 +226,7 @@ export namespace API {
 
         public getMessagesReaders(topEdgeMessageTime: string) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             message["topEdgeMessageTime"] = topEdgeMessageTime;
             socket.request("chat.chatHandler.getMessagesReaders", message, (result) => {
                 console.info("getMessagesReaders respones: ", result);
@@ -235,7 +235,7 @@ export namespace API {
 
         public getMessageContent(messageId: string, callback: (err: Error, res: any) => void) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             message["messageId"] = messageId;
             socket.request("chat.chatHandler.getMessageContent", message, (result) => {
                 if (!!callback) {
@@ -246,7 +246,7 @@ export namespace API {
 
         public updateMessageReader(messageId: string, roomId: string) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             message["messageId"] = messageId;
             message["roomId"] = roomId;
             socket.notify("chat.chatHandler.updateWhoReadMessage", message);
@@ -254,7 +254,7 @@ export namespace API {
 
         public updateMessageReaders(messageIds: string[], roomId: string) {
             let socket = this.server.getSocket();
-            let message = {} as IDictionary;
+            let message = {} as Stalk.IDictionary;
             message["messageIds"] = JSON.stringify(messageIds);
             message["roomId"] = roomId;
             socket.notify("chat.chatHandler.updateWhoReadMessages", message);
@@ -279,7 +279,7 @@ export namespace API {
          * @returns 
          * @memberof PushAPI
          */
-        public async push(_message: IDictionary) {
+        public async push(_message: Stalk.IDictionary) {
             return await new Promise((resolve, reject) => {
                 try {
                     let socket = this.server.getSocket();
@@ -305,7 +305,7 @@ export namespace API {
         }
 
         public async calling(api_key: string, event: string, members: string[], payload: any) {
-            let _message = {} as IDictionary;
+            let _message = {} as Stalk.IDictionary;
             _message["members"] = members;
             _message["event"] = event;
             _message["x-api-key"] = api_key;
@@ -330,7 +330,7 @@ export namespace API {
         }
 
         public async theLineIsBusy(contactId: string) {
-            let msg = {} as IDictionary;
+            let msg = {} as Stalk.IDictionary;
             msg["contactId"] = contactId;
 
             return new Promise((resolve, rejected) => {
