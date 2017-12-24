@@ -4,26 +4,27 @@
  *
  * Ahoo Studio.co.th
  */
+export declare type DataEvent = (data: any) => void;
 export declare namespace ChatEvents {
     const ON_ADD = "onAdd";
     const ON_LEAVE: string;
     const ON_CHAT: string;
     interface IChatServerEvents {
-        onChat: (data: any) => void;
-        onRoomJoin: (data: any) => void;
-        onLeaveRoom: (data: any) => void;
+        onChat: DataEvent;
+        onRoomJoin: DataEvent;
+        onLeaveRoom: DataEvent;
     }
 }
 export declare namespace PushEvents {
     const ON_PUSH = "ON_PUSH";
     interface IPushServerListener {
-        onPush: (data: any) => void;
+        onPush: DataEvent;
     }
 }
 export declare namespace CallingEvents {
     const ON_CALL = "ON_CALL";
     interface ICallingListener {
-        onCall: (data: any) => void;
+        onCall: DataEvent;
     }
     const VideoCall = "VideoCall";
     const VoiceCall = "VoiceCall";
@@ -32,14 +33,12 @@ export declare namespace CallingEvents {
 }
 export declare namespace StalkEvents {
     interface IServerListener {
-        onAccessRoom: (data: any) => void;
-        onUpdatedLastAccessTime: (data: any) => void;
-        onAddRoomAccess: (data: any) => void;
+        onAccessRoom: DataEvent;
+        onUpdatedLastAccessTime: DataEvent;
+        onAddRoomAccess: DataEvent;
+        onUserLogin: DataEvent;
+        onUserLogout: DataEvent;
     }
     const ON_USER_LOGIN = "onUserLogin";
     const ON_USER_LOGOUT = "onUserLogout";
-    interface BaseEvents {
-        onUserLogin: (data: any) => void;
-        onUserLogout: (data: any) => void;
-    }
 }
