@@ -21,11 +21,11 @@ export interface IDictionary {
     [k: string]: any;
 }
 
-export class ServerImplemented implements IServerImp {
-    private static Instance: ServerImplemented;
-    public static getInstance(): ServerImplemented {
+export class ServerImplement implements IServerImp {
+    private static Instance: ServerImplement;
+    public static getInstance(): ServerImplement {
         if (this.Instance === null || this.Instance === undefined) {
-            this.Instance = new ServerImplemented();
+            this.Instance = new ServerImplement();
         }
 
         return this.Instance;
@@ -57,7 +57,7 @@ export class ServerImplemented implements IServerImp {
 
         this.disConnect();
 
-        delete ServerImplemented.Instance;
+        delete ServerImplement.Instance;
     }
 
     public disConnect(callBack?: Function) {

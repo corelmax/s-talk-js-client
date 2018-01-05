@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { ServerImplemented } from "./lib/node/ServerImplemented";
-const stalk = ServerImplemented.getInstance();
+import { ServerImplement } from "./lib/node/ServerImplement";
+const stalk = ServerImplement.getInstance();
 function initStalk() {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {

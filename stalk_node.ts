@@ -3,13 +3,13 @@
  * Support by @ Ahoo Studio.co.th 
  */
 
-import { ServerImplemented, IDictionary } from "./lib/node/ServerImplemented";
+import { ServerImplement, IDictionary } from "./lib/node/ServerImplement";
 
-const stalk = ServerImplemented.getInstance();
+const stalk = ServerImplement.getInstance();
 export type Dict = IDictionary;
-export type Stalk = ServerImplemented;
+export type Stalk = ServerImplement;
 
-function initStalk(): Promise<ServerImplemented> {
+function initStalk(): Promise<ServerImplement> {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
             if (err) {
@@ -31,7 +31,7 @@ function initStalk(): Promise<ServerImplemented> {
     });
 }
 
-function pushMessage(msg: IDictionary): Promise<ServerImplemented> {
+function pushMessage(msg: IDictionary): Promise<ServerImplement> {
     return new Promise((resolve, reject) => {
         if (stalk._isConnected) {
             stalk.getSocket().request("push.pushHandler.push", msg, (result: any) => {
@@ -68,7 +68,7 @@ export function testCall() {
     msg["timestamp"] = new Date();
     msg["members"] = "*";
 
-    pushMessage(msg).catch((stalk: ServerImplemented) => {
+    pushMessage(msg).catch((stalk: ServerImplement) => {
         init().then(boo => {
             if (boo) {
                 testCall();
@@ -78,7 +78,7 @@ export function testCall() {
 }
 
 export function push(msg: IDictionary) {
-    pushMessage(msg).catch((stalk: ServerImplemented) => {
+    pushMessage(msg).catch((stalk: ServerImplement) => {
         init().then(boo => {
             if (boo) {
                 push(msg);

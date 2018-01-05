@@ -6,9 +6,9 @@ import { IPomelo } from "../utils/PomeloUtils";
 export interface IDictionary {
     [k: string]: any;
 }
-export declare class ServerImplemented implements IServerImp {
+export declare class ServerImplement implements IServerImp {
     private static Instance;
-    static getInstance(): ServerImplemented;
+    static getInstance(): ServerImplement;
     static connectionProblemString: string;
     socket: IPomelo;
     getSocket(): IPomelo;
