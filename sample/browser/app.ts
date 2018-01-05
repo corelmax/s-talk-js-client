@@ -5,7 +5,7 @@
 
 import {
     stalkjs, ServerImp, ServerParam, IDictionary, IPomelo,
-    PushEvents, StalkEvents, ChatEvents,
+    PushEvents, stalkEvents, ChatEvents,
     PushAPI, ChatRoomAPI
 } from "stalk-js";
 
@@ -62,15 +62,11 @@ export namespace StalkCodeExam {
     export class ServerListener {
         socket: IPomelo;
         private pushServerListener: PushEvents.IPushServerListener;
-        private serverListener: StalkEvents.BaseEvents;
+        private serverListener: stalkEvents.IServerListener;
         private chatServerListener: ChatEvents.IChatServerEvents;
 
         constructor(socket: IPomelo) {
             this.socket = socket;
-
-            this.pushServerListener = undefined;
-            this.serverListener = undefined;
-            this.chatServerListener = undefined;
         }
 
         public addPushListener(obj: PushEvents.IPushServerListener) {
@@ -85,19 +81,19 @@ export namespace StalkCodeExam {
             });
         }
 
-        public addServerListener(obj: StalkEvents.BaseEvents): void {
+        public addServerListener(obj: stalkEvents.IServerListener): void {
             this.serverListener = obj;
 
             let self = this;
 
             // <!-- User -->
-            self.socket.on(StalkEvents.ON_USER_LOGIN, data => {
-                console.log(StalkEvents.ON_USER_LOGIN);
+            self.socket.on(stalkEvents.ON_USER_LOGIN, data => {
+                console.log(stalkEvents.ON_USER_LOGIN);
 
                 self.serverListener.onUserLogin(data);
             });
-            self.socket.on(StalkEvents.ON_USER_LOGOUT, data => {
-                console.log(StalkEvents.ON_USER_LOGOUT);
+            self.socket.on(stalkEvents.ON_USER_LOGOUT, data => {
+                console.log(stalkEvents.ON_USER_LOGOUT);
 
                 self.serverListener.onUserLogout(data);
             });
@@ -138,8 +134,6 @@ export class YourApp {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
         this.chatApi = new ChatRoomAPI(this.exam.stalk);
         this.pushApi = new PushAPI(this.exam.stalk);
-
-        this.listeners = undefined;
     }
     /**
      * 

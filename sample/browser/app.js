@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { stalkjs, PushEvents, StalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
+import { stalkjs, PushEvents, stalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
 export var StalkCodeExam;
 (function (StalkCodeExam) {
     /**
@@ -67,9 +67,6 @@ export var StalkCodeExam;
     class ServerListener {
         constructor(socket) {
             this.socket = socket;
-            this.pushServerListener = undefined;
-            this.serverListener = undefined;
-            this.chatServerListener = undefined;
         }
         addPushListener(obj) {
             this.pushServerListener = obj;
@@ -83,12 +80,12 @@ export var StalkCodeExam;
             this.serverListener = obj;
             let self = this;
             // <!-- User -->
-            self.socket.on(StalkEvents.ON_USER_LOGIN, data => {
-                console.log(StalkEvents.ON_USER_LOGIN);
+            self.socket.on(stalkEvents.ON_USER_LOGIN, data => {
+                console.log(stalkEvents.ON_USER_LOGIN);
                 self.serverListener.onUserLogin(data);
             });
-            self.socket.on(StalkEvents.ON_USER_LOGOUT, data => {
-                console.log(StalkEvents.ON_USER_LOGOUT);
+            self.socket.on(stalkEvents.ON_USER_LOGOUT, data => {
+                console.log(stalkEvents.ON_USER_LOGOUT);
                 self.serverListener.onUserLogout(data);
             });
         }
@@ -116,7 +113,6 @@ export class YourApp {
         this.exam = new StalkCodeExam.Factory("stalk.com", 3010);
         this.chatApi = new ChatRoomAPI(this.exam.stalk);
         this.pushApi = new PushAPI(this.exam.stalk);
-        this.listeners = undefined;
     }
     /**
      *

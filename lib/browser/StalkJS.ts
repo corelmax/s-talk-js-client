@@ -1,4 +1,4 @@
-import { Stalk } from "./ServerImplemented";
+import { Stalk } from "./ServerImplement";
 import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";

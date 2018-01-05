@@ -2,19 +2,16 @@
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
  */
-import { Stalk } from "./lib/browser/ServerImplemented";
+import { Stalk } from "./lib/browser/ServerImplement";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as StalkEvents from "./lib/browser/StalkEvents";
+export { ServerParam, IPomelo, IPomeloResponse, IServer } from "./lib/utils/PomeloUtils";
 export import stalkjs = StalkJS;
 /**
  * Core server implementation.
  */
 export import ServerImp = Stalk.ServerImplemented;
-export import ServerParam = Stalk.ServerParam;
-export import IPomelo = Stalk.IPomelo;
-export import IPomeloResponse = Stalk.IPomeloResponse;
-export import IServer = Stalk.IServer;
 export import IDictionary = Stalk.IDictionary;
 /**
  * All events.

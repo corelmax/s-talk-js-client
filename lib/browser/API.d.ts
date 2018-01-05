@@ -1,22 +1,22 @@
-import { IDictionary, Stalk } from "./serverImplemented";
+import { Stalk } from "./ServerImplement";
 import { StalkUtils } from '../utils/index';
 export declare namespace API {
     class GateAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: IDictionary): Promise<any>;
+        gateEnter(msg: Stalk.IDictionary): Promise<any>;
     }
     class LobbyAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        checkIn(msg: IDictionary): Promise<{}>;
+        checkIn(msg: Stalk.IDictionary): Promise<{}>;
         logout(): void;
         /**
          * user : {_id: string, username: string, payload }
          * @param msg
          */
-        updateUser(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
-        getUsersPayload(msg: IDictionary): Promise<StalkUtils.IStalkResponse>;
+        updateUser(msg: Stalk.IDictionary): Promise<StalkUtils.IStalkResponse>;
+        getUsersPayload(msg: Stalk.IDictionary): Promise<StalkUtils.IStalkResponse>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
         kickMeAllSession(uid: string): void;
@@ -25,7 +25,7 @@ export declare namespace API {
         private server;
         constructor(_server: Stalk.ServerImplemented);
         chat(target: string, _message: any, callback: (err, res) => void): void;
-        pushByUids(_message: IDictionary): Promise<{}>;
+        pushByUids(_message: Stalk.IDictionary): Promise<{}>;
         getSyncDateTime(callback: (err, res) => void): void;
         /**
          * get older message histories.
@@ -50,7 +50,7 @@ export declare namespace API {
          * @returns
          * @memberof PushAPI
          */
-        push(_message: IDictionary): Promise<{}>;
+        push(_message: Stalk.IDictionary): Promise<{}>;
     }
     /**
      * calling experiences between phones, apps and VoIP systems

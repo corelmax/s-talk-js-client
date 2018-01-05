@@ -5,33 +5,17 @@
  * Ahoo Studio.co.th 
  */
 
-import * as EventEmitter from "events";
 import { HttpStatusCode } from "../utils/httpStatusCode";
-import { Authen } from "../utils/tokenDecode";
 import { API } from "./API";
+import { IPomeloResponse, IPomelo, ServerParam } from "../utils/PomeloUtils";
 const Pomelo = require("../pomelo/reactWSClient");
 
 export namespace Stalk {
-    export interface IPomeloResponse {
-        code: number;
-        message?: string;
-        data?: any;
-    }
-    export interface IPomelo extends EventEmitter {
-        init: (params: any, callback: (error?: any) => void) => void;
-        notify: (route: string, message: any) => void;
-        request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
-        disconnect: () => Promise<null>;
-        setReconnect: (reconnect: boolean) => void;
-        setInitCallback: (error?: string) => void;
-    };
-    export interface IServer { host: string; port: number; };
+    /**
+     * @deprecated Use es6 Map instead.
+     */
     export interface IDictionary { [k: string]: string | any; }
-    export class ServerParam implements IServer {
-        host: string;
-        port: number;
-        reconnect: boolean;
-    }
+
     export class ServerImplemented {
         private static Instance: ServerImplemented;
         public static getInstance(): ServerImplemented {
