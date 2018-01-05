@@ -6,12 +6,12 @@ import { Stalk } from "./lib/browser/ServerImplement";
 import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as StalkEvents from "./lib/browser/StalkEvents";
+export { ServerParam } from "./lib/utils/PomeloUtils";
 export var stalkjs = StalkJS;
 /**
  * Core server implementation.
  */
 export var ServerImp = Stalk.ServerImplemented;
-export var ServerParam = Stalk.ServerParam;
 /**
  * All events.
  */

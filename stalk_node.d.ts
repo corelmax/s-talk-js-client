@@ -2,9 +2,9 @@
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
  */
-import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
+import { ServerImplemented, IDictionary } from "./lib/node/ServerImplemented";
 export declare type Dict = IDictionary;
-export declare type Stalk = ServerImp;
+export declare type Stalk = ServerImplemented;
 export declare function init(): Promise<void>;
 /**
  * For test call api omly...

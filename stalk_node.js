@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import ServerImp from "./lib/node/serverImplemented";
-const stalk = ServerImp.getInstance();
+import { ServerImplemented } from "./lib/node/ServerImplemented";
+const stalk = ServerImplemented.getInstance();
 function initStalk() {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
@@ -23,7 +23,7 @@ function initStalk() {
             }
             console.log("Stalk init success.");
             stalk._isConnected = true;
-            stalk.pomelo.on("disconnect", function data(reason) {
+            stalk.socket.on("disconnect", function data(reason) {
                 stalk._isConnected = false;
             });
             resolve(stalk);
@@ -33,7 +33,7 @@ function initStalk() {
 function pushMessage(msg) {
     return new Promise((resolve, reject) => {
         if (stalk._isConnected) {
-            stalk.getClient().request("push.pushHandler.push", msg, (result) => {
+            stalk.getSocket().request("push.pushHandler.push", msg, (result) => {
                 console.log("request result", result);
             });
             resolve(stalk);

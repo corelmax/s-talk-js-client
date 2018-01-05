@@ -4,7 +4,7 @@ export declare namespace API {
     class GateAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: Stalk.IDictionary): Promise<Stalk.IServer>;
+        gateEnter(msg: Stalk.IDictionary): Promise<any>;
     }
     class LobbyAPI {
         private server;

@@ -1,37 +1,23 @@
+import { IServerImp } from "../Base/IServerImp";
+import { IPomelo } from "../utils/PomeloUtils";
+/**
+ * @deprecated Use es6 Map instead.
+ */
 export interface IDictionary {
     [k: string]: any;
 }
-export interface IAuthenData {
-    userId: string;
-    token: string;
-}
-export interface IPomeloParam {
-    host: string;
-    port: number;
-    reconnect: boolean;
-}
-export interface PomeloClient {
-    init(params: any, cb: any): any;
-    notify(route: string, msg: IDictionary): any;
-    request(route: string, msg: IDictionary, cb: any): any;
-    on(event: string, data: any): any;
-    setReconnect(_reconnect: boolean): any;
-    disconnect(): any;
-    removeAllListeners(): any;
-}
-export default class ServerImplemented {
+export declare class ServerImplemented implements IServerImp {
     private static Instance;
     static getInstance(): ServerImplemented;
     static connectionProblemString: string;
-    pomelo: PomeloClient;
+    socket: IPomelo;
+    getSocket(): IPomelo;
     host: string;
     port: number | string;
-    authenData: IAuthenData;
     _isConnected: boolean;
     _isLogedin: boolean;
-    connect: (params: IPomeloParam, callback: (err: any) => void) => void;
+    connect: (params: any, callback: (err: any) => void) => void;
     constructor();
-    getClient(): PomeloClient | undefined;
     dispose(): void;
     disConnect(callBack?: Function): void;
     logout(): void;

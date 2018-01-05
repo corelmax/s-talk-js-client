@@ -3,13 +3,13 @@
  * Support by @ Ahoo Studio.co.th 
  */
 
-import ServerImp, { IDictionary } from "./lib/node/serverImplemented";
+import { ServerImplemented, IDictionary } from "./lib/node/ServerImplemented";
 
-const stalk = ServerImp.getInstance();
+const stalk = ServerImplemented.getInstance();
 export type Dict = IDictionary;
-export type Stalk = ServerImp;
+export type Stalk = ServerImplemented;
 
-function initStalk(): Promise<ServerImp> {
+function initStalk(): Promise<ServerImplemented> {
     return new Promise((resolve, reject) => {
         stalk.init((err, result) => {
             if (err) {
@@ -22,7 +22,7 @@ function initStalk(): Promise<ServerImp> {
             console.log("Stalk init success.");
             stalk._isConnected = true;
 
-            stalk.pomelo.on("disconnect", function data(reason: any) {
+            stalk.socket.on("disconnect", function data(reason: any) {
                 stalk._isConnected = false;
             });
 
@@ -31,10 +31,10 @@ function initStalk(): Promise<ServerImp> {
     });
 }
 
-function pushMessage(msg: IDictionary): Promise<ServerImp> {
+function pushMessage(msg: IDictionary): Promise<ServerImplemented> {
     return new Promise((resolve, reject) => {
         if (stalk._isConnected) {
-            stalk.getClient().request("push.pushHandler.push", msg, (result: any) => {
+            stalk.getSocket().request("push.pushHandler.push", msg, (result: any) => {
                 console.log("request result", result);
             });
 
@@ -68,7 +68,7 @@ export function testCall() {
     msg["timestamp"] = new Date();
     msg["members"] = "*";
 
-    pushMessage(msg).catch((stalk: ServerImp) => {
+    pushMessage(msg).catch((stalk: ServerImplemented) => {
         init().then(boo => {
             if (boo) {
                 testCall();
@@ -78,7 +78,7 @@ export function testCall() {
 }
 
 export function push(msg: IDictionary) {
-    pushMessage(msg).catch((stalk: ServerImp) => {
+    pushMessage(msg).catch((stalk: ServerImplemented) => {
         init().then(boo => {
             if (boo) {
                 push(msg);

@@ -1,37 +1,11 @@
-/// <reference types="node" />
-/**
- * Stalk-JavaScript, Node.js client. Supported react, react-native.
- * Support by@ nattapon.r@live.com
- *
- * Ahoo Studio.co.th
- */
-import * as EventEmitter from "events";
 import { API } from "./API";
+import { IPomelo, ServerParam } from "../utils/PomeloUtils";
 export declare namespace Stalk {
-    interface IPomeloResponse {
-        code: number;
-        message?: string;
-        data?: any;
-    }
-    interface IPomelo extends EventEmitter {
-        init: (params: any, callback: (error?: any) => void) => void;
-        notify: (route: string, message: any) => void;
-        request: (route: string, message: any, callback: (result: IPomeloResponse) => void) => void;
-        disconnect: () => Promise<null>;
-        setReconnect: (reconnect: boolean) => void;
-        setInitCallback: (error?: string) => void;
-    }
-    interface IServer {
-        host: string;
-        port: number;
-    }
+    /**
+     * @deprecated Use es6 Map instead.
+     */
     interface IDictionary {
         [k: string]: string | any;
-    }
-    class ServerParam implements IServer {
-        host: string;
-        port: number;
-        reconnect: boolean;
     }
     class ServerImplemented {
         private static Instance;
