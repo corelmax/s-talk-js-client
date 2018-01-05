@@ -311,3 +311,5 @@ export class ServerImplement implements IServerImp {
         }
     }
 }
+
+export default ServerImplement;

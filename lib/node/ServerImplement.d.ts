@@ -31,3 +31,4 @@ export declare class ServerImplement implements IServerImp {
     private OnTokenAuthenticate(tokenRes, onSuccessCheckToken);
     kickMeAllSession(uid: string): void;
 }
+export default ServerImplement;
