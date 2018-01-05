@@ -2,7 +2,7 @@
  * Copyright 2016 Ahoo Studio.co.th.
  *
  */
-import { ServerImp, IDictionary, IPomelo, PushEvents, StalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
+import { ServerImp, IDictionary, IPomelo, PushEvents, stalkEvents, ChatEvents, PushAPI, ChatRoomAPI } from "stalk-js";
 export declare namespace StalkCodeExam {
     /**
      * Preparing connection...
@@ -25,7 +25,7 @@ export declare namespace StalkCodeExam {
         private chatServerListener;
         constructor(socket: IPomelo);
         addPushListener(obj: PushEvents.IPushServerListener): void;
-        addServerListener(obj: StalkEvents.BaseEvents): void;
+        addServerListener(obj: stalkEvents.IServerListener): void;
         addChatListener(obj: ChatEvents.IChatServerEvents): void;
     }
 }
