@@ -109,7 +109,7 @@ export class BackendFactory {
     }
 
     createChatlogs() {
-        this.chatLogComp = new ChatsLogComponent();
+        this.chatLogComp = new ChatsLogComponent(null);
 
         return this.chatLogComp;
     }

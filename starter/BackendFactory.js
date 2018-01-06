@@ -99,7 +99,7 @@ export class BackendFactory {
         return Promise.resolve();
     }
     createChatlogs() {
-        this.chatLogComp = new ChatsLogComponent();
+        this.chatLogComp = new ChatsLogComponent(null);
         return this.chatLogComp;
     }
     getServerListener() {
