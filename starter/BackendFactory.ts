@@ -1,15 +1,13 @@
 /**
  * Copyright 2016-2018 Ahoo Studio.co.th.
+ * Maintained by nattapon.r@live.com
  */
 
-import { stalkjs, ServerImp, ServerParam, IDictionary } from "../index";
+import { stalkjs, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
-
-// import { ChitChatFactory } from "./ChitChatFactory";
-// const getConfig = () => ChitChatFactory.getInstance().config;
 
 export interface IStalkApi {
     apiKey: string;

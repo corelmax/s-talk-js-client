@@ -234,13 +234,13 @@ export namespace API {
             });
         }
 
-        public getMessageContent(messageId: string, callback: (err: Error, res: any) => void) {
+        public getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void) {
             let socket = this.server.getSocket();
             let message = {} as Stalk.IDictionary;
             message["messageId"] = messageId;
             socket.request("chat.chatHandler.getMessageContent", message, (result) => {
                 if (!!callback) {
-                    callback(null, result);
+                    callback(undefined, result);
                 }
             });
         }

@@ -2,7 +2,7 @@ import { Stalk } from "./ServerImplement";
 import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
-import { IPomelo, ServerParam } from "../utils/PomeloUtils";
+import { IPomelo, ServerParam, IServer } from "../utils/PomeloUtils";
 
 export namespace StalkJS {
     // export type ServerImplemented = Stalk.ServerImplemented;
@@ -42,7 +42,7 @@ export namespace StalkJS {
 
     export async function geteEnter(server: Stalk.ServerImplemented, message: Stalk.IDictionary) {
         let connector = await server.getGateAPI().gateEnter(message);
-        return connector;
+        return connector as IServer;
     }
 
     export async function handshake(server: Stalk.ServerImplemented, params: ServerParam) {

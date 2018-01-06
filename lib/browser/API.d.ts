@@ -33,7 +33,7 @@ export declare namespace API {
          */
         getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err, res) => void): void;
         getMessagesReaders(topEdgeMessageTime: string): void;
-        getMessageContent(messageId: string, callback: (err: Error, res: any) => void): void;
+        getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void): void;
         updateMessageReader(messageId: string, roomId: string): void;
         updateMessageReaders(messageIds: string[], roomId: string): void;
     }
