@@ -37,3 +37,10 @@ export import ChatRoomAPI = API.ChatRoomAPI;
 export import GateAPI = API.GateAPI;
 export import LobbyAPI = API.LobbyAPI;
 export import PushAPI = API.PushAPI;
+
+
+/**
+ * Starterkit
+ */
+import * as PushDataListener from "./starter/PushDataListener";
+export import Push = PushDataListener.Push;
