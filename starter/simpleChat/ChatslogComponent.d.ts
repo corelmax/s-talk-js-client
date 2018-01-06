@@ -30,7 +30,7 @@ export declare class ChatsLogComponent {
     getUnreadItem(room_id: string): IUnread | undefined;
     updatedLastAccessTimeEvent: (data: RoomAccessData) => void;
     onUpdatedLastAccessTime(data: RoomAccessData): void;
-    constructor(userStore: any);
+    constructor();
     private chatListeners;
     addOnChatListener(listener: any): void;
     onChat(message: MessageImp): void;

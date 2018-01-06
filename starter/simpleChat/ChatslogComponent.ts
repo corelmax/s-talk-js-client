@@ -77,7 +77,7 @@ export class ChatsLogComponent {
         }
     }
 
-    constructor(userStore: any) {
+    constructor() {
         console.log("Create ChatsLogComponent");
 
         this._isReady = false;

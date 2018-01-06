@@ -39,7 +39,7 @@ export function getUnreadMessage(user_id, roomAccess) {
     });
 }
 export class ChatsLogComponent {
-    constructor(userStore) {
+    constructor() {
         this.chatlog_count = 0;
         this.chatslog = new Map();
         this.unreadMessageMap = new Map();
