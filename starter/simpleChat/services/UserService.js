@@ -1,7 +1,7 @@
 import * as Rx from "rxjs/Rx";
 const { ajax } = Rx.Observable;
 import { ChitChatFactory } from "../ChitChatFactory";
-import { chitchat_headers } from "./chitchatServiceUtils";
+import { apiHeaders } from "./chitchatServiceUtils";
 const getConfig = () => ChitChatFactory.getInstance().config;
 const authReducer = () => ChitChatFactory.getInstance().authStore;
 export function getTeamProfile(token, team_id) {
@@ -37,20 +37,20 @@ export function updateTeamProfile(user_id, team_id, profile) {
         body: JSON.stringify({
             profile: profile
         }),
-        headers: chitchat_headers()
+        headers: apiHeaders()
     });
 }
 export function fetchUser(username) {
     return ajax({
         method: "GET",
         url: `${getConfig().api.user}/?username=${username}`,
-        headers: chitchat_headers()
+        headers: apiHeaders()
     });
 }
 export function suggestUser(username, team_id) {
     return ajax({
         method: "GET",
         url: `${getConfig().api.user}/suggest/?username=${username}&team_id=${team_id}`,
-        headers: chitchat_headers()
+        headers: apiHeaders()
     });
 }

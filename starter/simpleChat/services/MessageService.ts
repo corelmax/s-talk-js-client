@@ -1,23 +1,26 @@
-import * as Rx from "rxjs";
+/**
+ * Copyright 2016-2018 Ahoo Studio.co.th.
+ * 
+ */
 
-import { ChitChatFactory } from "../ChitChatFactory";
-import { withToken, chitchat_headers } from "./chitchatServiceUtils";
-const getConfig = () => ChitChatFactory.getInstance().config;
-const authReducer = () => ChitChatFactory.getInstance().authStore;
+import { BackendFactory } from "../../BackendFactory";
+import { withToken, apiHeaders } from "./ServiceUtils";
+import InternalStore from "../InternalStore";
+const getConfig = () => BackendFactory.getInstance().getApiConfig();
+const authReducer = () => InternalStore.authStore;
 
-const { ajax } = Rx.Observable;
 
 export function updateMessageReader(message_id: string, room_id: string) {
-    return fetch(`${getConfig().api.message}/updateReader`, {
+    return fetch(`${getConfig().message}/updateReader`, {
         method: "POST",
-        headers: chitchat_headers(),
+        headers: apiHeaders(),
         body: JSON.stringify({ room_id: room_id, message_id: message_id })
     });
 }
 export function updateMessagesReader(messages_id: Array<string>, room_id: string) {
-    return fetch(`${getConfig().api.message}/updateMessagesReader`, {
+    return fetch(`${getConfig().message}/updateMessagesReader`, {
         method: "POST",
-        headers: chitchat_headers(),
+        headers: apiHeaders(),
         body: JSON.stringify({ room_id: room_id, messages: messages_id })
     });
 }

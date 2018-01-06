@@ -17,7 +17,7 @@ import {
     MessageImp, MemberImp
 } from "./models/index";
 import * as CryptoHelper from "./utils/CryptoHelper";
-
+import InternalStore from "./InternalStore";
 import * as chatroomService from "./services/ChatroomService";
 // import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
 const avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
@@ -45,7 +45,6 @@ export async function getUnreadMessage(user_id: string, roomAccess: RoomAccessDa
 
 export class ChatsLogComponent {
     dataListener: DataListener;
-    userStore: any;
 
     private chatlog_count: number = 0;
     public _isReady: boolean;
@@ -82,7 +81,6 @@ export class ChatsLogComponent {
         console.log("Create ChatsLogComponent");
 
         this._isReady = false;
-        this.userStore = userStore;
         let backendFactory = BackendFactory.getInstance();
         this.dataListener = backendFactory.dataListener;
 
@@ -211,7 +209,7 @@ export class ChatsLogComponent {
         if (roomInfo.type === RoomType.privateChat) {
             if (Array.isArray(roomInfo.members)) {
                 let others = roomInfo.members.filter((value) =>
-                    value._id !== this.userStore.user._id) as Array<MemberImp>;
+                    value._id !== InternalStore.authStore.user._id) as Array<MemberImp>;
 
                 if (others.length > 0) {
                     let contact = others[0];

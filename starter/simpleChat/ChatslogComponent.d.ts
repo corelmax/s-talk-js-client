@@ -17,7 +17,6 @@ export declare class Unread {
 export declare function getUnreadMessage(user_id: string, roomAccess: RoomAccessData): Promise<IUnread>;
 export declare class ChatsLogComponent {
     dataListener: DataListener;
-    userStore: any;
     private chatlog_count;
     _isReady: boolean;
     onReady: (rooms: Array<Room>) => void;

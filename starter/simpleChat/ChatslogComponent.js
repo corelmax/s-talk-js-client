@@ -17,6 +17,7 @@ import ChatLog from "./models/ChatLog";
 import { MessageType } from "../models/index";
 import { RoomType } from "./models/index";
 import * as CryptoHelper from "./utils/CryptoHelper";
+import InternalStore from "./InternalStore";
 import * as chatroomService from "./services/ChatroomService";
 // import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
 const avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
@@ -45,7 +46,6 @@ export class ChatsLogComponent {
         this.chatListeners = new Array();
         console.log("Create ChatsLogComponent");
         this._isReady = false;
-        this.userStore = userStore;
         let backendFactory = BackendFactory.getInstance();
         this.dataListener = backendFactory.dataListener;
         this.dataListener.addOnRoomAccessListener(this.onAccessRoom.bind(this));
@@ -177,7 +177,7 @@ export class ChatsLogComponent {
         return __awaiter(this, void 0, void 0, function* () {
             if (roomInfo.type === RoomType.privateChat) {
                 if (Array.isArray(roomInfo.members)) {
-                    let others = roomInfo.members.filter((value) => value._id !== this.userStore.user._id);
+                    let others = roomInfo.members.filter((value) => value._id !== InternalStore.authStore.user._id);
                     if (others.length > 0) {
                         let contact = others[0];
                         roomInfo.owner = (contact.username) ? contact.username : "EMPTY ROOM";

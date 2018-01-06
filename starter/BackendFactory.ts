@@ -9,7 +9,7 @@ import { PushDataListener } from "./PushDataListener";
 import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
 
-export interface IStalkApi {
+export interface IStalkConfig {
     apiKey: string;
     apiVersion: string;
     appId: string;
@@ -17,28 +17,49 @@ export interface IStalkApi {
     port: number;
 }
 
+export interface IApiConfig {
+    apiKey: string;
+    host: string;
+    api: string;
+    auth: string;
+    user: string;
+    team: string;
+    group: string;
+    orgChart: string;
+    chatroom: string;
+    message: string;
+    fileUpload: string;
+}
+
 export class BackendFactory {
     private static instance: BackendFactory;
     public static getInstance(): BackendFactory {
         return BackendFactory.instance;
     }
-    public static createInstance(config: IStalkApi): BackendFactory {
+    public static createInstance(stalkConfig: IStalkConfig, apiConfig: IApiConfig): BackendFactory {
         if (!BackendFactory.instance) {
-            BackendFactory.instance = new BackendFactory(config);
+            BackendFactory.instance = new BackendFactory(stalkConfig, apiConfig);
         }
 
         return BackendFactory.instance;
     }
 
-    config: IStalkApi;
+    config: IStalkConfig;
+    private apiConfig: IApiConfig;
+    public getApiConfig() {
+        return this.apiConfig;
+    }
+
     stalk: ServerImp;
     serverEventsListener: ServerEventListener;
     pushDataListener: PushDataListener;
     dataListener: DataListener;
     chatLogComp: ChatsLogComponent;
 
-    constructor(config: IStalkApi) {
+    constructor(config: IStalkConfig, apiConfig: IApiConfig) {
         this.config = config;
+        this.apiConfig = apiConfig;
+
         this.pushDataListener = new PushDataListener();
         this.dataListener = new DataListener();
     }

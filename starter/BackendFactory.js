@@ -19,14 +19,18 @@ export class BackendFactory {
     static getInstance() {
         return BackendFactory.instance;
     }
-    static createInstance(config) {
+    static createInstance(stalkConfig, apiConfig) {
         if (!BackendFactory.instance) {
-            BackendFactory.instance = new BackendFactory(config);
+            BackendFactory.instance = new BackendFactory(stalkConfig, apiConfig);
         }
         return BackendFactory.instance;
     }
-    constructor(config) {
+    getApiConfig() {
+        return this.apiConfig;
+    }
+    constructor(config, apiConfig) {
         this.config = config;
+        this.apiConfig = apiConfig;
         this.pushDataListener = new PushDataListener();
         this.dataListener = new DataListener();
     }
