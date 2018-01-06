@@ -8,7 +8,7 @@
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { API } from "./API";
 import { IPomeloResponse, IPomelo, ServerParam } from "../utils/PomeloUtils";
-import Pomelo = require("../pomelo/reactWSClient");
+const Pomelo = require("../pomelo/reactWSClient");
 
 export namespace Stalk {
     /**
