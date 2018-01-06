@@ -6,7 +6,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { SecureServiceFactory } from "./secure/secureServiceFactory";
+import { SecureServiceFactory } from "./secure/SecureServiceFactory";
 import { MessageType } from "../../models/index";
 export const decryptionText = (message) => __awaiter(this, void 0, void 0, function* () {
     if (!message)

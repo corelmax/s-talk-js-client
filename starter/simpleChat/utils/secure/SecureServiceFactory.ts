@@ -1,5 +1,5 @@
 import { ISecureService } from "./ISecureService";
-import { NodeSecureService } from "./nodeSecureService";
+import { NodeSecureService } from "./NodeSecureService";
 /**
  * SecureServiceFactory
  */

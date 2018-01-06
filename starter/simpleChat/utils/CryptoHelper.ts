@@ -1,4 +1,4 @@
-import { SecureServiceFactory } from "./secure/secureServiceFactory";
+import { SecureServiceFactory } from "./secure/SecureServiceFactory";
 import { MessageImp } from "../models/index";
 import { MessageType } from "../../models/index";
 
