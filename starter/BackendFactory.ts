@@ -2,11 +2,10 @@
  * Copyright 2016-2018 Ahoo Studio.co.th.
  */
 
-import { stalkjs, ServerImp, ServerParam, IDictionary } from "stalk-js";
-import { DataManager } from "./DataManager";
+import { stalkjs, ServerImp, ServerParam, IDictionary } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
-import { ChatsLogComponent } from "./ChatslogComponent";
+import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
 
 // import { ChitChatFactory } from "./ChitChatFactory";
@@ -37,15 +36,13 @@ export class BackendFactory {
     stalk: ServerImp;
     serverEventsListener: ServerEventListener;
     pushDataListener: PushDataListener;
-    dataManager: DataManager;
     dataListener: DataListener;
     chatLogComp: ChatsLogComponent;
 
     constructor(config: IStalkApi) {
         this.config = config;
         this.pushDataListener = new PushDataListener();
-        this.dataManager = new DataManager();
-        this.dataListener = new DataListener(this.dataManager);
+        this.dataListener = new DataListener();
     }
 
     getServer() {
@@ -106,7 +103,6 @@ export class BackendFactory {
         let self = this;
         self.checkOut();
         if (!!self.pushDataListener) { delete self.pushDataListener; }
-        if (!!self.dataManager) { delete self.dataManager; }
         if (!!self.dataListener) { delete self.dataListener; }
 
         delete BackendFactory.instance;
