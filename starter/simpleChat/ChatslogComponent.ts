@@ -7,7 +7,6 @@ import * as async from "async";
 
 import { DataListener } from "../DataListener";
 import { BackendFactory } from "../BackendFactory";
-import { IRoomAccessListenerImp } from "./abstracts/IRoomAccessListenerImp";
 import ChatLog from "./models/ChatLog";
 import {
     IMessage, MessageType, IMessageMeta,
@@ -20,7 +19,8 @@ import {
 import * as CryptoHelper from "./utils/CryptoHelper";
 
 import * as chatroomService from "./services/ChatroomService";
-import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
+// import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
+const avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
 
 export type ChatLogMap = Map<string, ChatLog>;
 export type UnreadMap = Map<string, IUnread>;
@@ -43,8 +43,9 @@ export async function getUnreadMessage(user_id: string, roomAccess: RoomAccessDa
     }
 }
 
-export class ChatsLogComponent implements IRoomAccessListenerImp {
+export class ChatsLogComponent {
     dataListener: DataListener;
+    userStore: any;
 
     private chatlog_count: number = 0;
     public _isReady: boolean;
@@ -67,7 +68,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
     public addUnreadMessage(unread: IUnread) {
         this.unreadMessageMap.set(unread.rid, unread);
     }
-    public getUnreadItem(room_id: string): IUnread {
+    public getUnreadItem(room_id: string) {
         return this.unreadMessageMap.get(room_id);
     }
     public updatedLastAccessTimeEvent: (data: RoomAccessData) => void;
@@ -77,10 +78,11 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         }
     }
 
-    constructor() {
+    constructor(userStore: any) {
         console.log("Create ChatsLogComponent");
 
         this._isReady = false;
+        this.userStore = userStore;
         let backendFactory = BackendFactory.getInstance();
         this.dataListener = backendFactory.dataListener;
 
@@ -90,11 +92,11 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         this.dataListener.addOnUpdateRoomAccessListener(this.onUpdatedLastAccessTime.bind(this));
     }
 
-    private chatListeners = new Array<(param) => void>();
-    public addOnChatListener(listener) {
+    private chatListeners = new Array<(param: any) => void>();
+    public addOnChatListener(listener: any) {
         this.chatListeners.push(listener);
     }
-    onChat(message) {
+    onChat(message: MessageImp) {
         console.log("ChatsLogComponent.onChat", message);
         let self = this;
 
@@ -140,8 +142,8 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         });
     }
 
-    public addNewRoomAccessEvent: (data) => void;
-    onAddRoomAccess(dataEvent) {
+    public addNewRoomAccessEvent: (data: any) => void;
+    onAddRoomAccess(dataEvent: any) {
         console.warn("ChatsLogComponent.onAddRoomAccess", JSON.stringify(dataEvent));
 
         if (!!this.addNewRoomAccessEvent) {
@@ -149,7 +151,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         }
     }
 
-    public getUnreadMessages(user_id: string, roomAccess: RoomAccessData[], callback: (err: Error | null, logsData: Array<IUnread>) => void) {
+    public getUnreadMessages(user_id: string, roomAccess: RoomAccessData[], callback: (err: Error | undefined, logsData: Array<IUnread> | undefined) => void) {
         let self = this;
         let unreadLogs = new Array<IUnread>();
 
@@ -173,7 +175,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         // assign a callback
         q.drain = function () {
             console.log("getUnreadMessages from your roomAccess is done.");
-            callback(null, unreadLogs);
+            callback(undefined, unreadLogs);
         };
 
         // add some items to the queue (batch-wise)
@@ -184,7 +186,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
             });
         }
         else {
-            callback(null, null);
+            callback(undefined, undefined);
         }
     }
 
@@ -209,23 +211,10 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         if (roomInfo.type === RoomType.privateChat) {
             if (Array.isArray(roomInfo.members)) {
                 let others = roomInfo.members.filter((value) =>
-                    value._id !== userReducer().user._id) as Array<MemberImp>;
+                    value._id !== this.userStore.user._id) as Array<MemberImp>;
 
                 if (others.length > 0) {
                     let contact = others[0];
-                    let avatar = null;
-
-                    if (!contact.avatar) {
-                        try {
-                            let user = await chatlogActionsHelper.getContactProfile(contact._id);
-                            avatar = user.avatar;
-                        }
-                        catch (err) {
-                            if (err) {
-                                console.warn("getContactProfile fail", err.message);
-                            }
-                        }
-                    }
 
                     roomInfo.owner = (contact.username) ? contact.username : "EMPTY ROOM";
                     roomInfo.image = (contact.avatar) ? contact.avatar : avatar;
@@ -246,10 +235,10 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
             let roomInfos = json.result as Array<Room>;
             let room = await self.decorateRoomInfoData(roomInfos[0]);
 
-            return room;
+            return Promise.resolve(room);
         }
         else {
-            return null;
+            return Promise.reject(undefined);
         }
     }
 
@@ -260,7 +249,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         let q = async.queue(function (task, callback) {
             let value = task as IUnread;
             let rooms = chatrooms.filter(v => v._id === value.rid);
-            let roomInfo = (rooms.length > 0) ? rooms[0] : null as Room;
+            let roomInfo = (rooms.length > 0) ? rooms[0] : undefined;
             if (!!roomInfo) {
                 self.decorateRoomInfoData(roomInfo).then(room => {
                     chatrooms.forEach(v => {
@@ -318,12 +307,12 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
             let q = async.queue(function (task, callback) {
                 let unread = task as IUnread;
                 let rooms = chatrooms.filter(v => v._id === unread.rid);
-                let room = (rooms.length > 0) ? rooms[0] : null as Room;
+                let room = (rooms.length > 0) ? rooms[0] : undefined;
                 if (!room) {
                     callback();
                 }
 
-                self.organizeChatLogMap(unread, room, () => {
+                self.organizeChatLogMap(unread, (<Room>room), () => {
                     callback();
                 });
             }, 2);
@@ -423,7 +412,7 @@ export class ChatsLogComponent implements IRoomAccessListenerImp {
         }
     }
 
-    private setLogProp(log: ChatLog, displayMessage, callback: (log: ChatLog) => void) {
+    private setLogProp(log: ChatLog, displayMessage: string, callback: (log: ChatLog) => void) {
         log.setLastMessage(displayMessage);
 
         callback(log);

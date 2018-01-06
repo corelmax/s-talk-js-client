@@ -1,8 +1,7 @@
 import { DataListener } from "../DataListener";
-import { IRoomAccessListenerImp } from "./abstracts/IRoomAccessListenerImp";
 import ChatLog from "./models/ChatLog";
 import { IMessage, RoomAccessData, StalkAccount } from "../models/index";
-import { Room } from "./models/index";
+import { Room, MessageImp } from "./models/index";
 export declare type ChatLogMap = Map<string, ChatLog>;
 export declare type UnreadMap = Map<string, IUnread>;
 export interface IUnread {
@@ -16,8 +15,9 @@ export declare class Unread {
     count: number;
 }
 export declare function getUnreadMessage(user_id: string, roomAccess: RoomAccessData): Promise<IUnread>;
-export declare class ChatsLogComponent implements IRoomAccessListenerImp {
+export declare class ChatsLogComponent {
     dataListener: DataListener;
+    userStore: any;
     private chatlog_count;
     _isReady: boolean;
     onReady: (rooms: Array<Room>) => void;
@@ -28,17 +28,17 @@ export declare class ChatsLogComponent implements IRoomAccessListenerImp {
     getUnreadMessageMap(): UnreadMap;
     setUnreadMessageMap(unreads: Array<IUnread>): void;
     addUnreadMessage(unread: IUnread): void;
-    getUnreadItem(room_id: string): IUnread;
+    getUnreadItem(room_id: string): IUnread | undefined;
     updatedLastAccessTimeEvent: (data: RoomAccessData) => void;
     onUpdatedLastAccessTime(data: RoomAccessData): void;
-    constructor();
+    constructor(userStore: any);
     private chatListeners;
     addOnChatListener(listener: any): void;
-    onChat(message: any): void;
+    onChat(message: MessageImp): void;
     onAccessRoom(dataEvent: StalkAccount): void;
-    addNewRoomAccessEvent: (data) => void;
+    addNewRoomAccessEvent: (data: any) => void;
     onAddRoomAccess(dataEvent: any): void;
-    getUnreadMessages(user_id: string, roomAccess: RoomAccessData[], callback: (err: Error | null, logsData: Array<IUnread>) => void): void;
+    getUnreadMessages(user_id: string, roomAccess: RoomAccessData[], callback: (err: Error | undefined, logsData: Array<IUnread> | undefined) => void): void;
     getUnreadMessage(user_id: string, roomAccess: RoomAccessData): Promise<IUnread>;
     private decorateRoomInfoData(roomInfo);
     private getRoomInfo(room_id);

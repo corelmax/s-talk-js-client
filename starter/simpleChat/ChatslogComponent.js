@@ -18,7 +18,8 @@ import { MessageType } from "../models/index";
 import { RoomType } from "./models/index";
 import * as CryptoHelper from "./utils/CryptoHelper";
 import * as chatroomService from "./services/ChatroomService";
-import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
+// import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
+const avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
 export class Unread {
 }
 export function getUnreadMessage(user_id, roomAccess) {
@@ -37,13 +38,14 @@ export function getUnreadMessage(user_id, roomAccess) {
     });
 }
 export class ChatsLogComponent {
-    constructor() {
+    constructor(userStore) {
         this.chatlog_count = 0;
         this.chatslog = new Map();
         this.unreadMessageMap = new Map();
         this.chatListeners = new Array();
         console.log("Create ChatsLogComponent");
         this._isReady = false;
+        this.userStore = userStore;
         let backendFactory = BackendFactory.getInstance();
         this.dataListener = backendFactory.dataListener;
         this.dataListener.addOnRoomAccessListener(this.onAccessRoom.bind(this));
@@ -142,7 +144,7 @@ export class ChatsLogComponent {
         // assign a callback
         q.drain = function () {
             console.log("getUnreadMessages from your roomAccess is done.");
-            callback(null, unreadLogs);
+            callback(undefined, unreadLogs);
         };
         // add some items to the queue (batch-wise)
         if (roomAccess && roomAccess.length > 0) {
@@ -152,7 +154,7 @@ export class ChatsLogComponent {
             });
         }
         else {
-            callback(null, null);
+            callback(undefined, undefined);
         }
     }
     getUnreadMessage(user_id, roomAccess) {
@@ -175,21 +177,9 @@ export class ChatsLogComponent {
         return __awaiter(this, void 0, void 0, function* () {
             if (roomInfo.type === RoomType.privateChat) {
                 if (Array.isArray(roomInfo.members)) {
-                    let others = roomInfo.members.filter((value) => value._id !== userReducer().user._id);
+                    let others = roomInfo.members.filter((value) => value._id !== this.userStore.user._id);
                     if (others.length > 0) {
                         let contact = others[0];
-                        let avatar = null;
-                        if (!contact.avatar) {
-                            try {
-                                let user = yield chatlogActionsHelper.getContactProfile(contact._id);
-                                avatar = user.avatar;
-                            }
-                            catch (err) {
-                                if (err) {
-                                    console.warn("getContactProfile fail", err.message);
-                                }
-                            }
-                        }
                         roomInfo.owner = (contact.username) ? contact.username : "EMPTY ROOM";
                         roomInfo.image = (contact.avatar) ? contact.avatar : avatar;
                     }
@@ -206,10 +196,10 @@ export class ChatsLogComponent {
             if (json.success) {
                 let roomInfos = json.result;
                 let room = yield self.decorateRoomInfoData(roomInfos[0]);
-                return room;
+                return Promise.resolve(room);
             }
             else {
-                return null;
+                return Promise.reject(undefined);
             }
         });
     }
@@ -219,7 +209,7 @@ export class ChatsLogComponent {
         let q = async.queue(function (task, callback) {
             let value = task;
             let rooms = chatrooms.filter(v => v._id === value.rid);
-            let roomInfo = (rooms.length > 0) ? rooms[0] : null;
+            let roomInfo = (rooms.length > 0) ? rooms[0] : undefined;
             if (!!roomInfo) {
                 self.decorateRoomInfoData(roomInfo).then(room => {
                     chatrooms.forEach(v => {
@@ -270,7 +260,7 @@ export class ChatsLogComponent {
             let q = async.queue(function (task, callback) {
                 let unread = task;
                 let rooms = chatrooms.filter(v => v._id === unread.rid);
-                let room = (rooms.length > 0) ? rooms[0] : null;
+                let room = (rooms.length > 0) ? rooms[0] : undefined;
                 if (!room) {
                     callback();
                 }

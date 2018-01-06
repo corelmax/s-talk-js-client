@@ -14,12 +14,14 @@
   },
   "homepage": "https://github.com/mzget/stalk-javascript-client#readme",
   "dependencies": {
+    "async": "^2.6.0",
     "events": "^1.1.1",
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
     "ws": "^1.1.5"
   },
   "devDependencies": {
+    "@types/async": "^2.0.46",
     "@types/jest": "^21.1.10",
     "@types/node": "^8.5.7",
     "jest": "^21.2.1",
