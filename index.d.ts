@@ -7,6 +7,7 @@ import { StalkJS } from "./lib/browser/StalkJS";
 import { API } from "./lib/browser/API";
 import * as StalkEvents from "./lib/browser/StalkEvents";
 export { ServerParam, IPomelo, IPomeloResponse, IServer } from "./lib/utils/PomeloUtils";
+export { HttpStatusCode } from "./lib/utils/index";
 export import stalkjs = StalkJS;
 /**
  * Core server implementation.
