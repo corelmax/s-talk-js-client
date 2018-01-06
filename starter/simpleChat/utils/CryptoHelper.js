@@ -6,23 +6,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { SecureServiceFactory } from "../secure/secureServiceFactory";
-import { MessageType } from "../../shared/Message";
-import { ChitChatFactory } from "../ChitChatFactory";
-const getConfig = () => ChitChatFactory.getInstance().config;
+import { SecureServiceFactory } from "./secure/secureServiceFactory";
+import { MessageType } from "../../models/index";
 export const decryptionText = (message) => __awaiter(this, void 0, void 0, function* () {
     if (!message)
         return message;
     let secure = SecureServiceFactory.getService();
     if (message.type === MessageType[MessageType.Text]) {
-        if (getConfig().appConfig.encryption === true) {
-            let result = yield secure.decryption(message.body);
-            message.body = result;
-            return message;
-        }
-        else {
-            return message;
-        }
+        let result = yield secure.decryption(message.body);
+        message.body = result;
+        return message;
     }
     else {
         return message;

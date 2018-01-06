@@ -1,3 +1,3 @@
-import { MessageImp } from "../models/MessageImp";
+import { MessageImp } from "../models/index";
 export declare const decryptionText: (message: MessageImp) => Promise<MessageImp>;
-export declare const hashComputation: (message: any) => Promise<string>;
+export declare const hashComputation: (message: string) => Promise<string>;

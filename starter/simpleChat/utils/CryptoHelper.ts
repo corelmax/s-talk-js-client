@@ -1,9 +1,6 @@
-import { SecureServiceFactory } from "../secure/secureServiceFactory";
-import { MessageImp } from "../models/MessageImp";
-import { MessageType } from "../../shared/Message";
-
-import { ChitChatFactory } from "../ChitChatFactory";
-const getConfig = () => ChitChatFactory.getInstance().config;
+import { SecureServiceFactory } from "./secure/secureServiceFactory";
+import { MessageImp } from "../models/index";
+import { MessageType } from "../../models/index";
 
 export const decryptionText = async (message: MessageImp) => {
     if (!message) return message;
@@ -11,22 +8,17 @@ export const decryptionText = async (message: MessageImp) => {
     let secure = SecureServiceFactory.getService();
 
     if (message.type === MessageType[MessageType.Text]) {
-        if (getConfig().appConfig.encryption === true) {
-            let result = await secure.decryption(message.body);
+        let result = await secure.decryption(message.body);
+        message.body = result;
 
-            message.body = result;
-            return message;
-        }
-        else {
-            return message;
-        }
+        return message;
     }
     else {
         return message;
     }
 };
 
-export const hashComputation = (message): Promise<string> => {
+export const hashComputation = (message: string): Promise<string> => {
     let secure = SecureServiceFactory.getService();
     return secure.hashCompute(message);
 };
