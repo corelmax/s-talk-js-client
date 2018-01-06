@@ -51,7 +51,11 @@
     "stalk_node",
     "/lib/node"
   ],
+  "include": [
+    "starter"
+  ],
   "files": [
     "index"
-  ]
+  ],
+  "compileOnSave": true
 }

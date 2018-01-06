@@ -1,5 +1,5 @@
 import { Stalk } from "./ServerImplement";
-import { StalkUtils } from '../utils/index';
+import { IPomeloResponse } from '../utils/index';
 import { IServer } from "../utils/PomeloUtils";
 export declare namespace API {
     class GateAPI {
@@ -16,8 +16,8 @@ export declare namespace API {
          * user : {_id: string, username: string, payload }
          * @param msg
          */
-        updateUser(msg: Stalk.IDictionary): Promise<StalkUtils.IStalkResponse>;
-        getUsersPayload(msg: Stalk.IDictionary): Promise<StalkUtils.IStalkResponse>;
+        updateUser(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
+        getUsersPayload(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
         joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
         leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
         kickMeAllSession(uid: string): void;
@@ -33,7 +33,7 @@ export declare namespace API {
          */
         getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err, res) => void): void;
         getMessagesReaders(topEdgeMessageTime: string): void;
-        getMessageContent(messageId: string, callback: (err: Error, res: any) => void): void;
+        getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void): void;
         updateMessageReader(messageId: string, roomId: string): void;
         updateMessageReaders(messageIds: string[], roomId: string): void;
     }
