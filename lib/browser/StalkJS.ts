@@ -2,6 +2,7 @@ import { Stalk } from "./ServerImplement";
 import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
+import { IPomelo, ServerParam } from "../utils/PomeloUtils";
 
 export namespace StalkJS {
     // export type ServerImplemented = Stalk.ServerImplemented;
@@ -23,9 +24,9 @@ export namespace StalkJS {
     }
 
     export async function init(server: Stalk.ServerImplemented) {
-        let promise = new Promise<Stalk.IPomelo>((resolve, reject) => {
+        let promise = new Promise<IPomelo>((resolve, reject) => {
             server.disConnect(() => {
-                server.init((err: Error, res: Stalk.IPomelo) => {
+                server.init((err: Error, res: IPomelo) => {
                     if (err) {
                         reject(err);
                     }
@@ -44,8 +45,8 @@ export namespace StalkJS {
         return connector;
     }
 
-    export async function handshake(server: Stalk.ServerImplemented, params: Stalk.ServerParam) {
-        return await new Promise<Stalk.IPomelo>((resolve, reject) => {
+    export async function handshake(server: Stalk.ServerImplemented, params: ServerParam) {
+        return await new Promise<IPomelo>((resolve, reject) => {
             server.connect(params, (err: Error) => {
                 server._isConnected = true;
                 let socket = server.getSocket();
