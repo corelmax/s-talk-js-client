@@ -1,5 +1,6 @@
 import { Stalk } from "./ServerImplement";
 import { HttpStatusCode, StalkUtils } from '../utils/index';
+import { IServer } from "../utils/PomeloUtils";
 
 export namespace API {
     export class GateAPI {
@@ -12,7 +13,7 @@ export namespace API {
             const self = this;
             const socket = this.server.getSocket();
 
-            const result = new Promise((resolve: (data: Stalk.IServer) => void, rejected) => {
+            const result = new Promise((resolve: (data: IServer) => void, rejected) => {
                 if (!!socket && self.server._isConnected === false) {
                     // <!-- Quering connector server.
                     socket.request("gate.gateHandler.queryEntry", msg, (result: any) => {
@@ -123,7 +124,7 @@ export namespace API {
         // <!-- Join and leave chat room.
         public joinRoom(token: string, username, room_id: string, callback: (err, res) => void) {
             let self = this;
-            let msg = {} as IDictionary;
+            let msg = {};
             msg["token"] = token;
             msg["rid"] = room_id;
             msg["username"] = username;
@@ -138,7 +139,7 @@ export namespace API {
 
         public leaveRoom(token: string, roomId: string, callback: (err, res) => void) {
             let self = this;
-            let msg = {} as IDictionary;
+            let msg = {};
             msg["token"] = token;
             msg["rid"] = roomId;
 

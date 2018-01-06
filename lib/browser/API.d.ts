@@ -1,10 +1,11 @@
 import { Stalk } from "./ServerImplement";
 import { StalkUtils } from '../utils/index';
+import { IServer } from "../utils/PomeloUtils";
 export declare namespace API {
     class GateAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: Stalk.IDictionary): Promise<any>;
+        gateEnter(msg: Stalk.IDictionary): Promise<IServer>;
     }
     class LobbyAPI {
         private server;
