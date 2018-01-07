@@ -12,10 +12,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import * as async from "async";
-import * as Rx from "rxjs/Rx";
+import * as Rx from "rxjs";
 import { BackendFactory } from "../BackendFactory";
 import { ChatEvents } from "../../index";
-import * as chatroomService from "./services/chatroomService";
+import * as chatroomService from "./services/ChatroomService";
 import { decryptionText } from "./utils/CryptoHelper";
 import { SecureServiceFactory } from "./index";
 import { MessageType } from "../models/index";

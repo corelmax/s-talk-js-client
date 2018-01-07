@@ -5,12 +5,12 @@
  */
 
 import * as async from "async";
-import * as Rx from "rxjs/Rx";
+import * as Rx from "rxjs";
 
 import { BackendFactory } from "../BackendFactory";
 import { DataListener } from "../DataListener";
 import { ChatEvents } from "../../index";
-import * as chatroomService from "./services/chatroomService";
+import * as chatroomService from "./services/ChatroomService";
 
 import { decryptionText, hashComputation } from "./utils/CryptoHelper";
 import { ISecureService, SecureServiceFactory } from "./index";
