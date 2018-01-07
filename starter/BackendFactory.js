@@ -13,7 +13,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import { stalkjs } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
-import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
 export class BackendFactory {
     static getInstance() {
@@ -101,10 +100,6 @@ export class BackendFactory {
         }
         delete BackendFactory.instance;
         return Promise.resolve();
-    }
-    createChatlogs() {
-        this.chatLogComp = new ChatsLogComponent();
-        return this.chatLogComp;
     }
     getServerListener() {
         if (!this.serverEventsListener) {

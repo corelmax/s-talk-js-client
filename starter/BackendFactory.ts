@@ -6,7 +6,6 @@
 import { stalkjs, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
-import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
 
 export interface IStalkConfig {
@@ -54,7 +53,6 @@ export class BackendFactory {
     serverEventsListener: ServerEventListener;
     pushDataListener: PushDataListener;
     dataListener: DataListener;
-    chatLogComp: ChatsLogComponent;
 
     constructor(config: IStalkConfig, apiConfig: IApiConfig) {
         this.config = config;
@@ -127,12 +125,6 @@ export class BackendFactory {
         delete BackendFactory.instance;
 
         return Promise.resolve();
-    }
-
-    createChatlogs() {
-        this.chatLogComp = new ChatsLogComponent();
-
-        return this.chatLogComp;
     }
 
     getServerListener() {
