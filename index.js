@@ -1,30 +1,34 @@
+"use strict";
 /**
  * Stalk-JavaScript, Node.js client. Supported react, react-native.
  * Support by @ Ahoo Studio.co.th
  */
-import { Stalk } from "./lib/browser/ServerImplement";
-import { StalkJS } from "./lib/browser/StalkJS";
-import { API } from "./lib/browser/API";
-import * as StalkEvents from "./lib/browser/StalkEvents";
-export { ServerParam } from "./lib/utils/PomeloUtils";
-export { HttpStatusCode } from "./lib/utils/index";
-export var stalkjs = StalkJS;
+Object.defineProperty(exports, "__esModule", { value: true });
+const ServerImplement_1 = require("./lib/browser/ServerImplement");
+const StalkJS_1 = require("./lib/browser/StalkJS");
+const API_1 = require("./lib/browser/API");
+const StalkEvents = require("./lib/browser/StalkEvents");
+var PomeloUtils_1 = require("./lib/utils/PomeloUtils");
+exports.ServerParam = PomeloUtils_1.ServerParam;
+var index_1 = require("./lib/utils/index");
+exports.HttpStatusCode = index_1.HttpStatusCode;
+exports.stalkjs = StalkJS_1.StalkJS;
 /**
  * Core server implementation.
  */
-export var ServerImp = Stalk.ServerImplemented;
+exports.ServerImp = ServerImplement_1.Stalk.ServerImplemented;
 /**
  * All events.
  */
-export var stalkEvents = StalkEvents.StalkEvents;
-export var PushEvents = StalkEvents.PushEvents;
-export var ChatEvents = StalkEvents.ChatEvents;
-export var CallingEvents = StalkEvents.CallingEvents;
+exports.stalkEvents = StalkEvents.StalkEvents;
+exports.PushEvents = StalkEvents.PushEvents;
+exports.ChatEvents = StalkEvents.ChatEvents;
+exports.CallingEvents = StalkEvents.CallingEvents;
 /**
  * APIs interface implementation.
  */
-export var CallingAPI = API.CallingAPI;
-export var ChatRoomAPI = API.ChatRoomAPI;
-export var GateAPI = API.GateAPI;
-export var LobbyAPI = API.LobbyAPI;
-export var PushAPI = API.PushAPI;
+exports.CallingAPI = API_1.API.CallingAPI;
+exports.ChatRoomAPI = API_1.API.ChatRoomAPI;
+exports.GateAPI = API_1.API.GateAPI;
+exports.LobbyAPI = API_1.API.LobbyAPI;
+exports.PushAPI = API_1.API.PushAPI;

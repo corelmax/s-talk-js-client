@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Copyright 2016-2018 Ahoo Studio.co.th.
  * Maintained by nattapon.r@live.com
@@ -10,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { stalkjs } from "../index";
-import { DataListener } from "./DataListener";
-import { PushDataListener } from "./PushDataListener";
-import { ServerEventListener } from "./ServerEventListener";
-export class BackendFactory {
+Object.defineProperty(exports, "__esModule", { value: true });
+const index_1 = require("../index");
+const DataListener_1 = require("./DataListener");
+const PushDataListener_1 = require("./PushDataListener");
+const ServerEventListener_1 = require("./ServerEventListener");
+class BackendFactory {
     static getInstance() {
         return BackendFactory.instance;
     }
@@ -30,8 +32,8 @@ export class BackendFactory {
     constructor(config, apiConfig) {
         this.config = config;
         this.apiConfig = apiConfig;
-        this.pushDataListener = new PushDataListener();
-        this.dataListener = new DataListener();
+        this.pushDataListener = new PushDataListener_1.PushDataListener();
+        this.dataListener = new DataListener_1.DataListener();
     }
     getServer() {
         if (this.stalk._isConnected) {
@@ -44,8 +46,8 @@ export class BackendFactory {
     }
     stalkInit() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.stalk = stalkjs.create(this.config.chat, this.config.port);
-            let socket = yield stalkjs.init(this.stalk);
+            this.stalk = index_1.stalkjs.create(this.config.chat, this.config.port);
+            let socket = yield index_1.stalkjs.init(this.stalk);
             return socket;
         });
     }
@@ -58,9 +60,9 @@ export class BackendFactory {
                 msg["x-api-key"] = this.config.apiKey;
                 msg["x-api-version"] = this.config.apiVersion;
                 msg["x-app-id"] = this.config.appId;
-                let connector = yield stalkjs.geteEnter(this.stalk, msg);
+                let connector = yield index_1.stalkjs.geteEnter(this.stalk, msg);
                 let params = { host: connector.host, port: connector.port, reconnect: false };
-                yield stalkjs.handshake(this.stalk, params);
+                yield index_1.stalkjs.handshake(this.stalk, params);
                 return yield connector;
             }
             catch (ex) {
@@ -75,13 +77,13 @@ export class BackendFactory {
             msg["x-api-key"] = this.config.apiKey;
             msg["x-api-version"] = this.config.apiVersion;
             msg["x-app-id"] = this.config.appId;
-            let result = yield stalkjs.checkIn(this.stalk, msg);
+            let result = yield index_1.stalkjs.checkIn(this.stalk, msg);
             return result;
         });
     }
     checkOut() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield stalkjs.checkOut(this.stalk);
+            yield index_1.stalkjs.checkOut(this.stalk);
         });
     }
     /**
@@ -103,7 +105,7 @@ export class BackendFactory {
     }
     getServerListener() {
         if (!this.serverEventsListener) {
-            this.serverEventsListener = new ServerEventListener(this.stalk.getSocket());
+            this.serverEventsListener = new ServerEventListener_1.ServerEventListener(this.stalk.getSocket());
         }
         return this.serverEventsListener;
     }
@@ -113,3 +115,4 @@ export class BackendFactory {
         this.serverEventsListener.addPushListener(this.pushDataListener);
     }
 }
+exports.BackendFactory = BackendFactory;

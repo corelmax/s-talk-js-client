@@ -1,4 +1,6 @@
-export class DataListener {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class DataListener {
     constructor() {
         //#region IServerListener.
         this.onRoomAccessEventListeners = new Array();
@@ -93,3 +95,4 @@ export class DataListener {
     }
     ;
 }
+exports.DataListener = DataListener;

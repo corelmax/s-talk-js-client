@@ -1,4 +1,6 @@
-export class PushDataListener {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class PushDataListener {
     constructor() {
         this.onPushEvents = new Array();
     }
@@ -13,3 +15,4 @@ export class PushDataListener {
         this.onPushEvents.forEach(fx => fx(dataEvent));
     }
 }
+exports.PushDataListener = PushDataListener;
