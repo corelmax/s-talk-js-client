@@ -8,6 +8,17 @@ export interface ICallPayload {
 export type ICallingListener = (data: ICallPayload) => void;
 
 export class CallingDataListener implements CallingEvents.ICallingListener {
+    private static instance: CallingDataListener;
+    public createInstance() {
+        if (!CallingDataListener.instance) {
+            CallingDataListener.instance = new CallingDataListener();
+        }
+
+        return CallingDataListener.instance;
+    }
+    public getInstance() {
+        return CallingDataListener.instance;
+    }
 
     private onCallListeners: ICallingListener[] = new Array();
     public addOnCallListener(fx: ICallingListener) {

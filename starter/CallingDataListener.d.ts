@@ -6,6 +6,9 @@ export interface ICallPayload {
 }
 export declare type ICallingListener = (data: ICallPayload) => void;
 export declare class CallingDataListener implements CallingEvents.ICallingListener {
+    private static instance;
+    createInstance(): CallingDataListener;
+    getInstance(): CallingDataListener;
     private onCallListeners;
     addOnCallListener(fx: ICallingListener): void;
     removeOnCallListener(fx: ICallingListener): void;
