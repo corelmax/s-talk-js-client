@@ -5,15 +5,15 @@ export interface ICallPayload {
     members: string[];
     payload: any;
 }
-export type IListener = (data: ICallPayload) => void;
+export type ICallingListener = (data: ICallPayload) => void;
 
 export class CallingDataListener implements CallingEvents.ICallingListener {
 
-    private onCallListeners: IListener[] = new Array();
-    public addOnCallListener(fx: IListener) {
+    private onCallListeners: ICallingListener[] = new Array();
+    public addOnCallListener(fx: ICallingListener) {
         this.onCallListeners.push(fx);
     }
-    public removeOnCallListener(fx: IListener) {
+    public removeOnCallListener(fx: ICallingListener) {
         const id = this.onCallListeners.indexOf(fx);
         this.onCallListeners.splice(id, 1);
     }

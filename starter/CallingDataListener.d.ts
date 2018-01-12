@@ -4,10 +4,10 @@ export interface ICallPayload {
     members: string[];
     payload: any;
 }
-export declare type IListener = (data: ICallPayload) => void;
+export declare type ICallingListener = (data: ICallPayload) => void;
 export declare class CallingDataListener implements CallingEvents.ICallingListener {
     private onCallListeners;
-    addOnCallListener(fx: IListener): void;
-    removeOnCallListener(fx: IListener): void;
+    addOnCallListener(fx: ICallingListener): void;
+    removeOnCallListener(fx: ICallingListener): void;
     onCall(dataEvent: ICallPayload): void;
 }
