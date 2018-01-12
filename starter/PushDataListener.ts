@@ -1,6 +1,5 @@
 import { PushEvents } from "../index";
 
-
 export type Push = {
     event: string;
     message: any;
