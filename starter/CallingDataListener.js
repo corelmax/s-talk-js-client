@@ -4,13 +4,13 @@ class CallingDataListener {
     constructor() {
         this.onCallListeners = new Array();
     }
-    createInstance() {
+    static createInstance() {
         if (!CallingDataListener.instance) {
             CallingDataListener.instance = new CallingDataListener();
         }
         return CallingDataListener.instance;
     }
-    getInstance() {
+    static getInstance() {
         return CallingDataListener.instance;
     }
     addOnCallListener(fx) {
