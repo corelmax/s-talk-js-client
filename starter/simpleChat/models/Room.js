@@ -19,5 +19,9 @@ export var RoomStatus;
     RoomStatus[RoomStatus["delete"] = 2] = "delete";
 })(RoomStatus || (RoomStatus = {}));
 ;
-export class Room {
-}
+var Room = /** @class */ (function () {
+    function Room() {
+    }
+    return Room;
+}());
+export { Room };

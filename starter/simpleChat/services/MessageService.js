@@ -5,17 +5,17 @@
 import { BackendFactory } from "../../BackendFactory";
 import { apiHeaders } from "./ServiceUtils";
 import InternalStore from "../InternalStore";
-const getConfig = () => BackendFactory.getInstance().getApiConfig();
-const authReducer = () => InternalStore.authStore;
+var getConfig = function () { return BackendFactory.getInstance().getApiConfig(); };
+var authReducer = function () { return InternalStore.authStore; };
 export function updateMessageReader(message_id, room_id) {
-    return fetch(`${getConfig().message}/updateReader`, {
+    return fetch(getConfig().message + "/updateReader", {
         method: "POST",
         headers: apiHeaders(),
         body: JSON.stringify({ room_id: room_id, message_id: message_id })
     });
 }
 export function updateMessagesReader(messages_id, room_id) {
-    return fetch(`${getConfig().message}/updateMessagesReader`, {
+    return fetch(getConfig().message + "/updateMessagesReader", {
         method: "POST",
         headers: apiHeaders(),
         body: JSON.stringify({ room_id: room_id, messages: messages_id })

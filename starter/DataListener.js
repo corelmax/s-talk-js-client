@@ -1,29 +1,30 @@
-export class DataListener {
-    constructor() {
+var DataListener = /** @class */ (function () {
+    function DataListener() {
         //#region IServerListener.
+        var _this = this;
         this.onRoomAccessEventListeners = new Array();
-        this.addOnRoomAccessListener = (listener) => {
-            this.onRoomAccessEventListeners.push(listener);
+        this.addOnRoomAccessListener = function (listener) {
+            _this.onRoomAccessEventListeners.push(listener);
         };
-        this.removeOnRoomAccessListener = (listener) => {
-            let id = this.onRoomAccessEventListeners.indexOf(listener);
-            this.onRoomAccessEventListeners.splice(id, 1);
+        this.removeOnRoomAccessListener = function (listener) {
+            var id = _this.onRoomAccessEventListeners.indexOf(listener);
+            _this.onRoomAccessEventListeners.splice(id, 1);
         };
         this.onAddRoomAccessEventListeners = new Array();
-        this.addOnAddRoomAccessListener = (listener) => {
-            this.onAddRoomAccessEventListeners.push(listener);
+        this.addOnAddRoomAccessListener = function (listener) {
+            _this.onAddRoomAccessEventListeners.push(listener);
         };
-        this.removeOnAddRoomAccessListener = (listener) => {
-            let id = this.onAddRoomAccessEventListeners.indexOf(listener);
-            this.onAddRoomAccessEventListeners.splice(id, 1);
+        this.removeOnAddRoomAccessListener = function (listener) {
+            var id = _this.onAddRoomAccessEventListeners.indexOf(listener);
+            _this.onAddRoomAccessEventListeners.splice(id, 1);
         };
         this.onUpdateRoomAccessEventListeners = new Array();
-        this.addOnUpdateRoomAccessListener = (listener) => {
-            this.onUpdateRoomAccessEventListeners.push(listener);
+        this.addOnUpdateRoomAccessListener = function (listener) {
+            _this.onUpdateRoomAccessEventListeners.push(listener);
         };
-        this.removeOnUpdateRoomAccessListener = (listener) => {
-            let id = this.onUpdateRoomAccessEventListeners.indexOf(listener);
-            this.onUpdateRoomAccessEventListeners.splice(id, 1);
+        this.removeOnUpdateRoomAccessListener = function (listener) {
+            var id = _this.onUpdateRoomAccessEventListeners.indexOf(listener);
+            _this.onUpdateRoomAccessEventListeners.splice(id, 1);
         };
         //#endregion
         // #region ChatListener...
@@ -38,58 +39,60 @@ export class DataListener {
         // };
         //#endregion
     }
-    onUserLogin(dataEvent) {
+    DataListener.prototype.onUserLogin = function (dataEvent) {
         console.log("user loged In", JSON.stringify(dataEvent));
-    }
-    onUserLogout(dataEvent) {
+    };
+    DataListener.prototype.onUserLogout = function (dataEvent) {
         console.log("user loged Out", JSON.stringify(dataEvent));
-    }
-    onAccessRoom(dataEvent) {
+    };
+    DataListener.prototype.onAccessRoom = function (dataEvent) {
         if (Array.isArray(dataEvent) && dataEvent.length > 0) {
-            let data = dataEvent[0];
+            var data_1 = dataEvent[0];
             // this.dataManager.setRoomAccessForUser(data);
-            this.onRoomAccessEventListeners.map(listener => {
-                listener(data);
+            this.onRoomAccessEventListeners.map(function (listener) {
+                listener(data_1);
             });
         }
-    }
-    onAddRoomAccess(dataEvent) {
-        let datas = JSON.parse(JSON.stringify(dataEvent));
+    };
+    DataListener.prototype.onAddRoomAccess = function (dataEvent) {
+        var datas = JSON.parse(JSON.stringify(dataEvent));
         if (!!datas[0].roomAccess && datas[0].roomAccess.length !== 0) {
             // this.dataManager.setRoomAccessForUser(dataEvent);
         }
-        this.onAddRoomAccessEventListeners.map(value => value(dataEvent));
-    }
-    onUpdatedLastAccessTime(dataEvent) {
+        this.onAddRoomAccessEventListeners.map(function (value) { return value(dataEvent); });
+    };
+    DataListener.prototype.onUpdatedLastAccessTime = function (dataEvent) {
         // this.dataManager.updateRoomAccessForUser(dataEvent);
-        this.onUpdateRoomAccessEventListeners.map(item => item(dataEvent));
-    }
-    addOnChatListener(listener) {
+        this.onUpdateRoomAccessEventListeners.map(function (item) { return item(dataEvent); });
+    };
+    DataListener.prototype.addOnChatListener = function (listener) {
         this.onChatEventListeners.push(listener);
-    }
-    removeOnChatListener(listener) {
-        let id = this.onChatEventListeners.indexOf(listener);
+    };
+    DataListener.prototype.removeOnChatListener = function (listener) {
+        var id = this.onChatEventListeners.indexOf(listener);
         this.onChatEventListeners.splice(id, 1);
-    }
-    onChat(data) {
-        let chatMessageImp = data;
-        this.onChatEventListeners.map((value, id, arr) => {
+    };
+    DataListener.prototype.onChat = function (data) {
+        var chatMessageImp = data;
+        this.onChatEventListeners.map(function (value, id, arr) {
             value(chatMessageImp);
         });
-    }
+    };
     ;
-    addOnLeaveRoomListener(listener) {
+    DataListener.prototype.addOnLeaveRoomListener = function (listener) {
         this.onLeaveRoomListeners.push(listener);
-    }
-    removeOnLeaveRoomListener(listener) {
-        let id = this.onLeaveRoomListeners.indexOf(listener);
+    };
+    DataListener.prototype.removeOnLeaveRoomListener = function (listener) {
+        var id = this.onLeaveRoomListeners.indexOf(listener);
         this.onLeaveRoomListeners.splice(id, 1);
-    }
-    onLeaveRoom(data) {
-        this.onLeaveRoomListeners.map(value => value(data));
-    }
+    };
+    DataListener.prototype.onLeaveRoom = function (data) {
+        this.onLeaveRoomListeners.map(function (value) { return value(data); });
+    };
     ;
-    onRoomJoin(data) {
-    }
+    DataListener.prototype.onRoomJoin = function (data) {
+    };
     ;
-}
+    return DataListener;
+}());
+export { DataListener };

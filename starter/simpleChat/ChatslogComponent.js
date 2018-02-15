@@ -6,6 +6,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 /**
  * Copyright 2016 Ahoo Studio.co.th.
  *
@@ -20,117 +47,130 @@ import * as CryptoHelper from "./utils/CryptoHelper";
 import InternalStore from "./InternalStore";
 import * as chatroomService from "./services/ChatroomService";
 // import * as chatlogActionsHelper from "./redux/chatlogs/chatlogActionsHelper";
-const avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
-export class Unread {
-}
+var avatar = require("./assets/ic_account_circle_black_48dp/web/ic_account_circle_black_48dp_2x.png");
+var Unread = /** @class */ (function () {
+    function Unread() {
+    }
+    return Unread;
+}());
+export { Unread };
 export function getUnreadMessage(user_id, roomAccess) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let response = yield chatroomService.getUnreadMessage(roomAccess.roomId, user_id, roomAccess.accessTime.toString());
-        let value = yield response.json();
-        if (value.success) {
-            let unread = value.result;
-            unread.rid = roomAccess.roomId;
-            let decoded = yield CryptoHelper.decryptionText(unread.message);
-            return unread;
-        }
-        else {
-            throw new Error(value.message);
-        }
+    return __awaiter(this, void 0, void 0, function () {
+        var response, value, unread, decoded;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, chatroomService.getUnreadMessage(roomAccess.roomId, user_id, roomAccess.accessTime.toString())];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    value = _a.sent();
+                    if (!value.success) return [3 /*break*/, 4];
+                    unread = value.result;
+                    unread.rid = roomAccess.roomId;
+                    return [4 /*yield*/, CryptoHelper.decryptionText(unread.message)];
+                case 3:
+                    decoded = _a.sent();
+                    return [2 /*return*/, unread];
+                case 4: throw new Error(value.message);
+            }
+        });
     });
 }
-export class ChatsLogComponent {
-    constructor() {
+var ChatsLogComponent = /** @class */ (function () {
+    function ChatsLogComponent() {
         this.chatlog_count = 0;
         this.chatslog = new Map();
         this.unreadMessageMap = new Map();
         this.chatListeners = new Array();
         console.log("Create ChatsLogComponent");
         this._isReady = false;
-        let backendFactory = BackendFactory.getInstance();
+        var backendFactory = BackendFactory.getInstance();
         this.dataListener = backendFactory.dataListener;
         this.dataListener.addOnRoomAccessListener(this.onAccessRoom.bind(this));
         this.dataListener.addOnChatListener(this.onChat.bind(this));
         this.dataListener.addOnAddRoomAccessListener(this.onAddRoomAccess.bind(this));
         this.dataListener.addOnUpdateRoomAccessListener(this.onUpdatedLastAccessTime.bind(this));
     }
-    getChatsLog() {
+    ChatsLogComponent.prototype.getChatsLog = function () {
         return Array.from(this.chatslog.values());
-    }
-    getUnreadMessageMap() {
+    };
+    ChatsLogComponent.prototype.getUnreadMessageMap = function () {
         return this.unreadMessageMap;
-    }
-    setUnreadMessageMap(unreads) {
-        unreads.map(v => {
-            this.unreadMessageMap.set(v.rid, v);
+    };
+    ChatsLogComponent.prototype.setUnreadMessageMap = function (unreads) {
+        var _this = this;
+        unreads.map(function (v) {
+            _this.unreadMessageMap.set(v.rid, v);
         });
-    }
-    addUnreadMessage(unread) {
+    };
+    ChatsLogComponent.prototype.addUnreadMessage = function (unread) {
         this.unreadMessageMap.set(unread.rid, unread);
-    }
-    getUnreadItem(room_id) {
+    };
+    ChatsLogComponent.prototype.getUnreadItem = function (room_id) {
         return this.unreadMessageMap.get(room_id);
-    }
-    onUpdatedLastAccessTime(data) {
+    };
+    ChatsLogComponent.prototype.onUpdatedLastAccessTime = function (data) {
         if (!!this.updatedLastAccessTimeEvent) {
             this.updatedLastAccessTimeEvent(data);
         }
-    }
-    addOnChatListener(listener) {
+    };
+    ChatsLogComponent.prototype.addOnChatListener = function (listener) {
         this.chatListeners.push(listener);
-    }
-    onChat(message) {
+    };
+    ChatsLogComponent.prototype.onChat = function (message) {
         console.log("ChatsLogComponent.onChat", message);
-        let self = this;
-        CryptoHelper.decryptionText(message).then((decoded) => {
+        var self = this;
+        CryptoHelper.decryptionText(message).then(function (decoded) {
             // Provide chatslog service.
-            self.chatListeners.map((v, i, a) => {
+            self.chatListeners.map(function (v, i, a) {
                 v(decoded);
             });
         });
-    }
-    onAccessRoom(dataEvent) {
-        let self = this;
+    };
+    ChatsLogComponent.prototype.onAccessRoom = function (dataEvent) {
+        var self = this;
         this.unreadMessageMap.clear();
         this.chatslog.clear();
-        let roomAccess = dataEvent.roomAccess;
-        let results = new Array();
-        const done = () => {
+        var roomAccess = dataEvent.roomAccess;
+        var results = new Array();
+        var done = function () {
             self._isReady = true;
             if (!!self.onReady) {
                 self.onReady(results);
             }
         };
-        async.each(roomAccess, (item, resultCallback) => {
+        async.each(roomAccess, function (item, resultCallback) {
             self.getRoomInfo(item.roomId)
-                .then(room => {
+                .then(function (room) {
                 results.push(room);
                 resultCallback();
-            }).catch(err => {
+            }).catch(function (err) {
                 if (err)
                     console.warn("getRoomInfo", err);
                 resultCallback();
             });
-        }, (err) => {
+        }, function (err) {
             console.log("onAccessRoom.finished!", err);
             done();
         });
-    }
-    onAddRoomAccess(dataEvent) {
+    };
+    ChatsLogComponent.prototype.onAddRoomAccess = function (dataEvent) {
         console.warn("ChatsLogComponent.onAddRoomAccess", JSON.stringify(dataEvent));
         if (!!this.addNewRoomAccessEvent) {
             this.addNewRoomAccessEvent(dataEvent);
         }
-    }
-    getUnreadMessages(user_id, roomAccess, callback) {
-        let self = this;
-        let unreadLogs = new Array();
+    };
+    ChatsLogComponent.prototype.getUnreadMessages = function (user_id, roomAccess, callback) {
+        var self = this;
+        var unreadLogs = new Array();
         // create a queue object with concurrency 2
-        let q = async.queue(function (task, callback) {
+        var q = async.queue(function (task, callback) {
             if (!!task.roomId && !!task.accessTime) {
-                self.getUnreadMessage(user_id, task).then(value => {
+                self.getUnreadMessage(user_id, task).then(function (value) {
                     unreadLogs.push(value);
                     callback();
-                }).catch(err => {
+                }).catch(function (err) {
                     if (err) {
                         console.warn("getUnreadMessage", err);
                     }
@@ -156,63 +196,85 @@ export class ChatsLogComponent {
         else {
             callback(undefined, undefined);
         }
-    }
-    getUnreadMessage(user_id, roomAccess) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response = yield chatroomService.getUnreadMessage(roomAccess.roomId, user_id, roomAccess.accessTime.toString());
-            let value = yield response.json();
-            console.log("getUnreadMessage result: ", value);
-            if (value.success) {
-                let unread = value.result;
-                unread.rid = roomAccess.roomId;
-                let decoded = yield CryptoHelper.decryptionText(unread.message);
-                return unread;
-            }
-            else {
-                throw new Error(value.message);
-            }
+    };
+    ChatsLogComponent.prototype.getUnreadMessage = function (user_id, roomAccess) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response, value, unread, decoded;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, chatroomService.getUnreadMessage(roomAccess.roomId, user_id, roomAccess.accessTime.toString())];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        value = _a.sent();
+                        console.log("getUnreadMessage result: ", value);
+                        if (!value.success) return [3 /*break*/, 4];
+                        unread = value.result;
+                        unread.rid = roomAccess.roomId;
+                        return [4 /*yield*/, CryptoHelper.decryptionText(unread.message)];
+                    case 3:
+                        decoded = _a.sent();
+                        return [2 /*return*/, unread];
+                    case 4: throw new Error(value.message);
+                }
+            });
         });
-    }
-    decorateRoomInfoData(roomInfo) {
-        return __awaiter(this, void 0, void 0, function* () {
-            if (roomInfo.type === RoomType.privateChat) {
-                if (Array.isArray(roomInfo.members)) {
-                    let others = roomInfo.members.filter((value) => value._id !== InternalStore.authStore.user._id);
-                    if (others.length > 0) {
-                        let contact = others[0];
-                        roomInfo.owner = (contact.username) ? contact.username : "EMPTY ROOM";
-                        roomInfo.image = (contact.avatar) ? contact.avatar : avatar;
+    };
+    ChatsLogComponent.prototype.decorateRoomInfoData = function (roomInfo) {
+        return __awaiter(this, void 0, void 0, function () {
+            var others, contact;
+            return __generator(this, function (_a) {
+                if (roomInfo.type === RoomType.privateChat) {
+                    if (Array.isArray(roomInfo.members)) {
+                        others = roomInfo.members.filter(function (value) {
+                            return value._id !== InternalStore.authStore.user._id;
+                        });
+                        if (others.length > 0) {
+                            contact = others[0];
+                            roomInfo.owner = (contact.username) ? contact.username : "EMPTY ROOM";
+                            roomInfo.image = (contact.avatar) ? contact.avatar : avatar;
+                        }
                     }
                 }
-            }
-            return roomInfo;
+                return [2 /*return*/, roomInfo];
+            });
         });
-    }
-    getRoomInfo(room_id) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let self = this;
-            let response = yield chatroomService.getRoomInfo(room_id);
-            let json = yield response.json();
-            if (json.success) {
-                let roomInfos = json.result;
-                let room = yield self.decorateRoomInfoData(roomInfos[0]);
-                return Promise.resolve(room);
-            }
-            else {
-                return Promise.reject(undefined);
-            }
+    };
+    ChatsLogComponent.prototype.getRoomInfo = function (room_id) {
+        return __awaiter(this, void 0, void 0, function () {
+            var self, response, json, roomInfos, room;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        self = this;
+                        return [4 /*yield*/, chatroomService.getRoomInfo(room_id)];
+                    case 1:
+                        response = _a.sent();
+                        return [4 /*yield*/, response.json()];
+                    case 2:
+                        json = _a.sent();
+                        if (!json.success) return [3 /*break*/, 4];
+                        roomInfos = json.result;
+                        return [4 /*yield*/, self.decorateRoomInfoData(roomInfos[0])];
+                    case 3:
+                        room = _a.sent();
+                        return [2 /*return*/, Promise.resolve(room)];
+                    case 4: return [2 /*return*/, Promise.reject(undefined)];
+                }
+            });
         });
-    }
-    getRoomsInfo(user_id, chatrooms) {
-        let self = this;
+    };
+    ChatsLogComponent.prototype.getRoomsInfo = function (user_id, chatrooms) {
+        var self = this;
         // create a queue object with concurrency 2
-        let q = async.queue(function (task, callback) {
-            let value = task;
-            let rooms = chatrooms.filter(v => v._id === value.rid);
-            let roomInfo = (rooms.length > 0) ? rooms[0] : undefined;
+        var q = async.queue(function (task, callback) {
+            var value = task;
+            var rooms = chatrooms.filter(function (v) { return v._id === value.rid; });
+            var roomInfo = (rooms.length > 0) ? rooms[0] : undefined;
             if (!!roomInfo) {
-                self.decorateRoomInfoData(roomInfo).then(room => {
-                    chatrooms.forEach(v => {
+                self.decorateRoomInfoData(roomInfo).then(function (room) {
+                    chatrooms.forEach(function (v) {
                         if (v._id === room._id) {
                             v = room;
                         }
@@ -220,14 +282,14 @@ export class ChatsLogComponent {
                     self.organizeChatLogMap(value, room, function done() {
                         callback();
                     });
-                }).catch(err => {
+                }).catch(function (err) {
                     callback();
                 });
             }
             else {
                 console.log("Can't find roomInfo from persisted data: ", value.rid);
-                self.getRoomInfo(value.rid).then(room => {
-                    chatrooms.forEach(v => {
+                self.getRoomInfo(value.rid).then(function (room) {
+                    chatrooms.forEach(function (v) {
                         if (v._id === room._id) {
                             v = room;
                         }
@@ -235,7 +297,7 @@ export class ChatsLogComponent {
                     self.organizeChatLogMap(value, room, function done() {
                         callback();
                     });
-                }).catch(err => {
+                }).catch(function (err) {
                     console.warn(err);
                     callback();
                 });
@@ -248,23 +310,24 @@ export class ChatsLogComponent {
                 self.getRoomsInfoCompleteEvent();
             }
         };
-        this.unreadMessageMap.forEach((value, key, map) => {
+        this.unreadMessageMap.forEach(function (value, key, map) {
             // add some items to the queue
             q.push(value, function (err) { });
         });
-    }
-    manageChatLog(chatrooms) {
-        let self = this;
-        return new Promise((resolve, rejected) => {
+    };
+    ChatsLogComponent.prototype.manageChatLog = function (chatrooms) {
+        var _this = this;
+        var self = this;
+        return new Promise(function (resolve, rejected) {
             // create a queue object with concurrency 2
-            let q = async.queue(function (task, callback) {
-                let unread = task;
-                let rooms = chatrooms.filter(v => v._id === unread.rid);
-                let room = (rooms.length > 0) ? rooms[0] : undefined;
+            var q = async.queue(function (task, callback) {
+                var unread = task;
+                var rooms = chatrooms.filter(function (v) { return v._id === unread.rid; });
+                var room = (rooms.length > 0) ? rooms[0] : undefined;
                 if (!room) {
                     callback();
                 }
-                self.organizeChatLogMap(unread, room, () => {
+                self.organizeChatLogMap(unread, room, function () {
                     callback();
                 });
             }, 2);
@@ -272,145 +335,170 @@ export class ChatsLogComponent {
             q.drain = function () {
                 resolve(self.chatslog);
             };
-            this.unreadMessageMap.forEach((value, key, map) => {
+            _this.unreadMessageMap.forEach(function (value, key, map) {
                 // add some items to the queue
                 q.push(value, function (err) { });
             });
         });
-    }
-    organizeChatLogMap(unread, roomInfo, done) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let self = this;
-            let log = new ChatLog(roomInfo);
-            log.setNotiCount(unread.count);
-            if (!!unread.message) {
-                log.setLastMessageTime(unread.message.createTime.toString());
-                let contact = null;
-                try {
-                    contact = yield chatlogActionsHelper.getContactProfile(unread.message.sender);
+    };
+    ChatsLogComponent.prototype.organizeChatLogMap = function (unread, roomInfo, done) {
+        return __awaiter(this, void 0, void 0, function () {
+            var self, log, contact, err_1, sender, displayMsg, displayMsg;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        self = this;
+                        log = new ChatLog(roomInfo);
+                        log.setNotiCount(unread.count);
+                        if (!!!unread.message) return [3 /*break*/, 5];
+                        log.setLastMessageTime(unread.message.createTime.toString());
+                        contact = null;
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, chatlogActionsHelper.getContactProfile(unread.message.sender)];
+                    case 2:
+                        contact = _a.sent();
+                        return [3 /*break*/, 4];
+                    case 3:
+                        err_1 = _a.sent();
+                        if (err_1) {
+                            console.warn("get sender contact fail", err_1.message);
+                        }
+                        return [3 /*break*/, 4];
+                    case 4:
+                        sender = (!!contact) ? contact.username : "";
+                        if (unread.message.body !== null) {
+                            displayMsg = unread.message.body;
+                            switch ("" + unread.message.type) {
+                                case MessageType[MessageType.Text]:
+                                    /*
+                                        self.main.decodeService(displayMsg, function (err, res) {
+                                            if (!err) {
+                                                displayMsg = res;
+                                            } else { console.warn(err, res); }
+                                        });
+                                    */
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.Sticker]:
+                                    displayMsg = sender + " sent a sticker.";
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.Voice]:
+                                    displayMsg = sender + " sent a voice message.";
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.Image]:
+                                    displayMsg = sender + " sent a image.";
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.Video]:
+                                    displayMsg = sender + " sent a video.";
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.Location]:
+                                    displayMsg = sender + " sent a location.";
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                case MessageType[MessageType.File]:
+                                    self.setLogProp(log, displayMsg, function (log) {
+                                        self.addChatLog(log, done);
+                                    });
+                                    break;
+                                default:
+                                    console.log("bobo");
+                                    break;
+                            }
+                        }
+                        return [3 /*break*/, 6];
+                    case 5:
+                        displayMsg = "Start Chatting Now!";
+                        self.setLogProp(log, displayMsg, function (log) {
+                            self.addChatLog(log, done);
+                        });
+                        _a.label = 6;
+                    case 6: return [2 /*return*/];
                 }
-                catch (err) {
-                    if (err) {
-                        console.warn("get sender contact fail", err.message);
-                    }
-                }
-                let sender = (!!contact) ? contact.username : "";
-                if (unread.message.body !== null) {
-                    let displayMsg = unread.message.body;
-                    switch (`${unread.message.type}`) {
-                        case MessageType[MessageType.Text]:
-                            /*
-                                self.main.decodeService(displayMsg, function (err, res) {
-                                    if (!err) {
-                                        displayMsg = res;
-                                    } else { console.warn(err, res); }
-                                });
-                            */
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.Sticker]:
-                            displayMsg = sender + " sent a sticker.";
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.Voice]:
-                            displayMsg = sender + " sent a voice message.";
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.Image]:
-                            displayMsg = sender + " sent a image.";
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.Video]:
-                            displayMsg = sender + " sent a video.";
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.Location]:
-                            displayMsg = sender + " sent a location.";
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        case MessageType[MessageType.File]:
-                            self.setLogProp(log, displayMsg, function (log) {
-                                self.addChatLog(log, done);
-                            });
-                            break;
-                        default:
-                            console.log("bobo");
-                            break;
-                    }
-                }
-            }
-            else {
-                let displayMsg = "Start Chatting Now!";
-                self.setLogProp(log, displayMsg, function (log) {
-                    self.addChatLog(log, done);
-                });
-            }
+            });
         });
-    }
-    setLogProp(log, displayMessage, callback) {
+    };
+    ChatsLogComponent.prototype.setLogProp = function (log, displayMessage, callback) {
         log.setLastMessage(displayMessage);
         callback(log);
-    }
-    addChatLog(chatLog, done) {
+    };
+    ChatsLogComponent.prototype.addChatLog = function (chatLog, done) {
         this.chatslog.set(chatLog.id, chatLog);
         done();
-    }
-    checkRoomInfo(unread, chatrooms) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let self = this;
-            let rooms = (!!chatrooms && chatrooms.length > 0) ? chatrooms.filter(v => v._id === unread.rid) : [];
-            let roomInfo = rooms[0];
-            if (!roomInfo) {
-                console.warn("No have roomInfo in room store.", unread.rid);
-                let room = yield self.getRoomInfo(unread.rid);
-                let p = new Promise((resolve, rejected) => {
-                    if (!room) {
-                        rejected();
-                    }
-                    else {
-                        this.organizeChatLogMap(unread, room, () => {
-                            resolve(room);
+    };
+    ChatsLogComponent.prototype.checkRoomInfo = function (unread, chatrooms) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            var self, rooms, roomInfo, room_1, p, p;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        self = this;
+                        rooms = (!!chatrooms && chatrooms.length > 0) ? chatrooms.filter(function (v) { return v._id === unread.rid; }) : [];
+                        roomInfo = rooms[0];
+                        if (!!roomInfo) return [3 /*break*/, 2];
+                        console.warn("No have roomInfo in room store.", unread.rid);
+                        return [4 /*yield*/, self.getRoomInfo(unread.rid)];
+                    case 1:
+                        room_1 = _a.sent();
+                        p = new Promise(function (resolve, rejected) {
+                            if (!room_1) {
+                                rejected();
+                            }
+                            else {
+                                _this.organizeChatLogMap(unread, room_1, function () {
+                                    resolve(room_1);
+                                });
+                            }
                         });
-                    }
-                });
-                return p;
-            }
-            else {
-                console.log("organize chats log of room: ", roomInfo.owner);
-                let p = new Promise((resolve, rejected) => {
-                    this.organizeChatLogMap(unread, roomInfo, () => {
-                        resolve();
-                    });
-                });
-            }
+                        return [2 /*return*/, p];
+                    case 2:
+                        console.log("organize chats log of room: ", roomInfo.owner);
+                        p = new Promise(function (resolve, rejected) {
+                            _this.organizeChatLogMap(unread, roomInfo, function () {
+                                resolve();
+                            });
+                        });
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
         });
-    }
-    getChatsLogCount() {
+    };
+    ChatsLogComponent.prototype.getChatsLogCount = function () {
         return this.chatlog_count;
-    }
-    increaseChatsLogCount(num) {
+    };
+    ChatsLogComponent.prototype.increaseChatsLogCount = function (num) {
         this.chatlog_count += num;
-    }
-    decreaseChatsLogCount(num) {
+    };
+    ChatsLogComponent.prototype.decreaseChatsLogCount = function (num) {
         this.chatlog_count -= num;
-    }
-    calculateChatsLogCount() {
+    };
+    ChatsLogComponent.prototype.calculateChatsLogCount = function () {
+        var _this = this;
         this.chatlog_count = 0;
-        this.unreadMessageMap.forEach((value, key) => {
-            let count = value.count;
-            this.chatlog_count += count;
+        this.unreadMessageMap.forEach(function (value, key) {
+            var count = value.count;
+            _this.chatlog_count += count;
         });
-    }
-}
+    };
+    return ChatsLogComponent;
+}());
+export { ChatsLogComponent };

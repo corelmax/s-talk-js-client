@@ -10,31 +10,58 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [0, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 import { stalkjs } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
-export class BackendFactory {
-    static getInstance() {
-        return BackendFactory.instance;
-    }
-    static createInstance(stalkConfig, apiConfig) {
-        if (!BackendFactory.instance) {
-            BackendFactory.instance = new BackendFactory(stalkConfig, apiConfig);
-        }
-        return BackendFactory.instance;
-    }
-    getApiConfig() {
-        return this.apiConfig;
-    }
-    constructor(config, apiConfig) {
+var BackendFactory = /** @class */ (function () {
+    function BackendFactory(config, apiConfig) {
         this.config = config;
         this.apiConfig = apiConfig;
         this.pushDataListener = new PushDataListener();
         this.dataListener = new DataListener();
     }
-    getServer() {
+    BackendFactory.getInstance = function () {
+        return BackendFactory.instance;
+    };
+    BackendFactory.createInstance = function (stalkConfig, apiConfig) {
+        if (!BackendFactory.instance) {
+            BackendFactory.instance = new BackendFactory(stalkConfig, apiConfig);
+        }
+        return BackendFactory.instance;
+    };
+    BackendFactory.prototype.getApiConfig = function () {
+        return this.apiConfig;
+    };
+    BackendFactory.prototype.getServer = function () {
         if (this.stalk._isConnected) {
             return this.stalk;
         }
@@ -42,56 +69,89 @@ export class BackendFactory {
             console.log("Stalk connection not yet ready.");
             return null;
         }
-    }
-    stalkInit() {
-        return __awaiter(this, void 0, void 0, function* () {
-            this.stalk = stalkjs.create(this.config.chat, this.config.port);
-            let socket = yield stalkjs.init(this.stalk);
-            return socket;
+    };
+    BackendFactory.prototype.stalkInit = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var socket;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        this.stalk = stalkjs.create(this.config.chat, this.config.port);
+                        return [4 /*yield*/, stalkjs.init(this.stalk)];
+                    case 1:
+                        socket = _a.sent();
+                        return [2 /*return*/, socket];
+                }
+            });
         });
-    }
-    handshake(uid) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                // @ get connector server.
-                let msg = {};
-                msg["uid"] = uid;
-                msg["x-api-key"] = this.config.apiKey;
-                msg["x-api-version"] = this.config.apiVersion;
-                msg["x-app-id"] = this.config.appId;
-                let connector = yield stalkjs.geteEnter(this.stalk, msg);
-                let params = { host: connector.host, port: connector.port, reconnect: false };
-                yield stalkjs.handshake(this.stalk, params);
-                return yield connector;
-            }
-            catch (ex) {
-                throw new Error("handshake fail: " + ex.message);
-            }
+    };
+    BackendFactory.prototype.handshake = function (uid) {
+        return __awaiter(this, void 0, void 0, function () {
+            var msg, connector, params, ex_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 4, , 5]);
+                        msg = {};
+                        msg["uid"] = uid;
+                        msg["x-api-key"] = this.config.apiKey;
+                        msg["x-api-version"] = this.config.apiVersion;
+                        msg["x-app-id"] = this.config.appId;
+                        return [4 /*yield*/, stalkjs.geteEnter(this.stalk, msg)];
+                    case 1:
+                        connector = _a.sent();
+                        params = { host: connector.host, port: connector.port, reconnect: false };
+                        return [4 /*yield*/, stalkjs.handshake(this.stalk, params)];
+                    case 2:
+                        _a.sent();
+                        return [4 /*yield*/, connector];
+                    case 3: return [2 /*return*/, _a.sent()];
+                    case 4:
+                        ex_1 = _a.sent();
+                        throw new Error("handshake fail: " + ex_1.message);
+                    case 5: return [2 /*return*/];
+                }
+            });
         });
-    }
-    checkIn(user) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let msg = {};
-            msg["user"] = user;
-            msg["x-api-key"] = this.config.apiKey;
-            msg["x-api-version"] = this.config.apiVersion;
-            msg["x-app-id"] = this.config.appId;
-            let result = yield stalkjs.checkIn(this.stalk, msg);
-            return result;
+    };
+    BackendFactory.prototype.checkIn = function (user) {
+        return __awaiter(this, void 0, void 0, function () {
+            var msg, result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        msg = {};
+                        msg["user"] = user;
+                        msg["x-api-key"] = this.config.apiKey;
+                        msg["x-api-version"] = this.config.apiVersion;
+                        msg["x-app-id"] = this.config.appId;
+                        return [4 /*yield*/, stalkjs.checkIn(this.stalk, msg)];
+                    case 1:
+                        result = _a.sent();
+                        return [2 /*return*/, result];
+                }
+            });
         });
-    }
-    checkOut() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield stalkjs.checkOut(this.stalk);
+    };
+    BackendFactory.prototype.checkOut = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, stalkjs.checkOut(this.stalk)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
         });
-    }
+    };
     /**
      * @returns
      *
      * @memberof BackendFactory
      */
-    logout() {
-        let self = this;
+    BackendFactory.prototype.logout = function () {
+        var self = this;
         self.checkOut();
         if (!!self.pushDataListener) {
             delete self.pushDataListener;
@@ -101,20 +161,22 @@ export class BackendFactory {
         }
         delete BackendFactory.instance;
         return Promise.resolve();
-    }
-    createChatlogs() {
+    };
+    BackendFactory.prototype.createChatlogs = function () {
         this.chatLogComp = new ChatsLogComponent();
         return this.chatLogComp;
-    }
-    getServerListener() {
+    };
+    BackendFactory.prototype.getServerListener = function () {
         if (!this.serverEventsListener) {
             this.serverEventsListener = new ServerEventListener(this.stalk.getSocket());
         }
         return this.serverEventsListener;
-    }
-    subscriptions() {
+    };
+    BackendFactory.prototype.subscriptions = function () {
         this.serverEventsListener.addServerListener(this.dataListener);
         this.serverEventsListener.addChatListener(this.dataListener);
         this.serverEventsListener.addPushListener(this.pushDataListener);
-    }
-}
+    };
+    return BackendFactory;
+}());
+export { BackendFactory };
