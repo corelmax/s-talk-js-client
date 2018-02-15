@@ -122,28 +122,26 @@
     connect(params, url);
   };
 
-  pomelo.disconnect = function (): Promise<any> {
-    return new Promise((resolve, rejected) => {
-      if (!!socket) {
-        if (socket.close) {
-          socket.close();
-        }
-        socket = undefined;
-
-        console.log("disconnected socket is", socket);
+  pomelo.disconnect = function () {
+    if (!!socket) {
+      if (socket.close) {
+        socket.close();
       }
+      socket = undefined;
 
-      if (heartbeatId) {
-        clearTimeout(heartbeatId);
-        heartbeatId = null;
-      }
-      if (heartbeatTimeoutId) {
-        clearTimeout(heartbeatTimeoutId);
-        heartbeatTimeoutId = null;
-      }
+      console.log("disconnected socket is", socket);
+    }
 
-      resolve();
-    });
+    if (heartbeatId) {
+      clearTimeout(heartbeatId);
+      heartbeatId = null;
+    }
+    if (heartbeatTimeoutId) {
+      clearTimeout(heartbeatTimeoutId);
+      heartbeatTimeoutId = null;
+    }
+
+    return Promise.resolve();
   };
 
   pomelo.request = function (route, msg, cb) {
@@ -518,4 +516,3 @@
 
   module.exports = pomelo;
 })();
-
