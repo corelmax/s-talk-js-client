@@ -65,6 +65,12 @@ export namespace Stalk {
         constructor(host: string, port: number) {
             console.log("ServerImp", host, port);
 
+            this.socket = Object.create(null);
+            this.onSocketOpen = Object.create(null);
+            this.onSocketClose = Object.create(null);
+            this.onSocketReconnect = Object.create(null);
+            this.onDisconnected = Object.create(null);
+
             this.host = host;
             this.port = port;
             this.gateAPI = new API.GateAPI(this);

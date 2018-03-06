@@ -58,6 +58,8 @@ export class BackendFactory {
         this.config = config;
         this.apiConfig = apiConfig;
 
+        this.stalk = Object.create(null);
+        this.serverEventsListener = Object.create(null);
         this.pushDataListener = new PushDataListener();
         this.dataListener = new DataListener();
     }

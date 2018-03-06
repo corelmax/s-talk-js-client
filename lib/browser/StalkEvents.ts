@@ -6,6 +6,7 @@
  */
 
 export type DataEvent = (data: any) => void;
+export type BaseDataEvent = (eventName: string, data: any) => void;
 
 export namespace ChatEvents {
     export const ON_ADD = "onAdd";
@@ -40,7 +41,10 @@ export namespace StalkEvents {
         onAccessRoom: DataEvent;
         onUpdatedLastAccessTime: DataEvent;
         onAddRoomAccess: DataEvent;
+        onActiveUser: BaseDataEvent;
+        /** @deprecated */
         onUserLogin: DataEvent;
+        /** @deprecated */
         onUserLogout: DataEvent;
     }
 

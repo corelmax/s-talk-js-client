@@ -1,75 +1,76 @@
-"use strict";
 /**
  * Copyright 2016-2018 Ahoo Studio.co.th.
  *
  * Support by@ nattapon.r@live.com
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-const index_1 = require("../lib/browser/index");
-class ServerEventListener {
-    constructor(socket) {
+import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/browser/index";
+var ServerEventListener = /** @class */ (function () {
+    function ServerEventListener(socket) {
         this.socket = socket;
+        this.serverListener = Object.create(null);
+        this.chatServerListener = Object.create(null);
+        this.rtcCallListener = Object.create(null);
+        this.pushServerListener = Object.create(null);
     }
-    addServerListener(obj) {
+    ServerEventListener.prototype.addServerListener = function (obj) {
         this.serverListener = obj;
-        let self = this;
+        var self = this;
         // <!-- AccessRoom Info -->
-        self.socket.on(ServerEventListener.ON_ACCESS_ROOMS, (data) => {
+        self.socket.on(ServerEventListener.ON_ACCESS_ROOMS, function (data) {
             console.log(ServerEventListener.ON_ACCESS_ROOMS, data);
             self.serverListener.onAccessRoom(data);
         });
-        self.socket.on(ServerEventListener.ON_ADD_ROOM_ACCESS, (data) => {
+        self.socket.on(ServerEventListener.ON_ADD_ROOM_ACCESS, function (data) {
             console.log(ServerEventListener.ON_ADD_ROOM_ACCESS, data);
             self.serverListener.onAddRoomAccess(data);
         });
-        self.socket.on(ServerEventListener.ON_UPDATED_LASTACCESSTIME, (data) => {
+        self.socket.on(ServerEventListener.ON_UPDATED_LASTACCESSTIME, function (data) {
             console.log(ServerEventListener.ON_UPDATED_LASTACCESSTIME, data);
             self.serverListener.onUpdatedLastAccessTime(data);
         });
         // <!-- User -->
-        self.socket.on(index_1.StalkEvents.ON_USER_LOGIN, data => {
-            console.log(index_1.StalkEvents.ON_USER_LOGIN);
-            self.serverListener.onUserLogin(data);
+        self.socket.on(StalkEvents.ON_USER_LOGIN, function (data) {
+            self.serverListener.onActiveUser(StalkEvents.ON_USER_LOGIN, data);
         });
-        self.socket.on(index_1.StalkEvents.ON_USER_LOGOUT, data => {
-            console.log(index_1.StalkEvents.ON_USER_LOGOUT);
-            self.serverListener.onUserLogout(data);
+        self.socket.on(StalkEvents.ON_USER_LOGOUT, function (data) {
+            self.serverListener.onActiveUser(StalkEvents.ON_USER_LOGOUT, data);
         });
-    }
-    addChatListener(obj) {
+    };
+    ServerEventListener.prototype.addChatListener = function (obj) {
         this.chatServerListener = obj;
-        let self = this;
-        self.socket.on(index_1.ChatEvents.ON_CHAT, function (data) {
-            console.log(index_1.ChatEvents.ON_CHAT, JSON.stringify(data));
+        var self = this;
+        self.socket.on(ChatEvents.ON_CHAT, function (data) {
+            console.log(ChatEvents.ON_CHAT, JSON.stringify(data));
             self.chatServerListener.onChat(data);
         });
-        self.socket.on(index_1.ChatEvents.ON_ADD, (data) => {
-            console.log(index_1.ChatEvents.ON_ADD, data);
+        self.socket.on(ChatEvents.ON_ADD, function (data) {
+            console.log(ChatEvents.ON_ADD, data);
             self.chatServerListener.onRoomJoin(data);
         });
-        self.socket.on(index_1.ChatEvents.ON_LEAVE, (data) => {
-            console.log(index_1.ChatEvents.ON_LEAVE, data);
+        self.socket.on(ChatEvents.ON_LEAVE, function (data) {
+            console.log(ChatEvents.ON_LEAVE, data);
             self.chatServerListener.onLeaveRoom(data);
         });
-    }
-    addRTCListener(obj) {
+    };
+    ServerEventListener.prototype.addRTCListener = function (obj) {
         this.rtcCallListener = obj;
-        let self = this;
-        self.socket.on(index_1.CallingEvents.ON_CALL, (data) => {
-            console.log(index_1.CallingEvents.ON_CALL, JSON.stringify(data));
+        var self = this;
+        self.socket.on(CallingEvents.ON_CALL, function (data) {
+            console.log(CallingEvents.ON_CALL, JSON.stringify(data));
             self.rtcCallListener.onCall(data);
         });
-    }
-    addPushListener(obj) {
+    };
+    ServerEventListener.prototype.addPushListener = function (obj) {
         this.pushServerListener = obj;
-        let self = this;
-        self.socket.on(index_1.PushEvents.ON_PUSH, function (data) {
+        var self = this;
+        self.socket.on(PushEvents.ON_PUSH, function (data) {
             self.pushServerListener.onPush(data);
         });
-    }
-}
-// <!-- AccessRoom Info -->
-ServerEventListener.ON_ACCESS_ROOMS = "onAccessRooms";
-ServerEventListener.ON_ADD_ROOM_ACCESS = "onAddRoomAccess";
-ServerEventListener.ON_UPDATED_LASTACCESSTIME = "onUpdatedLastAccessTime";
-exports.ServerEventListener = ServerEventListener;
+    };
+    // <!-- AccessRoom Info -->
+    ServerEventListener.ON_ACCESS_ROOMS = "onAccessRooms";
+    ServerEventListener.ON_ADD_ROOM_ACCESS = "onAddRoomAccess";
+    ServerEventListener.ON_UPDATED_LASTACCESSTIME = "onUpdatedLastAccessTime";
+    return ServerEventListener;
+}());
+export { ServerEventListener };

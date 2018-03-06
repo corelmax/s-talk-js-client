@@ -1,6 +1,11 @@
 import { ChatEvents, stalkEvents } from "../index";
 import { StalkAccount, RoomAccessData, IMessage } from "./models/index";
 export declare class DataListener implements stalkEvents.IServerListener, ChatEvents.IChatServerEvents {
+    constructor();
+    activeUserEvents: Array<(key: string, data: any) => void>;
+    addActiveUserEventListener(listener: (key: string, data: any) => void): void;
+    removeActiveUserEventListener(listener: (key: string, data: any) => void): void;
+    onActiveUser(eventName: string, data: any): void;
     onUserLogin(dataEvent: any): void;
     onUserLogout(dataEvent: any): void;
     private onRoomAccessEventListeners;

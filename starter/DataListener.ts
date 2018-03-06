@@ -5,14 +5,50 @@ export class DataListener implements
     stalkEvents.IServerListener,
     ChatEvents.IChatServerEvents {
 
+    constructor() {
+        this.activeUserEvents = Object.create(null);
+    }
+
     //#region IServerListener.
 
+    activeUserEvents: Array<(key: string, data: any) => void>;
+    addActiveUserEventListener(listener: (key: string, data: any) => void) {
+        if (this.activeUserEvents.indexOf(listener) < 0) {
+            this.activeUserEvents.push(listener);
+        }
+    }
+    removeActiveUserEventListener(listener: (key: string, data: any) => void) {
+        const index = this.activeUserEvents.indexOf(listener);
+        this.activeUserEvents.splice(index, 1);
+    }
+    onActiveUser(eventName: string, data: any) {
+        console.log(eventName, JSON.stringify(data));
+        if (this.activeUserEvents && this.activeUserEvents.length) {
+            this.activeUserEvents.map(listener => {
+                listener(eventName, data);
+            });
+        }
+    }
     onUserLogin(dataEvent: any) {
+        /*
         console.log("user loged In", JSON.stringify(dataEvent));
+        if (this.activeUserEvents && this.activeUserEvents.length) {
+            this.activeUserEvents.map(listener => {
+                listener(dataEvent);
+            });
+        }
+        */
     }
 
     onUserLogout(dataEvent: any) {
+        /*
         console.log("user loged Out", JSON.stringify(dataEvent));
+        if (this.activeUserEvents && this.activeUserEvents.length) {
+            this.activeUserEvents.map(listener => {
+                listener(dataEvent);
+            });
+        }
+        */
     }
 
     private onRoomAccessEventListeners = new Array<(data: StalkAccount) => void>();

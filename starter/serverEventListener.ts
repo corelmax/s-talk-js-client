@@ -17,6 +17,10 @@ export class ServerEventListener {
 
     constructor(socket: IPomelo) {
         this.socket = socket;
+        this.serverListener = Object.create(null);
+        this.chatServerListener = Object.create(null);
+        this.rtcCallListener = Object.create(null);
+        this.pushServerListener = Object.create(null);
     }
 
     /**
@@ -49,14 +53,10 @@ export class ServerEventListener {
 
         // <!-- User -->
         self.socket.on(StalkEvents.ON_USER_LOGIN, data => {
-            console.log(StalkEvents.ON_USER_LOGIN);
-
-            self.serverListener.onUserLogin(data);
+            self.serverListener.onActiveUser(StalkEvents.ON_USER_LOGIN, data);
         });
         self.socket.on(StalkEvents.ON_USER_LOGOUT, data => {
-            console.log(StalkEvents.ON_USER_LOGOUT);
-
-            self.serverListener.onUserLogout(data);
+            self.serverListener.onActiveUser(StalkEvents.ON_USER_LOGOUT, data);
         });
     }
 
