@@ -25,14 +25,13 @@
   },
   "devDependencies": {
     "@types/async": "^2.0.46",
-    "@types/core-js": "^0.9.46",
     "@types/crypto-js": "^3.1.38",
     "@types/es6-promise": "^3.3.0",
     "@types/es6-shim": "^0.31.35",
     "@types/jest": "^21.1.10",
     "@types/node": "^8.5.7",
     "jest": "^21.2.1",
-    "typescript": "^2.6.2"
+    "typescript": "^2.7.2"
   },
   "scripts": {
     "test": "jest"

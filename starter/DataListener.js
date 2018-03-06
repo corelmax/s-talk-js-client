@@ -1,6 +1,8 @@
 var DataListener = /** @class */ (function () {
     function DataListener() {
         var _this = this;
+        //#region IServerListener.
+        this.activeUserEvents = [];
         this.onRoomAccessEventListeners = new Array();
         this.addOnRoomAccessListener = function (listener) {
             _this.onRoomAccessEventListeners.push(listener);
