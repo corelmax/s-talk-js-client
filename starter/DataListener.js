@@ -44,7 +44,7 @@ var DataListener = /** @class */ (function () {
     };
     DataListener.prototype.onActiveUser = function (eventName, data) {
         console.log(eventName, JSON.stringify(data));
-        if (this.activeUserEvents && this.activeUserEvents.length) {
+        if (this.activeUserEvents && this.activeUserEvents.length > 0) {
             this.activeUserEvents.map(function (listener) {
                 listener(eventName, data);
             });

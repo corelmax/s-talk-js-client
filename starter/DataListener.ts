@@ -23,7 +23,7 @@ export class DataListener implements
     }
     onActiveUser(eventName: string, data: any) {
         console.log(eventName, JSON.stringify(data));
-        if (this.activeUserEvents && this.activeUserEvents.length) {
+        if (this.activeUserEvents && this.activeUserEvents.length > 0) {
             this.activeUserEvents.map(listener => {
                 listener(eventName, data);
             });
