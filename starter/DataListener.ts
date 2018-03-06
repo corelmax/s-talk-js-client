@@ -13,7 +13,7 @@ export class DataListener implements
 
     private activeUserEvents: Array<(key: string, data: any) => void> = [];
     addActiveUserEventListener(listener: (key: string, data: any) => void) {
-        if (this.activeUserEvents.indexOf(listener) < 0) {
+        if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
             this.activeUserEvents.push(listener);
         }
     }

@@ -34,7 +34,7 @@ var DataListener = /** @class */ (function () {
         this.activeUserEvents = undefined;
     }
     DataListener.prototype.addActiveUserEventListener = function (listener) {
-        if (this.activeUserEvents.indexOf(listener) < 0) {
+        if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
             this.activeUserEvents.push(listener);
         }
     };
