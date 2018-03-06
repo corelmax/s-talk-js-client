@@ -6,12 +6,12 @@ export class DataListener implements
     ChatEvents.IChatServerEvents {
 
     constructor() {
-        this.activeUserEvents = undefined as any;
+        this.activeUserEvents = new Array();
     }
 
     //#region IServerListener.
 
-    private activeUserEvents: Array<(key: string, data: any) => void> = new Array();
+    private activeUserEvents: Array<(key: string, data: any) => void>;
     addActiveUserEventListener(listener: (key: string, data: any) => void) {
         if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
             this.activeUserEvents.push(listener);

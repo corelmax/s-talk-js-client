@@ -1,8 +1,6 @@
 var DataListener = /** @class */ (function () {
     function DataListener() {
         var _this = this;
-        //#region IServerListener.
-        this.activeUserEvents = new Array();
         this.onRoomAccessEventListeners = new Array();
         this.addOnRoomAccessListener = function (listener) {
             _this.onRoomAccessEventListeners.push(listener);
@@ -31,7 +29,7 @@ var DataListener = /** @class */ (function () {
         // #region ChatListener...
         this.onChatEventListeners = new Array();
         this.onLeaveRoomListeners = new Array();
-        this.activeUserEvents = undefined;
+        this.activeUserEvents = new Array();
     }
     DataListener.prototype.addActiveUserEventListener = function (listener) {
         if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
