@@ -7,10 +7,10 @@ import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/brows
 var ServerEventListener = /** @class */ (function () {
     function ServerEventListener(socket) {
         this.socket = socket;
-        this.serverListener = Object.create(null);
-        this.chatServerListener = Object.create(null);
-        this.rtcCallListener = Object.create(null);
-        this.pushServerListener = Object.create(null);
+        this.serverListener = undefined;
+        this.chatServerListener = undefined;
+        this.rtcCallListener = undefined;
+        this.pushServerListener = undefined;
     }
     ServerEventListener.prototype.addServerListener = function (obj) {
         this.serverListener = obj;

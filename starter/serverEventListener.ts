@@ -17,10 +17,10 @@ export class ServerEventListener {
 
     constructor(socket: IPomelo) {
         this.socket = socket;
-        this.serverListener = Object.create(null);
-        this.chatServerListener = Object.create(null);
-        this.rtcCallListener = Object.create(null);
-        this.pushServerListener = Object.create(null);
+        this.serverListener = undefined as any;
+        this.chatServerListener = undefined as any;
+        this.rtcCallListener = undefined as any;
+        this.pushServerListener = undefined as any;
     }
 
     /**

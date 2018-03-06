@@ -6,7 +6,7 @@ export class DataListener implements
     ChatEvents.IChatServerEvents {
 
     constructor() {
-        this.activeUserEvents = Object.create(null);
+        this.activeUserEvents = undefined as any;
     }
 
     //#region IServerListener.

@@ -45,8 +45,8 @@ var BackendFactory = /** @class */ (function () {
     function BackendFactory(config, apiConfig) {
         this.config = config;
         this.apiConfig = apiConfig;
-        this.stalk = Object.create(null);
-        this.serverEventsListener = Object.create(null);
+        this.stalk = undefined;
+        this.serverEventsListener = undefined;
         this.pushDataListener = new PushDataListener();
         this.dataListener = new DataListener();
     }

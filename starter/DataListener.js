@@ -29,7 +29,7 @@ var DataListener = /** @class */ (function () {
         // #region ChatListener...
         this.onChatEventListeners = new Array();
         this.onLeaveRoomListeners = new Array();
-        this.activeUserEvents = Object.create(null);
+        this.activeUserEvents = undefined;
     }
     DataListener.prototype.addActiveUserEventListener = function (listener) {
         if (this.activeUserEvents.indexOf(listener) < 0) {

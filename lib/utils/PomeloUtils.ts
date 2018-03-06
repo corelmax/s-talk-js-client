@@ -18,7 +18,7 @@ export interface IPomelo extends EventEmitter {
 
 export interface IServer { host: string; port: number; };
 export class ServerParam implements IServer {
-    host: string;
-    port: number;
-    reconnect: boolean;
+    host: string = "";
+    port: number = 0;
+    reconnect: boolean = false;
 }

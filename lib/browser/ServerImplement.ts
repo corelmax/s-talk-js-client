@@ -65,11 +65,11 @@ export namespace Stalk {
         constructor(host: string, port: number) {
             console.log("ServerImp", host, port);
 
-            this.socket = Object.create(null);
-            this.onSocketOpen = Object.create(null);
-            this.onSocketClose = Object.create(null);
-            this.onSocketReconnect = Object.create(null);
-            this.onDisconnected = Object.create(null);
+            this.socket = undefined as any;
+            this.onSocketOpen = undefined as any;
+            this.onSocketClose = undefined as any;
+            this.onSocketReconnect = undefined as any;
+            this.onDisconnected = undefined as any;
 
             this.host = host;
             this.port = port;
