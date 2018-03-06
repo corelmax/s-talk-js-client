@@ -5,7 +5,6 @@
 import { ServerImp, IPomelo, IServer } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
-import { ChatsLogComponent } from "./simpleChat/ChatslogComponent";
 import { ServerEventListener } from "./ServerEventListener";
 export interface IStalkConfig {
     apiKey: string;
@@ -38,7 +37,6 @@ export declare class BackendFactory {
     serverEventsListener: ServerEventListener;
     pushDataListener: PushDataListener;
     dataListener: DataListener;
-    chatLogComp: ChatsLogComponent;
     constructor(config: IStalkConfig, apiConfig: IApiConfig);
     getServer(): ServerImp | null;
     stalkInit(): Promise<IPomelo>;
@@ -51,7 +49,6 @@ export declare class BackendFactory {
      * @memberof BackendFactory
      */
     logout(): Promise<void>;
-    createChatlogs(): ChatsLogComponent;
     getServerListener(): ServerEventListener;
     subscriptions(): void;
 }

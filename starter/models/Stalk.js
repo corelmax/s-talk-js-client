@@ -1,9 +1,10 @@
-var RoomAccessData = /** @class */ (function () {
-    function RoomAccessData(rid, time) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class RoomAccessData {
+    constructor(rid, time) {
         this.roomId = rid;
         this.accessTime = time;
     }
-    return RoomAccessData;
-}());
-export { RoomAccessData };
+}
+exports.RoomAccessData = RoomAccessData;
 ;
