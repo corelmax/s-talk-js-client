@@ -11,7 +11,7 @@ export class DataListener implements
 
     //#region IServerListener.
 
-    private activeUserEvents: Array<(key: string, data: any) => void> = [];
+    private activeUserEvents: Array<(key: string, data: any) => void> = new Array();
     addActiveUserEventListener(listener: (key: string, data: any) => void) {
         if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
             this.activeUserEvents.push(listener);
