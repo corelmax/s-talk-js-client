@@ -1,1 +1,1 @@
-export * from "./dist/node/stalk_node";
+export * from "./dist/node/node/stalk_node";

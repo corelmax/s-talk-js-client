@@ -47,7 +47,8 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "files": [
-    "stalk_node",
-    "/lib/node/ServerImplement"
+    "lib/node/stalk_node",
+    "lib/node/ServerImplement",
+    "lib/pomelo/nodeWSClient"
   ]
 }

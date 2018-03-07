@@ -12,7 +12,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ServerImplement_1 = require("./lib/node/ServerImplement");
+const ServerImplement_1 = require("./ServerImplement");
 const stalk = ServerImplement_1.ServerImplement.getInstance();
 function initStalk() {
     return new Promise((resolve, reject) => {
