@@ -3,7 +3,7 @@
  * Support by @ Ahoo Studio.co.th 
  */
 
-import { ServerImplement, IDictionary } from "./lib/node/ServerImplement";
+import { ServerImplement, IDictionary } from "./ServerImplement";
 
 const stalk = ServerImplement.getInstance();
 export type Dict = IDictionary;
