@@ -35,6 +35,7 @@ const WebSocket = require("ws");
 (function () {
     let JS_WS_CLIENT_TYPE = 'js-websocket';
     let JS_WS_CLIENT_VERSION = '0.0.1';
+    const EventEmitter = require("events");
     let Protocol = require('pomelo-protocol');
     let protobuf = require('pomelo-protobuf');
     let decodeIO_protobuf = window.decodeIO_protobuf;
@@ -42,7 +43,6 @@ const WebSocket = require("ws");
     let decodeIO_decoder = null;
     let Package = Protocol.Package;
     let Message = Protocol.Message;
-    let EventEmitter = require('./EventEmitter');
     let rsa = window.rsa;
     if (typeof (window) != "undefined" && typeof (sys) != 'undefined' && sys.localStorage) {
         window.localStorage = sys.localStorage;
