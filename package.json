@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.36",
+  "version": "0.0.38",
   "description": "s-talk javascript client.",
   "main": "index.js",
   "repository": {
@@ -14,15 +14,24 @@
   },
   "homepage": "https://github.com/mzget/stalk-javascript-client#readme",
   "dependencies": {
+    "async": "^2.6.0",
+    "crypto-js": "^3.1.9-1",
+    "es6-shim": "^0.35.3",
     "events": "^1.1.1",
-    "jest": "^21.2.1",
     "pomelo-protobuf": "^0.4.0",
     "pomelo-protocol": "^0.1.6",
+    "rxjs-es": "^5.0.0-beta.12",
     "ws": "^1.1.5"
   },
   "devDependencies": {
+    "@types/async": "^2.0.46",
+    "@types/crypto-js": "^3.1.38",
+    "@types/es6-promise": "^3.3.0",
+    "@types/es6-shim": "^0.31.35",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.5.7"
+    "@types/node": "^8.5.7",
+    "jest": "^21.2.1",
+    "typescript": "^2.7.2"
   },
   "scripts": {
     "test": "jest"

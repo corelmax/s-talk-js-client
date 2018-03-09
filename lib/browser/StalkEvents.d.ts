@@ -5,6 +5,7 @@
  * Ahoo Studio.co.th
  */
 export declare type DataEvent = (data: any) => void;
+export declare type BaseDataEvent = (eventName: string, data: any) => void;
 export declare namespace ChatEvents {
     const ON_ADD = "onAdd";
     const ON_LEAVE: string;
@@ -36,7 +37,10 @@ export declare namespace StalkEvents {
         onAccessRoom: DataEvent;
         onUpdatedLastAccessTime: DataEvent;
         onAddRoomAccess: DataEvent;
+        onActiveUser: BaseDataEvent;
+        /** @deprecated */
         onUserLogin: DataEvent;
+        /** @deprecated */
         onUserLogout: DataEvent;
     }
     const ON_USER_LOGIN = "onUserLogin";

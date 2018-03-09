@@ -1,5 +1,5 @@
 import { Stalk } from "./ServerImplement";
-import { HttpStatusCode, StalkUtils } from '../utils/index';
+import { HttpStatusCode, IPomeloResponse } from '../utils/index';
 import { IServer } from "../utils/PomeloUtils";
 
 export namespace API {
@@ -91,10 +91,10 @@ export namespace API {
             let self = this;
             let socket = this.server.getSocket();
 
-            return new Promise((resolve: (value: StalkUtils.IStalkResponse) => void, rejected) => {
+            return new Promise((resolve: (value: IPomeloResponse) => void, rejected) => {
                 try {
                     // <!-- Authentication.
-                    socket.request("connector.entryHandler.updateUser", msg, (res: StalkUtils.IStalkResponse) => {
+                    socket.request("connector.entryHandler.updateUser", msg, (res: IPomeloResponse) => {
                         resolve(res);
                     });
                 }
@@ -108,10 +108,10 @@ export namespace API {
             let self = this;
             let socket = this.server.getSocket();
 
-            return new Promise((resolve: (value: StalkUtils.IStalkResponse) => void, rejected) => {
+            return new Promise((resolve: (value: IPomeloResponse) => void, rejected) => {
                 // <!-- Authentication.
                 try {
-                    socket.request("connector.entryHandler.getUsersPayload", msg, (res: StalkUtils.IStalkResponse) => {
+                    socket.request("connector.entryHandler.getUsersPayload", msg, (res: IPomeloResponse) => {
                         resolve(res);
                     });
                 }
@@ -130,7 +130,7 @@ export namespace API {
             msg["username"] = username;
 
             let socket = this.server.getSocket();
-            socket.request("connector.entryHandler.enterRoom", msg, (result: StalkUtils.IStalkResponse) => {
+            socket.request("connector.entryHandler.enterRoom", msg, (result: IPomeloResponse) => {
                 if (callback !== null) {
                     callback(null, result);
                 }
@@ -234,13 +234,13 @@ export namespace API {
             });
         }
 
-        public getMessageContent(messageId: string, callback: (err: Error, res: any) => void) {
+        public getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void) {
             let socket = this.server.getSocket();
             let message = {} as Stalk.IDictionary;
             message["messageId"] = messageId;
             socket.request("chat.chatHandler.getMessageContent", message, (result) => {
                 if (!!callback) {
-                    callback(null, result);
+                    callback(undefined, result);
                 }
             });
         }
@@ -284,7 +284,7 @@ export namespace API {
             return await new Promise((resolve, reject) => {
                 try {
                     let socket = this.server.getSocket();
-                    socket.request("push.pushHandler.push", _message, (result: StalkUtils.IStalkResponse) => {
+                    socket.request("push.pushHandler.push", _message, (result: IPomeloResponse) => {
                         resolve(result);
                     });
                 }

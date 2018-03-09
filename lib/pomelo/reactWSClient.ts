@@ -1,6 +1,4 @@
-﻿// @ts-check
-
-export interface IServerParam {
+﻿export interface IServerParam {
   host: string;
   port: number;
   reconnect: boolean;
@@ -25,8 +23,8 @@ export interface IServerParam {
   let Package = Protocol.Package;
   let Message = Protocol.Message;
   let pomelo = Object.create(EventEmitter.prototype);
-  let decodeIO_protobuf = window.decodeIO_protobuf;
-  let rsa = window.rsa;
+  let decodeIO_protobuf = (<any>window).decodeIO_protobuf;
+  let rsa = (<any>window).rsa;
 
   /*
     if (typeof (window) != "undefined" && typeof (sys) != 'undefined' && sys.localStorage) {
@@ -80,14 +78,13 @@ export interface IServerParam {
   let useCrypto;
 
   let handshakeBuffer = {
-    "sys": {
+    sys: {
       type: JS_WS_CLIENT_TYPE,
       version: JS_WS_CLIENT_VERSION,
       rsa: {},
-      protoVersion
+      protoVersion: 0
     },
-    "user": {
-    }
+    user: {}
   };
 
   let initCallback: (error: string) => void;
@@ -125,28 +122,26 @@ export interface IServerParam {
     connect(params, url);
   };
 
-  pomelo.disconnect = function (): Promise<any> {
-    return new Promise((resolve, rejected) => {
-      if (!!socket) {
-        if (socket.close) {
-          socket.close();
-        }
-        socket = undefined;
-
-        console.log("disconnected socket is", socket);
+  pomelo.disconnect = function () {
+    if (!!socket) {
+      if (socket.close) {
+        socket.close();
       }
+      socket = undefined;
 
-      if (heartbeatId) {
-        clearTimeout(heartbeatId);
-        heartbeatId = null;
-      }
-      if (heartbeatTimeoutId) {
-        clearTimeout(heartbeatTimeoutId);
-        heartbeatTimeoutId = null;
-      }
+      console.log("disconnected socket is", socket);
+    }
 
-      resolve();
-    });
+    if (heartbeatId) {
+      clearTimeout(heartbeatId);
+      heartbeatId = null;
+    }
+    if (heartbeatTimeoutId) {
+      clearTimeout(heartbeatTimeoutId);
+      heartbeatTimeoutId = null;
+    }
+
+    return Promise.resolve();
   };
 
   pomelo.request = function (route, msg, cb) {
@@ -521,4 +516,3 @@ export interface IServerParam {
 
   module.exports = pomelo;
 })();
-
