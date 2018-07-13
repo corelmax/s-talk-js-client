@@ -22,6 +22,7 @@ export import PushEvents = StalkEvents.PushEvents;
 export import ChatEvents = StalkEvents.ChatEvents;
 export import CallingEvents = StalkEvents.CallingEvents;
 export import DataEvent = StalkEvents.DataEvent;
+export default StalkEvents;
 /**
  * APIs interface implementation.
  */

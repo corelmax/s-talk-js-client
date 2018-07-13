@@ -20,6 +20,7 @@ export var stalkEvents = StalkEvents.StalkEvents;
 export var PushEvents = StalkEvents.PushEvents;
 export var ChatEvents = StalkEvents.ChatEvents;
 export var CallingEvents = StalkEvents.CallingEvents;
+export default StalkEvents;
 /**
  * APIs interface implementation.
  */

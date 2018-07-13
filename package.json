@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "description": "s-talk javascript client.",
   "main": "index.js",
   "repository": {
