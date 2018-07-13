@@ -1,65 +1,12 @@
-import { Stalk } from "./ServerImplement";
-import { IPomeloResponse } from '../utils/index';
-import { IServer } from "../utils/PomeloUtils";
+import * as gateAPI from "./api/GateAPI";
+import * as lobbyAPI from "./api/LobbyAPI";
+import * as chatroomAPI from "./api/ChatRoomAPI";
+import * as pushAPI from "./api/PushAPI";
+import * as callingAPI from "./api/CallingAPI";
 export declare namespace API {
-    class GateAPI {
-        private server;
-        constructor(_server: Stalk.ServerImplemented);
-        gateEnter(msg: Stalk.IDictionary): Promise<IServer>;
-    }
-    class LobbyAPI {
-        private server;
-        constructor(_server: Stalk.ServerImplemented);
-        checkIn(msg: Stalk.IDictionary): Promise<{}>;
-        logout(): void;
-        /**
-         * user : {_id: string, username: string, payload }
-         * @param msg
-         */
-        updateUser(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
-        getUsersPayload(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
-        joinRoom(token: string, username: any, room_id: string, callback: (err: any, res: any) => void): void;
-        leaveRoom(token: string, roomId: string, callback: (err: any, res: any) => void): void;
-        kickMeAllSession(uid: string): void;
-    }
-    class ChatRoomAPI {
-        private server;
-        constructor(_server: Stalk.ServerImplemented);
-        chat(target: string, _message: any, callback: (err: any, res: any) => void): void;
-        pushByUids(_message: Stalk.IDictionary): Promise<{}>;
-        getSyncDateTime(callback: (err: any, res: any) => void): void;
-        /**
-         * get older message histories.
-         */
-        getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err: any, res: any) => void): void;
-        getMessagesReaders(topEdgeMessageTime: string): void;
-        getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void): void;
-        updateMessageReader(messageId: string, roomId: string): void;
-        updateMessageReaders(messageIds: string[], roomId: string): void;
-    }
-    class PushAPI {
-        private server;
-        constructor(_server: Stalk.ServerImplemented);
-        /**
-         * payload: {
-         *  event: string;
-         *  message: string;
-         *  members: string[] | string;
-         * }
-         *
-         * @param {IDictionary} _message
-         * @returns
-         * @memberof PushAPI
-         */
-        push(_message: Stalk.IDictionary): Promise<{}>;
-    }
-    /**
-     * calling experiences between phones, apps and VoIP systems
-     */
-    class CallingAPI {
-        private server;
-        constructor(_server: Stalk.ServerImplemented);
-        calling(api_key: string, event: string, members: string[], payload: any): Promise<{}>;
-        theLineIsBusy(contactId: string): Promise<{}>;
-    }
+    export import GateAPI = gateAPI;
+    export import LobbyAPI = lobbyAPI;
+    export import ChatRoomAPI = chatroomAPI;
+    export import PushAPI = pushAPI;
+    export import CallingAPI = callingAPI;
 }

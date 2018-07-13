@@ -4,7 +4,7 @@
  * Support by@ nattapon.r@live.com
  */
 import { IPomelo } from "../index";
-import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/browser/index";
+import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../index";
 export declare class ServerEventListener {
     static ON_ACCESS_ROOMS: string;
     static ON_ADD_ROOM_ACCESS: string;

@@ -3,7 +3,7 @@
  *
  * Support by@ nattapon.r@live.com
  */
-import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/browser/index";
+import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../index";
 export class ServerEventListener {
     constructor(socket) {
         this.socket = socket;

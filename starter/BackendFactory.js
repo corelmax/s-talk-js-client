@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { stalkjs } from "../index";
+import { StalkJS } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ServerEventListener } from "./ServerEventListener";
@@ -46,8 +46,8 @@ export class BackendFactory {
     }
     stalkInit() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.stalk = stalkjs.create(this.config.chat, this.config.port);
-            let socket = yield stalkjs.init(this.stalk);
+            this.stalk = StalkJS.create(this.config.chat, this.config.port);
+            let socket = yield StalkJS.init(this.stalk);
             return socket;
         });
     }
@@ -60,9 +60,9 @@ export class BackendFactory {
                 msg["x-api-key"] = this.config.apiKey;
                 msg["x-api-version"] = this.config.apiVersion;
                 msg["x-app-id"] = this.config.appId;
-                let connector = yield stalkjs.geteEnter(this.stalk, msg);
+                let connector = yield StalkJS.geteEnter(this.stalk, msg);
                 let params = { host: connector.host, port: connector.port, reconnect: false };
-                yield stalkjs.handshake(this.stalk, params);
+                yield StalkJS.handshake(this.stalk, params);
                 return yield connector;
             }
             catch (ex) {
@@ -77,13 +77,13 @@ export class BackendFactory {
             msg["x-api-key"] = this.config.apiKey;
             msg["x-api-version"] = this.config.apiVersion;
             msg["x-app-id"] = this.config.appId;
-            let result = yield stalkjs.checkIn(this.stalk, msg);
+            let result = yield StalkJS.checkIn(this.stalk, msg);
             return result;
         });
     }
     checkOut() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield stalkjs.checkOut(this.stalk);
+            yield StalkJS.checkOut(this.stalk);
         });
     }
     /**

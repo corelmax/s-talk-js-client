@@ -1,4 +1,4 @@
-import { Stalk } from "./ServerImplement";
+import { ServerImp, IDictionary } from "./ServerImplement";
 import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
@@ -19,11 +19,11 @@ export namespace StalkJS {
 
     export function create(_host: string, _port: number) {
         // "ws://stalk.com"
-        let server = Stalk.ServerImplemented.createInstance(_host, _port);
+        let server = ServerImp.createInstance(_host, _port);
         return server;
     }
 
-    export async function init(server: Stalk.ServerImplemented) {
+    export async function init(server: ServerImp) {
         let promise = new Promise<IPomelo>((resolve, reject) => {
             server.disConnect(() => {
                 server.init((err: Error, res: IPomelo) => {
@@ -40,12 +40,12 @@ export namespace StalkJS {
         return await promise;
     }
 
-    export async function geteEnter(server: Stalk.ServerImplemented, message: Stalk.IDictionary) {
+    export async function geteEnter(server: ServerImp, message: IDictionary) {
         let connector = await server.getGateAPI().gateEnter(message);
         return connector as IServer;
     }
 
-    export async function handshake(server: Stalk.ServerImplemented, params: ServerParam) {
+    export async function handshake(server: ServerImp, params: ServerParam) {
         return await new Promise<IPomelo>((resolve, reject) => {
             server.connect(params, (err: Error) => {
                 server._isConnected = true;
@@ -64,12 +64,12 @@ export namespace StalkJS {
         });
     }
 
-    export async function checkIn(server: Stalk.ServerImplemented, message: Stalk.IDictionary) {
+    export async function checkIn(server: ServerImp, message: IDictionary) {
         let result = await server.getLobby().checkIn(message);
         return result;
     }
 
-    export function checkOut(server: Stalk.ServerImplemented) {
+    export function checkOut(server: ServerImp) {
         if (server) {
             let socket = server.getSocket();
             if (!!socket) { socket.setReconnect(false); }

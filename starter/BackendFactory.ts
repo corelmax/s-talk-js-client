@@ -3,7 +3,7 @@
  * Maintained by nattapon.r@live.com
  */
 
-import { stalkjs, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../index";
+import { StalkJS, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../index";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ServerEventListener } from "./ServerEventListener";
@@ -75,8 +75,8 @@ export class BackendFactory {
     }
 
     async stalkInit() {
-        this.stalk = stalkjs.create(this.config.chat, this.config.port);
-        let socket = await stalkjs.init(this.stalk);
+        this.stalk = StalkJS.create(this.config.chat, this.config.port);
+        let socket = await StalkJS.init(this.stalk);
         return socket;
     }
 
@@ -88,10 +88,10 @@ export class BackendFactory {
             msg["x-api-key"] = this.config.apiKey;
             msg["x-api-version"] = this.config.apiVersion;
             msg["x-app-id"] = this.config.appId;
-            let connector = await stalkjs.geteEnter(this.stalk, msg);
+            let connector = await StalkJS.geteEnter(this.stalk, msg);
 
             let params = { host: connector.host, port: connector.port, reconnect: false } as ServerParam;
-            await stalkjs.handshake(this.stalk, params);
+            await StalkJS.handshake(this.stalk, params);
 
             return await connector;
         } catch (ex) {
@@ -105,12 +105,12 @@ export class BackendFactory {
         msg["x-api-key"] = this.config.apiKey;
         msg["x-api-version"] = this.config.apiVersion;
         msg["x-app-id"] = this.config.appId;
-        let result = await stalkjs.checkIn(this.stalk, msg);
+        let result = await StalkJS.checkIn(this.stalk, msg);
         return result;
     }
 
     private async checkOut() {
-        await stalkjs.checkOut(this.stalk);
+        await StalkJS.checkOut(this.stalk);
     }
 
     /**

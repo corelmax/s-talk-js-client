@@ -1,8 +1,8 @@
-﻿import { ChatEvents, stalkEvents } from "../index";
-import { StalkAccount, RoomAccessData, IMessage } from "./models/index";
+﻿import { ChatEvents, StalkEvents } from "../index";
+import { IMessage, RoomAccessData, StalkAccount } from "./models/index";
 
 export class DataListener implements
-    stalkEvents.IServerListener,
+    StalkEvents.IServerListener,
     ChatEvents.IChatServerEvents {
 
     constructor() {
@@ -12,24 +12,24 @@ export class DataListener implements
     //#region IServerListener.
 
     private activeUserEvents: Array<(key: string, data: any) => void>;
-    addActiveUserEventListener(listener: (key: string, data: any) => void) {
+    public addActiveUserEventListener(listener: (key: string, data: any) => void) {
         if (this.activeUserEvents && this.activeUserEvents.indexOf(listener) < 0) {
             this.activeUserEvents.push(listener);
         }
     }
-    removeActiveUserEventListener(listener: (key: string, data: any) => void) {
+    public removeActiveUserEventListener(listener: (key: string, data: any) => void) {
         const index = this.activeUserEvents.indexOf(listener);
         this.activeUserEvents.splice(index, 1);
     }
-    onActiveUser(eventName: string, data: any) {
+    public onActiveUser(eventName: string, data: any) {
         console.log(eventName, JSON.stringify(data));
         if (this.activeUserEvents && this.activeUserEvents.length > 0) {
-            this.activeUserEvents.map(listener => {
+            this.activeUserEvents.map((listener) => {
                 listener(eventName, data);
             });
         }
     }
-    onUserLogin(dataEvent: any) {
+    public onUserLogin(dataEvent: any) {
         /*
         console.log("user loged In", JSON.stringify(dataEvent));
         if (this.activeUserEvents && this.activeUserEvents.length) {
@@ -40,7 +40,7 @@ export class DataListener implements
         */
     }
 
-    onUserLogout(dataEvent: any) {
+    public onUserLogout(dataEvent: any) {
         /*
         console.log("user loged Out", JSON.stringify(dataEvent));
         if (this.activeUserEvents && this.activeUserEvents.length) {
@@ -56,16 +56,16 @@ export class DataListener implements
         this.onRoomAccessEventListeners.push(listener);
     }
     public removeOnRoomAccessListener = (listener: (data: any) => void) => {
-        let id = this.onRoomAccessEventListeners.indexOf(listener);
+        const id = this.onRoomAccessEventListeners.indexOf(listener);
         this.onRoomAccessEventListeners.splice(id, 1);
     }
-    onAccessRoom(dataEvent: Array<any>) {
+    public onAccessRoom(dataEvent: any[]) {
         if (Array.isArray(dataEvent) && dataEvent.length > 0) {
-            let data = dataEvent[0] as StalkAccount;
+            const data = dataEvent[0] as StalkAccount;
 
             // this.dataManager.setRoomAccessForUser(data);
 
-            this.onRoomAccessEventListeners.map(listener => {
+            this.onRoomAccessEventListeners.map((listener) => {
                 listener(data);
             });
         }
@@ -76,16 +76,16 @@ export class DataListener implements
         this.onAddRoomAccessEventListeners.push(listener);
     }
     public removeOnAddRoomAccessListener = (listener: (data: any) => void) => {
-        let id = this.onAddRoomAccessEventListeners.indexOf(listener);
+        const id = this.onAddRoomAccessEventListeners.indexOf(listener);
         this.onAddRoomAccessEventListeners.splice(id, 1);
     }
-    onAddRoomAccess(dataEvent: any) {
-        let datas: Array<StalkAccount> = JSON.parse(JSON.stringify(dataEvent));
+    public onAddRoomAccess(dataEvent: any) {
+        const datas: StalkAccount[] = JSON.parse(JSON.stringify(dataEvent));
         if (!!datas[0].roomAccess && datas[0].roomAccess.length !== 0) {
             // this.dataManager.setRoomAccessForUser(dataEvent);
         }
 
-        this.onAddRoomAccessEventListeners.map(value => value(dataEvent));
+        this.onAddRoomAccessEventListeners.map((value) => value(dataEvent));
     }
 
     private onUpdateRoomAccessEventListeners = new Array<(data: RoomAccessData) => void>();
@@ -93,13 +93,13 @@ export class DataListener implements
         this.onUpdateRoomAccessEventListeners.push(listener);
     }
     public removeOnUpdateRoomAccessListener = (listener: (data: RoomAccessData) => void) => {
-        let id = this.onUpdateRoomAccessEventListeners.indexOf(listener);
+        const id = this.onUpdateRoomAccessEventListeners.indexOf(listener);
         this.onUpdateRoomAccessEventListeners.splice(id, 1);
     }
-    onUpdatedLastAccessTime(dataEvent: RoomAccessData) {
+    public onUpdatedLastAccessTime(dataEvent: RoomAccessData) {
         // this.dataManager.updateRoomAccessForUser(dataEvent);
 
-        this.onUpdateRoomAccessEventListeners.map(item => item(dataEvent));
+        this.onUpdateRoomAccessEventListeners.map((item) => item(dataEvent));
     }
 
     //#endregion
@@ -111,32 +111,32 @@ export class DataListener implements
         this.onChatEventListeners.push(listener);
     }
     public removeOnChatListener(listener: (message: IMessage) => void) {
-        let id = this.onChatEventListeners.indexOf(listener);
+        const id = this.onChatEventListeners.indexOf(listener);
         this.onChatEventListeners.splice(id, 1);
     }
 
-    onChat(data: any) {
-        let chatMessageImp = data as IMessage;
+    public onChat(data: any) {
+        const chatMessageImp = data as IMessage;
         this.onChatEventListeners.map((value, id, arr) => {
             value(chatMessageImp);
         });
-    };
+    }
 
     private onLeaveRoomListeners = new Array();
     public addOnLeaveRoomListener(listener: (message: IMessage) => void) {
         this.onLeaveRoomListeners.push(listener);
     }
     public removeOnLeaveRoomListener(listener: (message: IMessage) => void) {
-        let id = this.onLeaveRoomListeners.indexOf(listener);
+        const id = this.onLeaveRoomListeners.indexOf(listener);
         this.onLeaveRoomListeners.splice(id, 1);
     }
-    onLeaveRoom(data: any) {
-        this.onLeaveRoomListeners.map(value => value(data));
-    };
+    public onLeaveRoom(data: any) {
+        this.onLeaveRoomListeners.map((value) => value(data));
+    }
 
-    onRoomJoin(data: any) {
+    public onRoomJoin(data: any) {
 
-    };
+    }
 
     // onGetMessagesReaders(dataEvent: DataEvent) {
     //     if (!!this.chatListenerImps && this.chatListenerImps.length !== 0) {

@@ -1,5 +1,7 @@
 "use strict";
 class SocketComponent {
+    onDisconnect(reason) {
+    }
     disconnected(reason) {
         if (!!this.onDisconnect) {
             this.onDisconnect(reason);

@@ -6,32 +6,6 @@
  */
 export declare type DataEvent = (data: any) => void;
 export declare type BaseDataEvent = (eventName: string, data: any) => void;
-export declare namespace ChatEvents {
-    const ON_ADD = "onAdd";
-    const ON_LEAVE: string;
-    const ON_CHAT: string;
-    interface IChatServerEvents {
-        onChat: DataEvent;
-        onRoomJoin: DataEvent;
-        onLeaveRoom: DataEvent;
-    }
-}
-export declare namespace PushEvents {
-    const ON_PUSH = "ON_PUSH";
-    interface IPushServerListener {
-        onPush: DataEvent;
-    }
-}
-export declare namespace CallingEvents {
-    const ON_CALL = "ON_CALL";
-    interface ICallingListener {
-        onCall: DataEvent;
-    }
-    const VideoCall = "VideoCall";
-    const VoiceCall = "VoiceCall";
-    const HangupCall = "HangupCall";
-    const TheLineIsBusy = "TheLineIsBusy";
-}
 export declare namespace StalkEvents {
     interface IServerListener {
         onAccessRoom: DataEvent;

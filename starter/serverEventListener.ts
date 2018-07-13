@@ -5,7 +5,7 @@
  */
 
 import { IPomelo } from "../index";
-import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/browser/index";
+import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../index";
 
 export class ServerEventListener {
     // <!-- AccessRoom Info -->

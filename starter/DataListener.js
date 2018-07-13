@@ -5,7 +5,7 @@ export class DataListener {
             this.onRoomAccessEventListeners.push(listener);
         };
         this.removeOnRoomAccessListener = (listener) => {
-            let id = this.onRoomAccessEventListeners.indexOf(listener);
+            const id = this.onRoomAccessEventListeners.indexOf(listener);
             this.onRoomAccessEventListeners.splice(id, 1);
         };
         this.onAddRoomAccessEventListeners = new Array();
@@ -13,7 +13,7 @@ export class DataListener {
             this.onAddRoomAccessEventListeners.push(listener);
         };
         this.removeOnAddRoomAccessListener = (listener) => {
-            let id = this.onAddRoomAccessEventListeners.indexOf(listener);
+            const id = this.onAddRoomAccessEventListeners.indexOf(listener);
             this.onAddRoomAccessEventListeners.splice(id, 1);
         };
         this.onUpdateRoomAccessEventListeners = new Array();
@@ -21,7 +21,7 @@ export class DataListener {
             this.onUpdateRoomAccessEventListeners.push(listener);
         };
         this.removeOnUpdateRoomAccessListener = (listener) => {
-            let id = this.onUpdateRoomAccessEventListeners.indexOf(listener);
+            const id = this.onUpdateRoomAccessEventListeners.indexOf(listener);
             this.onUpdateRoomAccessEventListeners.splice(id, 1);
         };
         //#endregion
@@ -42,7 +42,7 @@ export class DataListener {
     onActiveUser(eventName, data) {
         console.log(eventName, JSON.stringify(data));
         if (this.activeUserEvents && this.activeUserEvents.length > 0) {
-            this.activeUserEvents.map(listener => {
+            this.activeUserEvents.map((listener) => {
                 listener(eventName, data);
             });
         }
@@ -69,50 +69,47 @@ export class DataListener {
     }
     onAccessRoom(dataEvent) {
         if (Array.isArray(dataEvent) && dataEvent.length > 0) {
-            let data = dataEvent[0];
+            const data = dataEvent[0];
             // this.dataManager.setRoomAccessForUser(data);
-            this.onRoomAccessEventListeners.map(listener => {
+            this.onRoomAccessEventListeners.map((listener) => {
                 listener(data);
             });
         }
     }
     onAddRoomAccess(dataEvent) {
-        let datas = JSON.parse(JSON.stringify(dataEvent));
+        const datas = JSON.parse(JSON.stringify(dataEvent));
         if (!!datas[0].roomAccess && datas[0].roomAccess.length !== 0) {
             // this.dataManager.setRoomAccessForUser(dataEvent);
         }
-        this.onAddRoomAccessEventListeners.map(value => value(dataEvent));
+        this.onAddRoomAccessEventListeners.map((value) => value(dataEvent));
     }
     onUpdatedLastAccessTime(dataEvent) {
         // this.dataManager.updateRoomAccessForUser(dataEvent);
-        this.onUpdateRoomAccessEventListeners.map(item => item(dataEvent));
+        this.onUpdateRoomAccessEventListeners.map((item) => item(dataEvent));
     }
     addOnChatListener(listener) {
         this.onChatEventListeners.push(listener);
     }
     removeOnChatListener(listener) {
-        let id = this.onChatEventListeners.indexOf(listener);
+        const id = this.onChatEventListeners.indexOf(listener);
         this.onChatEventListeners.splice(id, 1);
     }
     onChat(data) {
-        let chatMessageImp = data;
+        const chatMessageImp = data;
         this.onChatEventListeners.map((value, id, arr) => {
             value(chatMessageImp);
         });
     }
-    ;
     addOnLeaveRoomListener(listener) {
         this.onLeaveRoomListeners.push(listener);
     }
     removeOnLeaveRoomListener(listener) {
-        let id = this.onLeaveRoomListeners.indexOf(listener);
+        const id = this.onLeaveRoomListeners.indexOf(listener);
         this.onLeaveRoomListeners.splice(id, 1);
     }
     onLeaveRoom(data) {
-        this.onLeaveRoomListeners.map(value => value(data));
+        this.onLeaveRoomListeners.map((value) => value(data));
     }
-    ;
     onRoomJoin(data) {
     }
-    ;
 }
