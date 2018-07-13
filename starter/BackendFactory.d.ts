@@ -42,7 +42,7 @@ export declare class BackendFactory {
     stalkInit(): Promise<IPomelo>;
     handshake(uid: string): Promise<IServer>;
     checkIn(user: any): Promise<{}>;
-    private checkOut();
+    private checkOut;
     /**
      * @returns
      *

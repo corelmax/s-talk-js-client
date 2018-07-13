@@ -18,20 +18,20 @@ export declare namespace API {
          */
         updateUser(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
         getUsersPayload(msg: Stalk.IDictionary): Promise<IPomeloResponse>;
-        joinRoom(token: string, username: any, room_id: string, callback: (err, res) => void): void;
-        leaveRoom(token: string, roomId: string, callback: (err, res) => void): void;
+        joinRoom(token: string, username: any, room_id: string, callback: (err: any, res: any) => void): void;
+        leaveRoom(token: string, roomId: string, callback: (err: any, res: any) => void): void;
         kickMeAllSession(uid: string): void;
     }
     class ChatRoomAPI {
         private server;
         constructor(_server: Stalk.ServerImplemented);
-        chat(target: string, _message: any, callback: (err, res) => void): void;
+        chat(target: string, _message: any, callback: (err: any, res: any) => void): void;
         pushByUids(_message: Stalk.IDictionary): Promise<{}>;
-        getSyncDateTime(callback: (err, res) => void): void;
+        getSyncDateTime(callback: (err: any, res: any) => void): void;
         /**
          * get older message histories.
          */
-        getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err, res) => void): void;
+        getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err: any, res: any) => void): void;
         getMessagesReaders(topEdgeMessageTime: string): void;
         getMessageContent(messageId: string, callback: (err: Error | undefined, res: any) => void): void;
         updateMessageReader(messageId: string, roomId: string): void;

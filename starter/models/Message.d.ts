@@ -5,7 +5,7 @@ export declare enum MessageType {
     Voice = 3,
     Location = 4,
     Sticker = 5,
-    File = 6,
+    File = 6
 }
 /**
  * @Message...

@@ -1,3 +1,9 @@
+/**
+ * Stalk-JavaScript, Node.js client. Supported react, react-native.
+ * Support by@ nattapon.r@live.com
+ *
+ * Ahoo Studio.co.th
+ */
 import { API } from "./API";
 import { IPomelo, ServerParam } from "../utils/PomeloUtils";
 export declare namespace Stalk {
@@ -36,7 +42,7 @@ export declare namespace Stalk {
         dispose(): void;
         disConnect(callBack?: Function): void;
         init(callback: (err: Error, res: IPomelo) => void): void;
-        private connectServer(params, callback);
+        private connectServer;
         listenSocketEvents(): void;
     }
 }
