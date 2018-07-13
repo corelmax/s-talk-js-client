@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ChatRoomApiProvider = /** @class */ (function () {
     function ChatRoomApiProvider(socket) {
         this.pomelo = socket;
@@ -112,4 +114,4 @@ var ChatRoomApiProvider = /** @class */ (function () {
     };
     return ChatRoomApiProvider;
 }());
-export default ChatRoomApiProvider;
+exports.default = ChatRoomApiProvider;

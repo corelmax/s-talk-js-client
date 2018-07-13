@@ -238,17 +238,12 @@
     }
     // Set protoversion
     handshakeBuffer.sys.protoVersion = protoVersion;
-    try {
-      socket = new WebSocket(url);
-      socket.binaryType = "arraybuffer";
-      socket.onopen = onopen;
-      socket.onmessage = onmessage;
-      socket.onerror = onerror;
-      socket.onclose = onclose;
-    }
-    catch (ex) {
-      console.error("Init socket fail: ", ex);
-    }
+    socket = new WebSocket(url);
+    socket.binaryType = "arraybuffer";
+    socket.onopen = onopen;
+    socket.onmessage = onmessage;
+    socket.onerror = onerror;
+    socket.onclose = onclose;
   };
 
   let onopen = function (event) {

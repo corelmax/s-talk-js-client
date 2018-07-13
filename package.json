@@ -1,6 +1,6 @@
 {
   "name": "stalk-js",
-  "version": "0.0.38",
+  "version": "0.0.40",
   "description": "s-talk javascript client.",
   "main": "index.js",
   "repository": {
@@ -24,14 +24,14 @@
     "ws": "^1.1.5"
   },
   "devDependencies": {
-    "@types/async": "^2.0.46",
-    "@types/crypto-js": "^3.1.38",
+    "@types/async": "^2.0.49",
+    "@types/crypto-js": "^3.1.39",
     "@types/es6-promise": "^3.3.0",
-    "@types/es6-shim": "^0.31.35",
+    "@types/es6-shim": "^0.31.36",
     "@types/jest": "^21.1.10",
-    "@types/node": "^8.5.7",
+    "@types/node": "^8.10.10",
     "jest": "^21.2.1",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.3"
   },
   "scripts": {
     "test": "jest"

@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var CallingDataListener = /** @class */ (function () {
     function CallingDataListener() {
         this.onCallListeners = new Array();
@@ -23,4 +25,4 @@ var CallingDataListener = /** @class */ (function () {
     };
     return CallingDataListener;
 }());
-export { CallingDataListener };
+exports.CallingDataListener = CallingDataListener;
