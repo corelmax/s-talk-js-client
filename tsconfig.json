@@ -56,7 +56,7 @@
     "starter"
   ],
   "files": [
-    "index"
+    "stalkjs"
   ],
   "compileOnSave": true
 }

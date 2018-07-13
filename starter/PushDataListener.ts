@@ -1,4 +1,4 @@
-import { PushEvents } from "../index";
+import { PushEvents } from "../stalkjs";
 
 export type Push = {
     event: string;

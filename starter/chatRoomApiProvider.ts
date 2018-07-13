@@ -1,4 +1,4 @@
-import { IDictionary } from "../index";
+import { IDictionary } from "../stalkjs";
 
 export interface IMetaFile {
     thumbnail: string;

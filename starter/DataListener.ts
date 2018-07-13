@@ -1,4 +1,4 @@
-﻿import { ChatEvents, StalkEvents } from "../index";
+﻿import { ChatEvents, StalkEvents } from "../stalkjs";
 import { IMessage, RoomAccessData, StalkAccount } from "./models/index";
 
 export class DataListener implements

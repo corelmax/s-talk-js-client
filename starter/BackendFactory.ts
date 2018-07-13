@@ -3,7 +3,7 @@
  * Maintained by nattapon.r@live.com
  */
 
-import { StalkJS, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../index";
+import { StalkJS, ServerImp, ServerParam, IDictionary, IPomelo, IServer } from "../stalkjs";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ServerEventListener } from "./ServerEventListener";
