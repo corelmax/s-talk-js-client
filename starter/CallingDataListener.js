@@ -1,26 +1,24 @@
-var CallingDataListener = /** @class */ (function () {
-    function CallingDataListener() {
+export class CallingDataListener {
+    constructor() {
         this.onCallListeners = new Array();
     }
-    CallingDataListener.createInstance = function () {
+    static createInstance() {
         if (!CallingDataListener.instance) {
             CallingDataListener.instance = new CallingDataListener();
         }
         return CallingDataListener.instance;
-    };
-    CallingDataListener.getInstance = function () {
+    }
+    static getInstance() {
         return CallingDataListener.instance;
-    };
-    CallingDataListener.prototype.addOnCallListener = function (fx) {
+    }
+    addOnCallListener(fx) {
         this.onCallListeners.push(fx);
-    };
-    CallingDataListener.prototype.removeOnCallListener = function (fx) {
-        var id = this.onCallListeners.indexOf(fx);
+    }
+    removeOnCallListener(fx) {
+        const id = this.onCallListeners.indexOf(fx);
         this.onCallListeners.splice(id, 1);
-    };
-    CallingDataListener.prototype.onCall = function (dataEvent) {
-        this.onCallListeners.forEach(function (fx) { return fx(dataEvent); });
-    };
-    return CallingDataListener;
-}());
-export { CallingDataListener };
+    }
+    onCall(dataEvent) {
+        this.onCallListeners.forEach((fx) => fx(dataEvent));
+    }
+}

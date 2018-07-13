@@ -36,7 +36,7 @@ export default class ChatRoomApiProvider {
     getOlderMessageChunk(roomId: string, topEdgeMessageTime: Date, callback: (err: any, res: any) => void): void;
     checkOlderMessagesCount(roomId: string, topEdgeMessageTime: Date, callback: (err: any, res: any) => void): void;
     getMessagesReaders(topEdgeMessageTime: string): void;
-    getMessageContent(messageId: string, callback: (err: Error, res: any) => void): void;
+    getMessageContent(messageId: string, callback: (err: Error | null, res: any) => void): void;
     updateMessageReader(messageId: string, roomId: string): void;
     updateMessageReaders(messageIds: string[], roomId: string): void;
 }

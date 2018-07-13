@@ -124,7 +124,7 @@ export default class ChatRoomApiProvider {
         });
     }
 
-    public getMessageContent(messageId: string, callback: (err: Error, res: any) => void) {
+    public getMessageContent(messageId: string, callback: (err: Error | null, res: any) => void) {
         var message: IDictionary = {};
         message["messageId"] = messageId;
         this.pomelo.request("chat.chatHandler.getMessageContent", message, (result) => {
