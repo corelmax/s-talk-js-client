@@ -1,24 +1,26 @@
-export class CallingDataListener {
-    constructor() {
+var CallingDataListener = /** @class */ (function () {
+    function CallingDataListener() {
         this.onCallListeners = new Array();
     }
-    static createInstance() {
+    CallingDataListener.createInstance = function () {
         if (!CallingDataListener.instance) {
             CallingDataListener.instance = new CallingDataListener();
         }
         return CallingDataListener.instance;
-    }
-    static getInstance() {
+    };
+    CallingDataListener.getInstance = function () {
         return CallingDataListener.instance;
-    }
-    addOnCallListener(fx) {
+    };
+    CallingDataListener.prototype.addOnCallListener = function (fx) {
         this.onCallListeners.push(fx);
-    }
-    removeOnCallListener(fx) {
-        const id = this.onCallListeners.indexOf(fx);
+    };
+    CallingDataListener.prototype.removeOnCallListener = function (fx) {
+        var id = this.onCallListeners.indexOf(fx);
         this.onCallListeners.splice(id, 1);
-    }
-    onCall(dataEvent) {
-        this.onCallListeners.forEach((fx) => fx(dataEvent));
-    }
-}
+    };
+    CallingDataListener.prototype.onCall = function (dataEvent) {
+        this.onCallListeners.forEach(function (fx) { return fx(dataEvent); });
+    };
+    return CallingDataListener;
+}());
+export { CallingDataListener };
