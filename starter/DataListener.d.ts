@@ -1,6 +1,6 @@
-import { ChatEvents, stalkEvents } from "../index";
-import { StalkAccount, RoomAccessData, IMessage } from "./models/index";
-export declare class DataListener implements stalkEvents.IServerListener, ChatEvents.IChatServerEvents {
+import { ChatEvents, StalkEvents } from "../stalkjs";
+import { IMessage, RoomAccessData, StalkAccount } from "./models/index";
+export declare class DataListener implements StalkEvents.IServerListener, ChatEvents.IChatServerEvents {
     constructor();
     private activeUserEvents;
     addActiveUserEventListener(listener: (key: string, data: any) => void): void;
@@ -11,7 +11,7 @@ export declare class DataListener implements stalkEvents.IServerListener, ChatEv
     private onRoomAccessEventListeners;
     addOnRoomAccessListener: (listener: (data: StalkAccount) => void) => void;
     removeOnRoomAccessListener: (listener: (data: any) => void) => void;
-    onAccessRoom(dataEvent: Array<any>): void;
+    onAccessRoom(dataEvent: any[]): void;
     private onAddRoomAccessEventListeners;
     addOnAddRoomAccessListener: (listener: (data: any) => void) => void;
     removeOnAddRoomAccessListener: (listener: (data: any) => void) => void;

@@ -2,6 +2,8 @@
 var SocketComponent = /** @class */ (function () {
     function SocketComponent() {
     }
+    SocketComponent.prototype.onDisconnect = function (reason) {
+    };
     SocketComponent.prototype.disconnected = function (reason) {
         if (!!this.onDisconnect) {
             this.onDisconnect(reason);

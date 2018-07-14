@@ -2,7 +2,7 @@
  * Copyright 2016-2018 Ahoo Studio.co.th.
  * Maintained by nattapon.r@live.com
  */
-import { ServerImp, IPomelo, IServer } from "../index";
+import { ServerImp, IPomelo, IServer } from "../stalkjs";
 import { DataListener } from "./DataListener";
 import { PushDataListener } from "./PushDataListener";
 import { ServerEventListener } from "./ServerEventListener";
@@ -42,7 +42,7 @@ export declare class BackendFactory {
     stalkInit(): Promise<IPomelo>;
     handshake(uid: string): Promise<IServer>;
     checkIn(user: any): Promise<{}>;
-    private checkOut();
+    private checkOut;
     /**
      * @returns
      *

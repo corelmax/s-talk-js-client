@@ -1,3 +1,4 @@
 .circleci/**
 sample/**
 tsconfig.json
+tsconfignode.json

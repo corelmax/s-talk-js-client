@@ -101,7 +101,6 @@ var DataListener = /** @class */ (function () {
             value(chatMessageImp);
         });
     };
-    ;
     DataListener.prototype.addOnLeaveRoomListener = function (listener) {
         this.onLeaveRoomListeners.push(listener);
     };
@@ -112,10 +111,8 @@ var DataListener = /** @class */ (function () {
     DataListener.prototype.onLeaveRoom = function (data) {
         this.onLeaveRoomListeners.map(function (value) { return value(data); });
     };
-    ;
     DataListener.prototype.onRoomJoin = function (data) {
     };
-    ;
     return DataListener;
 }());
 export { DataListener };

@@ -4,8 +4,7 @@
  * Support by@ nattapon.r@live.com
  */
 
-import { IPomelo } from "../index";
-import { StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../lib/browser/index";
+import { IPomelo, StalkEvents, ChatEvents, PushEvents, CallingEvents } from "../stalkjs";
 
 export class ServerEventListener {
     // <!-- AccessRoom Info -->

@@ -1,4 +1,4 @@
-import { CallingEvents } from "../index";
+import { CallingEvents } from "../stalkjs";
 export interface ICallPayload {
     event: string;
     members: string[];

@@ -1,5 +1,8 @@
 ﻿class SocketComponent {
-    onDisconnect: (reason: any) => void;
+    onDisconnect(reason: any) {
+
+    }
+
     disconnected(reason) {
         if (!!this.onDisconnect) {
             this.onDisconnect(reason);
