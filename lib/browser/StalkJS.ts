@@ -1,5 +1,5 @@
 import { ServerImp, IDictionary } from "./ServerImplement";
-import { API } from "./API";
+// import { API } from "./API";
 import { HttpStatusCode } from "../utils/httpStatusCode";
 import { Authen } from "../utils/tokenDecode";
 import { IPomelo, ServerParam, IServer } from "../utils/PomeloUtils";
