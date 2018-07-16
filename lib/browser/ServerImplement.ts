@@ -5,9 +5,8 @@
  * Ahoo Studio.co.th 
  */
 
-import { HttpStatusCode } from "../utils/httpStatusCode";
 import * as API from "./api/index";
-import { IPomeloResponse, IPomelo, ServerParam } from "../utils/PomeloUtils";
+import { IPomelo, ServerParam } from "../utils/PomeloUtils";
 const Pomelo = require("../pomelo/reactWSClient");
 
 /**

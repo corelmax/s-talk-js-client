@@ -6,14 +6,6 @@
 export { StalkJS } from "./lib/browser/StalkJS";
 export { ServerImp, IDictionary } from "./lib/browser/ServerImplement";
 
-/**
- * All events.
- */
-export { StalkEvents, DataEvent, BaseDataEvent } from "./lib/browser/StalkEvents";
-export { PushEvents } from "./lib/browser/PushEvents";
-export { CallingEvents } from "./lib/browser/CallingEvents";
-export { ChatEvents } from "./lib/browser/ChatEvents";
-
 export { ServerParam, IPomelo, IPomeloResponse, IServer } from "./lib/utils/PomeloUtils";
 export { HttpStatusCode } from "./lib/utils/index";
 /**
@@ -24,6 +16,10 @@ export { HttpStatusCode } from "./lib/utils/index";
 // export import IPomeloResponse = IPomeloResponse;
 // export import IServer = IServer;
 
+/**
+ * All events.
+ */
+export * from "./lib/browser/events/index";
 /**
  * APIs interface implementation.
  */
